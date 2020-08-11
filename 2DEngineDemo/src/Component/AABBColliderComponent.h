@@ -14,7 +14,7 @@ public:
 	Rect destRect_;
 
 	
-	AABBColliderComponent(std::shared_ptr<TransformComponent> transform, std::string tag,
+	AABBColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
 		const Vector2& pos, const float& w, const float& h);
 	~AABBColliderComponent();
 

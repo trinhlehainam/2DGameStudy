@@ -95,5 +95,5 @@ void Map::AddCollisionTile(std::string collisionID, const float& posX, const flo
 {
 	auto newTile = entityMng_.AddTileEntity("collision");
 	newTile->AddComponent<TransformComponent>(Vector2(posX, posY), tileSize, tileSize, scale);
-	collisionMng_.AddMapCollider(newTile->GetComponent<TransformComponent>(), collisionID, Vector2(posX, posY), tileSize*scale, tileSize*scale);
+	collisionMng_.AddMapCollider(newTile, collisionID, Vector2(posX, posY), tileSize*scale, tileSize*scale);
 }

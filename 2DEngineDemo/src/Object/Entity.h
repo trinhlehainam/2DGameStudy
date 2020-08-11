@@ -29,6 +29,7 @@ public:
 	{
 		return isActive_;
 	}
+
 	void Destroy()
 	{
 		isActive_ = false;
@@ -36,7 +37,7 @@ public:
 	}
 
 	template<typename T, typename...Args>
-	void AddComponent(Args...args)
+	void AddComponent(Args&&...args)
 	{
 		auto component = std::make_shared<T>(*this, std::forward<Args>(args)...);
 		component->Initialize();
@@ -50,6 +51,10 @@ public:
 		return std::static_pointer_cast<T>(componentMap_.at(&typeid(T)));
 	}
 
+	bool IsEmptyComponent()
+	{
+		return components_.size() == 0;
+	}
 
 	template<typename T>
 	bool HasComponent()

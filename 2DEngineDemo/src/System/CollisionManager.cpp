@@ -1,5 +1,8 @@
 #include "CollisionManager.h"
 
+#include <algorithm>
+
+#include "../Object/Entity.h"
 #include "../Component/CircleColliderComponent.h"
 #include "../Component/AABBColliderComponent.h"
 #include "../Component/TransformComponent.h"
@@ -7,6 +10,8 @@
 namespace
 {
     constexpr unsigned int actor_size = 100;
+
+    
 }
 
 
@@ -17,11 +22,13 @@ CollisionManager::CollisionManager()
     actorColliders_.reserve(actor_size);
 }
 
-void CollisionManager::AddProjectileCollider(std::shared_ptr<TransformComponent> transform, 
+void CollisionManager::AddProjectileCollider(std::shared_ptr<Entity> owner,
     std::string tag, const float& posX, const float& posY, const float& radius)
 {
-    projectileColliders_.emplace_back(transform, tag, posX, posY, radius);
+    projectileColliders_.emplace_back(owner, tag, posX, posY, radius);
 }
+
+
 
 bool CollisionManager::CheckCollision(const Rect& rectA, const Rect& rectB)
 {
@@ -122,7 +129,16 @@ void CollisionManager::Update(const float& deltaTime)
     {
         projectileCollider.Update(deltaTime);
     }
+
+    RemoveCollider();
 }
+
+void CollisionManager::RemoveCollider()
+{
+    ProcessRemoveCollider(projectileColliders_);
+}
+
+
 
 void CollisionManager::PlatformResolution(const float& deltaTime)
 {

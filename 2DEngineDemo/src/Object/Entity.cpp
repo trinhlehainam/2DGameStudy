@@ -8,6 +8,9 @@ Entity::Entity(EntityManager& entityMng, std::string name) :
 	isActive_ = true;
 }
 
+
+
+
 void Entity::Update(const float& deltaTime)
 {
 	for (auto& component : components_)

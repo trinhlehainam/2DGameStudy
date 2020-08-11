@@ -3,11 +3,6 @@
 #include <algorithm>
 
 #include "Entity.h"
-#include "../Component/ColliderComponent.h"
-#include "../Component/AABBColliderComponent.h"
-#include "../Component/CircleColliderComponent.h"
-
-
 
 EntityManager::EntityManager()
 {

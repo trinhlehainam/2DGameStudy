@@ -37,7 +37,7 @@ void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 		Rect(0, 0, shuriken_width, shuriken_height),
 		1, 1, 30);
 	anim->Play("attack");
-	gs_.collisionMng_->AddProjectileCollider(projectile->GetComponent<TransformComponent>(),
+	gs_.collisionMng_->AddProjectileCollider(projectile,
 		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_width / 2);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));

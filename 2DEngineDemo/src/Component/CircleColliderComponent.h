@@ -10,7 +10,7 @@ public:
     Circle collider_;
     Circle destCir_;
 
-    CircleColliderComponent(std::shared_ptr<TransformComponent> transform, std::string tag, 
+    CircleColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
         const float& posX, const float& posY, const float& radius);
     ~CircleColliderComponent();
     void Initialize();

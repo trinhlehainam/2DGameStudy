@@ -5,16 +5,17 @@
 
 #include "../Geometry/Geometry.h"
 
-class TransformComponent;
+class Entity;
 
 class ColliderComponent
 {
 protected:
-	std::weak_ptr<TransformComponent> transform_;
+	std::weak_ptr<Entity> owner_;
 public:
 	std::string tag_;
 	bool flag_ = false;
-	ColliderComponent(std::shared_ptr<TransformComponent> transfrom, std::string tag);
+	bool IsOwnerExist();
+	ColliderComponent(std::shared_ptr<Entity> owner, std::string tag);
 	~ColliderComponent() = default;
 };
 

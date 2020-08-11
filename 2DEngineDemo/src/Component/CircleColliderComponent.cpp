@@ -1,12 +1,13 @@
 #include "CircleColliderComponent.h"
 
+#include "../Object/Entity.h"
 #include "TransformComponent.h"
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-CircleColliderComponent::CircleColliderComponent(std::shared_ptr<TransformComponent> transform, std::string tag,
+CircleColliderComponent::CircleColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
 	const float& posX, const float& posY, const float& radius):
-	ColliderComponent(transform, tag)
+	ColliderComponent(owner, tag)
 {
 	collider_.pos = Vector2(posX, posY);
 	collider_.radius = radius;
@@ -25,7 +26,13 @@ void CircleColliderComponent::Initialize()
 
 void CircleColliderComponent::Update(const float& deltaTime)
 {
-	auto transform = transform_.lock();
+	if (owner_.expired())
+	{
+		return;
+	}
+	
+
+	auto transform = owner_.lock()->GetComponent<TransformComponent>();
 	/*---------------------------NEED-TO-BE-CAUTIOUS-------------------------------*/
 	// Because the position of circle's center is different from the Entity postition
 	// So it's necessary to move position of circle to center of Entity

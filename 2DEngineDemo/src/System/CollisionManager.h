@@ -11,6 +11,7 @@
 class AABBColliderComponent;
 class CircleColliderComponent;
 class TransformComponent;
+class Entity;
 
 // Class managing all objects' collider and solve them
 // This class also manage physic of the game
@@ -24,6 +25,18 @@ private:
 
 	Vector2 gravity_;
 	Vector2 friction_;
+	bool removeFlag_ = false;
+
+	void RemoveCollider();
+
+	template<typename T>
+	void ProcessRemoveCollider(std::vector<T>& container)
+	{
+		container.erase(std::remove_if(container.begin(), container.end(), [](T& collider) {
+			return collider.IsOwnerExist(); }),
+			container.end());
+	}
+
 public:
 	CollisionManager();
 	~CollisionManager() = default;
@@ -33,26 +46,30 @@ public:
 	void ApplyForce(const float& deltaTime);
 	void Update(const float& deltaTime);
 
+	void TurnOnRemoveFlag()
+	{
+		removeFlag_ = true;
+	}
+
 	// Process moving objects when they touch on platforms
 	void PlatformResolution(const float& deltaTime);
 	void Render();
 
 	template<typename...Args>
-	void AddMapCollider(Args...args)
+	void AddMapCollider(Args&&...args)
 	{
 		mapColliders_.emplace_back(std::forward<Args>(args)...);
 	}
 
 	template<typename...Args>
-	RigidBody2D& AddRigidBody2D(Args...args)
+	RigidBody2D& AddRigidBody2D(Args&&...args)
 	{
 		actorColliders_.emplace_back(std::forward<Args>(args)...);
 		return (*actorColliders_.rbegin());
 	}
 
-	void AddProjectileCollider(std::shared_ptr<TransformComponent> transform, std::string tag,
+	void AddProjectileCollider(std::shared_ptr<Entity> owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
-
 
 	// AABB vs AABB
 	bool CheckCollision(const Rect& rectA, const Rect& rectB);

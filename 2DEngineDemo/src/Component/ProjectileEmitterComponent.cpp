@@ -33,10 +33,10 @@ void ProjectileEmitterComponent::Update(const float& deltaTime)
 	auto transform = owner_.GetComponent<TransformComponent>();
 	transform->pos += velocity_ * deltaTime;
 	auto travel_range = transform->pos - start_;
-	/*if (travel_range * travel_range >= range_ * range_  || IsOutOfWorld())
+	if (travel_range * travel_range >= range_ * range_  || IsOutOfWorld())
 	{
 		owner_.Destroy();
-	}*/
+	}
 }
 
 void ProjectileEmitterComponent::Render()
