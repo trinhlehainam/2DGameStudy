@@ -15,6 +15,7 @@
 #include "../Game Object/Enemy/EnemyManager.h"
 #include "../Game Object/Enemy/Slasher.h"
 #include "../Game Object/Enemy/SideSpawner.h"
+#include "../Game Object/Environment.h"
 
 #include "../System/CollisionManager.h"
 
@@ -54,6 +55,8 @@ GameScene::GameScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScen
 	collisionMng_ = std::make_unique<CollisionManager>();
 	
 	LoadLevel(1);
+
+	environment_ = std::make_unique<Environment>(*this);
 }
 
 void GameScene::LoadLevel(const int& level)
@@ -76,8 +79,8 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher-slash-Sheet.png");
 	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
 
-	assetMng_->AddTexture("enviroment_1", L"assets/Image/Environment/environment_1.png");
-	assetMng_->AddTexture("enviroment_2", L"assets/Image/Environment/environment_2.png");
+	assetMng_->AddTexture("environment-1", L"assets/Image/Environment/environment_1.png");
+	assetMng_->AddTexture("environment-2", L"assets/Image/Environment/environment_2.png");
 	
 
 	// Create Title Map
@@ -147,6 +150,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	enemyMng_->Update(deltaTime);
 	entityMng_->Update(deltaTime);
 	Camera::Instance().Update();
+	environment_->Update(deltaTime);
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	player_->UpdateState();
@@ -171,9 +175,12 @@ void GameScene::FadeInRender()
 
 void GameScene::GameRender()
 {
+	environment_->RenderBackGround();
 	entityMng_->Render();
-	collisionMng_->Render();
+	/*collisionMng_->Render();*/
+	environment_->RenderForeGround();
 	player_->RenderUI();
+	
 }
 
 

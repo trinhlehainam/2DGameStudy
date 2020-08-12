@@ -13,6 +13,7 @@ class Player;
 class Slasher;
 class EnemyManager;
 class Spawner;
+class Environment;
 
 class GameScene :
     public BaseScene
@@ -21,7 +22,7 @@ class GameScene :
     friend Slasher;
     friend class ShurikenEquip;
     friend class BombEquip;
-    friend class Environment;
+    friend Environment;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;
@@ -30,6 +31,7 @@ private:
     std::unique_ptr<Player> player_;
     std::unique_ptr<EnemyManager> enemyMng_;
     std::vector<std::unique_ptr<Spawner>> spawners_;
+    std::unique_ptr<Environment> environment_;
 
     using UpdateFunc_t = void(GameScene::*)(const float&);
     UpdateFunc_t updateFunc_;

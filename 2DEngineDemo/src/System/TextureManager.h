@@ -16,5 +16,9 @@ public:
 	static void DrawBox(const Rect& desRect, const int& color, const bool& fill = true);
 	static void DeleteGraph(int texture);
 	static void DrawIconBox(const int& texture, const Rect& desRect);
+	static void DrawDynamicInfiniteScrolling(const int& texture, const Rect& srcRect,
+		const float& view_width, const float& view_height, const Vector2& cutPos, const Vector2& offset);
+	static void SetBlendAlpha(int alpha);
+	static void SetNormalBlend();
 };
 

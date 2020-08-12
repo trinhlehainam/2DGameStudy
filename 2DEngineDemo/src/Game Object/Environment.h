@@ -19,6 +19,7 @@ private:
 	std::vector<Layer> layers_;
 
 	void Initialize();
+	void InfiniteScrollingProcess(Vector2& pos, const float& width, const float& height);
 public:
 	void SetLayerSpeed(const int& layer_no, const float& speedX, const float& speedY);
 

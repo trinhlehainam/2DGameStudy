@@ -50,3 +50,25 @@ void TextureManager::DrawIconBox(const int& texture, const Rect& desRect)
 	DxLib::DrawBox(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), 0xffffff, false);
 	DxLib::DrawExtendGraph(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), texture, true);
 }
+
+void TextureManager::DrawDynamicInfiniteScrolling(const int& texture, const Rect& srcRect,
+	const float& view_width, const float& view_height, const Vector2& cutPos, const Vector2& offset)
+{
+	float ratio = cutPos.X / view_width;
+
+	DxLib::DrawRectExtendGraphF(0, offset.Y, cutPos.X, offset.Y + view_height,
+		srcRect.w * (1-ratio), srcRect.origin.Y, srcRect.w, srcRect.h, texture, true);
+	
+	DxLib::DrawRectExtendGraphF(cutPos.X, offset.Y, view_width, offset.Y + view_height,
+		0, 0, srcRect.w * (1-ratio), srcRect.h, texture, true);
+}
+
+void TextureManager::SetBlendAlpha(int alpha)
+{
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+}
+
+void TextureManager::SetNormalBlend()
+{
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
