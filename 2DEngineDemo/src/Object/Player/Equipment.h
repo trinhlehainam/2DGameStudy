@@ -19,7 +19,7 @@ public:
 	virtual void Initialize() = 0;
 
 	// ¡‚Ì•Ší‚ÅUŒ‚‚ğ‰Á‚¦‚é
-	virtual void Attack(const Vector2& startPos_, const float& angle) = 0;
+	virtual void Attack(const Vector2& startPos, const float& angle) = 0;
 
 	virtual void DrawEquipmentBox(int texture);
 

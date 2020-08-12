@@ -40,7 +40,7 @@ void SpriteComponent::Update(const float& deltaTime)
 	speedTimer_ += deltaTime * 1000.0f;
 	animation.index = (speedTimer_ / animation.animSpeed) % animation.numCels;
 	animation.srcRect.origin.X =  animation.index * animation.srcRect.w;
-	angleRad_ += animation.rotateSpeed;
+	angleRad_ += animation.rotateSpeed * deltaTime;
 
 	transform_ = owner_.GetComponent<TransformComponent>();
 	

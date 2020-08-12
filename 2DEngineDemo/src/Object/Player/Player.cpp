@@ -8,6 +8,7 @@
 #include "../Entity.h"
 #include "../EntityManager.h"
 #include "../Player/ShurikenEquip.h"
+#include "../Player/BombEquip.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/RigidBody2D.h"
@@ -74,6 +75,7 @@ void Player::Initialize()
 
 	// Initialize Equipment list
 	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_)));
+	equipments_.emplace_back(std::move(std::make_unique<BombEquip>(gs_)));
 	
 }
 
@@ -122,6 +124,11 @@ void Player::Input(const float& deltaTime)
 	if (input_->IsReleased("up"))
 	{
 		isJumping = false;
+	}
+
+	if (input_->IsTriggered("switch"))
+	{
+		currentEquip_ = (currentEquip_ + 1) % equipments_.size();
 	}
 
 	SetAngleDirection();

@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Object\Player\BombEquip.cpp" />
     <ClCompile Include="src\Object\Player\ShurikenEquip.cpp" />
     <ClCompile Include="src\Object\Player\Equipment.cpp" />
     <ClCompile Include="src\Component\ProjectileEmitterComponent.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="src\Component\TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Object\Player\BombEquip.h" />
     <ClInclude Include="src\Object\Player\ShurikenEquip.h" />
     <ClInclude Include="src\Object\Player\Equipment.h" />
     <ClInclude Include="src\Component\ProjectileEmitterComponent.h" />
