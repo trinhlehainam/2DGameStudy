@@ -5,7 +5,7 @@
 
 #include "../Constant.h"
 #include "../Geometry/Geometry.h"
-#include "SceneManager.h"
+#include "../System/SceneManager.h"
 #include "GameScene.h"
 #include "PauseScene.h"
 #include "../Input/KeyboardInput.h"
@@ -43,6 +43,8 @@ TitleScene::~TitleScene()
 {
 	DxLib::DeleteGraph(bgTexture_);
 	DxLib::DeleteGraph(btnTexture_);
+	bgTexture_ = -1;
+	btnTexture_ = -1;
 }
 
 void TitleScene::Initialize()

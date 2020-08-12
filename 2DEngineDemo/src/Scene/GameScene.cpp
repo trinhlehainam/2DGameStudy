@@ -4,7 +4,7 @@
 
 #include "../Constant.h"
 
-#include "SceneManager.h"
+#include "../System/SceneManager.h"
 #include "PauseScene.h"
 
 #include "../System/AssetManager.h"
@@ -164,6 +164,7 @@ void GameScene::Render()
 
 void GameScene::FadeInRender()
 {
+	environment_->RenderBackGround();
 	entityMng_->Render();
 	auto blendpara = 255 * waitTimer_ / wait_fade_time;
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, blendpara);
@@ -178,7 +179,7 @@ void GameScene::GameRender()
 	environment_->RenderBackGround();
 	entityMng_->Render();
 	/*collisionMng_->Render();*/
-	environment_->RenderForeGround();
+	/*environment_->RenderForeGround();*/
 	player_->RenderUI();
 	
 }

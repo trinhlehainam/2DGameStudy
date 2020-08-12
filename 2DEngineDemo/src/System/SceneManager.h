@@ -3,7 +3,7 @@
 #include <memory>
 #include <deque>
 
-#include "BaseScene.h"
+#include "../Scene/BaseScene.h"
 
 using active_scene = std::unique_ptr<BaseScene>;
 class Engine;
@@ -29,6 +29,7 @@ public:
 	void Render();
 	void ChangeScene(active_scene scene);
 	void ClearScene();
+	void ResetScene(active_scene scene);
 	void PushScene(active_scene scene);
 	void PopScene();
 	~SceneManager() = default;

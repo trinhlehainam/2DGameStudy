@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 
-#include "TitleScene.h"
+#include "../Scene/TitleScene.h"
 
 SceneManager::SceneManager(KeyboardInput& sceneInput):sceneInput_(sceneInput)
 {
@@ -33,6 +33,12 @@ void SceneManager::ChangeScene(active_scene scene)
 void SceneManager::ClearScene()
 {
 	scenes_.clear();
+}
+
+void SceneManager::ResetScene(active_scene scene)
+{
+	ClearScene();
+	scenes_.emplace_back(std::move(scene));
 }
 
 void SceneManager::PushScene(active_scene scene)

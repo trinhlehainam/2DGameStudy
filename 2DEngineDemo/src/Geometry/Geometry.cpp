@@ -33,6 +33,12 @@ void Vector2::operator+=(const Vector2& vec)
 	this->Y += vec.Y;
 }
 
+void Vector2::operator-=(const Vector2& vec)
+{
+	this->X -= vec.X;
+	this->Y -= vec.Y;
+}
+
 Vector2 operator+(const Vector2& lvec, const Vector2& rvec)
 {
 	return Vector2(lvec.X + rvec.X, lvec.Y + rvec.Y);

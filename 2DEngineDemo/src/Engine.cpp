@@ -6,7 +6,7 @@
 
 #include "Constant.h"
 
-#include "Scene/SceneManager.h"
+#include "System/SceneManager.h"
 #include "System/Debugger.h"
 #include "Input/KeyboardInput.h"
 
@@ -29,6 +29,8 @@ void Engine::Start()
 
     DxLib::SetDrawScreen(DX_SCREEN_BACK);
 
+    isActive_ = true;
+
     sceneInput_ = std::make_unique<KeyboardInput>();
 
     sceneMng_.reset(new SceneManager(*sceneInput_));
@@ -39,7 +41,7 @@ void Engine::Start()
 void Engine::Run()
 {
     
-    while (!DxLib::ProcessMessage() && !DxLib::CheckHitKey(KEY_INPUT_ESCAPE))
+    while (!DxLib::ProcessMessage() && isActive_)
     {
         DxLib::ClearDrawScreen();
 
@@ -64,5 +66,11 @@ void Engine::Run()
 
 void Engine::Stop()
 {
+    isActive_ = false;
     DxLib_End();
+}
+
+void Engine::DeActivate()
+{
+    isActive_ = false;
 }

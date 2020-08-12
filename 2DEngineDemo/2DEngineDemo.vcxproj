@@ -173,7 +173,7 @@
     <ClCompile Include="src\Geometry\Geometry.cpp" />
     <ClCompile Include="src\Scene\PauseScene.cpp" />
     <ClCompile Include="src\Scene\GameScene.cpp" />
-    <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\System\SceneManager.cpp" />
     <ClCompile Include="src\Scene\BaseScene.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -211,7 +211,7 @@
     <ClInclude Include="src\Geometry\Geometry.h" />
     <ClInclude Include="src\Scene\PauseScene.h" />
     <ClInclude Include="src\Scene\GameScene.h" />
-    <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\System\SceneManager.h" />
     <ClInclude Include="src\Scene\BaseScene.h" />
     <ClInclude Include="src\Constant.h" />
     <ClInclude Include="src\Engine.h" />

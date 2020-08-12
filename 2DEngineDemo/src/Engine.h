@@ -19,10 +19,12 @@ private:
 	unsigned int lastTickFrame = 0;
 
 	~Engine() = default;
+	bool isActive_ = false;
 public:
 	static Engine& Instance();
 	void Start();
 	void Run();
 	void Stop();
+	void DeActivate();
 };
 

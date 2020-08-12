@@ -13,6 +13,7 @@ struct Vector2
 	Vector2& operator = (const Vector2& vec);
 	Vector2& operator = (Vector2&& vec) = default;
 	void operator += (const Vector2& vec);
+	void operator -= (const Vector2& vec);
 	~Vector2() = default;
 };
 

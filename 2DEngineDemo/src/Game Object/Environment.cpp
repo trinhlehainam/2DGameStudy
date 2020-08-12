@@ -12,6 +12,8 @@ namespace {
 	constexpr float layer_2_speed = 150.0f;
 	constexpr float layer_3_speed = 200.0f;
 	const Rect srcRect(Vector2(0, 0), 496, 272);
+	Vector2 oldCameraPos_;
+	Vector2 cameraMove_;
 }
 
 Environment::Environment(GameScene& gs) :gs_(gs)
@@ -28,6 +30,7 @@ void Environment::Initialize()
 	layers_[2].textureID = gs_.GetTexture("environment-2");
 
 	for (auto& layer : layers_) layer.pos_ = Vector2(0.0f, 0.0f);
+	oldCameraPos_ = Camera::Instance().viewport.origin;
 }
 
 void Environment::InfiniteScrollingProcess(Vector2& pos, const float& width, const float& height)
@@ -44,13 +47,17 @@ void Environment::SetLayerSpeed(const int& layer_no, const float& speedX, const 
 
 void Environment::Update(const float& deltaTime)
 {
+	cameraMove_ = Camera::Instance().viewport.origin - oldCameraPos_;
+	oldCameraPos_ = Camera::Instance().viewport.origin;
+
 	layers_[0].velocity_.X = layer_1_speed;
 	layers_[1].velocity_.X = layer_2_speed;
 	layers_[2].velocity_.X = layer_3_speed;
 	
 	for (auto& layer : layers_)
 	{
-		layer.pos_ += layer.velocity_ * deltaTime;
+		layer.pos_ += (layer.velocity_ ) * deltaTime;
+		layer.pos_ -= cameraMove_;
 		InfiniteScrollingProcess(layer.pos_, WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 	
