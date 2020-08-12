@@ -1,6 +1,6 @@
 #include "CircleColliderComponent.h"
 
-#include "../Object/Entity.h"
+#include "../Game Object/Entity.h"
 #include "TransformComponent.h"
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"

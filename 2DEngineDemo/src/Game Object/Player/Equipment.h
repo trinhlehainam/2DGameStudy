@@ -21,7 +21,7 @@ public:
 	// ¡‚Ì•Ší‚ÅUŒ‚‚ğ‰Á‚¦‚é
 	virtual void Attack(const Vector2& startPos, const float& angle) = 0;
 
-	virtual void DrawEquipmentBox(int texture);
+	virtual void DrawEquipmentBox(const int& texture) final;
 
 	virtual void Render() = 0;
 };

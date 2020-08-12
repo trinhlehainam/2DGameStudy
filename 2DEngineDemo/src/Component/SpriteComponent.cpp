@@ -2,7 +2,7 @@
 
 #include <DxLib.h>
 
-#include "../Object/Entity.h"
+#include "../Game Object/Entity.h"
 #include "../System/TextureManager.h"
 #include "TransformComponent.h"
 #include "../System/Camera.h"

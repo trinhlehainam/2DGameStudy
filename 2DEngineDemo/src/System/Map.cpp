@@ -2,8 +2,8 @@
 
 #include <fstream>
 
-#include "../Object/Entity.h"
-#include "../Object/EntityManager.h"
+#include "../Game Object/Entity.h"
+#include "../Game Object/EntityManager.h"
 #include "TextureManager.h"
 #include "CollisionManager.h"
 #include "../Component/TileComponent.h"

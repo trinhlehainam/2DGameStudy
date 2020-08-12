@@ -9,12 +9,12 @@
 
 #include "../System/AssetManager.h"
 
-#include "../Object/Entity.h"
-#include "../Object/EntityManager.h"
-#include "../Object/Player/Player.h"
-#include "../Object/Enemy/EnemyManager.h"
-#include "../Object/Enemy/Slasher.h"
-#include "../Object/Enemy/SideSpawner.h"
+#include "../Game Object/Entity.h"
+#include "../Game Object/EntityManager.h"
+#include "../Game Object/Player/Player.h"
+#include "../Game Object/Enemy/EnemyManager.h"
+#include "../Game Object/Enemy/Slasher.h"
+#include "../Game Object/Enemy/SideSpawner.h"
 
 #include "../System/CollisionManager.h"
 
@@ -75,6 +75,9 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("slasher-run", L"assets/Image/Character/Enemy/slasher-run-Sheet.png");
 	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher-slash-Sheet.png");
 	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
+
+	assetMng_->AddTexture("enviroment_1", L"assets/Image/Environment/environment_1.png");
+	assetMng_->AddTexture("enviroment_2", L"assets/Image/Environment/environment_2.png");
 	
 
 	// Create Title Map

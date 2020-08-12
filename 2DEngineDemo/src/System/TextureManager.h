@@ -15,5 +15,6 @@ public:
 	static void DrawCircle( const Circle& desCir, const int& color , const bool& fill = true);
 	static void DrawBox(const Rect& desRect, const int& color, const bool& fill = true);
 	static void DeleteGraph(int texture);
+	static void DrawIconBox(const int& texture, const Rect& desRect);
 };
 

@@ -1,7 +1,7 @@
 #include "TransformComponent.h"
 
 #include "../Constant.h"
-#include "../Object/Entity.h"
+#include "../Game Object/Entity.h"
 #include "../Geometry/Geometry.h"
 #include "../System/Camera.h"
 

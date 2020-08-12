@@ -41,3 +41,12 @@ void TextureManager::DeleteGraph(int texture)
 {
 	DxLib::DeleteGraph(texture);
 }
+
+void TextureManager::DrawIconBox(const int& texture, const Rect& desRect)
+{
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, 128);
+	DxLib::DrawBox(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), 0x000000, true);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DxLib::DrawBox(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), 0xffffff, false);
+	DxLib::DrawExtendGraph(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), texture, true);
+}

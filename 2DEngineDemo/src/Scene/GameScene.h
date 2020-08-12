@@ -21,6 +21,7 @@ class GameScene :
     friend Slasher;
     friend class ShurikenEquip;
     friend class BombEquip;
+    friend class Environment;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;

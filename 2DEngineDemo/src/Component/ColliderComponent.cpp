@@ -1,6 +1,6 @@
 #include "ColliderComponent.h"
 
-#include "../Object/Entity.h"
+#include "../Game Object/Entity.h"
 
 
 bool ColliderComponent::IsOwnerExist()

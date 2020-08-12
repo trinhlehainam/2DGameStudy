@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "../Object/Entity.h"
+#include "../Game Object/Entity.h"
 #include "../Component/CircleColliderComponent.h"
 #include "../Component/AABBColliderComponent.h"
 #include "../Component/TransformComponent.h"
