@@ -116,7 +116,7 @@ void GameScene::LoadLevel(const int& level)
 
 void GameScene::ProcessInput()
 {
-	if(sceneInput_.IsTriggered("pause"))
+	if(sceneInput_.IsTriggered(L"pause"))
 	{
 		sceneMng_.PushScene(std::move(active_scene(new PauseScene(sceneMng_, sceneInput_, (*player_->input_)))));
 	}

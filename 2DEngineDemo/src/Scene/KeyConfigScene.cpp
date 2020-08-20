@@ -34,6 +34,16 @@ KeyConfigScene::KeyConfigScene(SceneManager& sceneMng, KeyboardInput& sceneInput
 	int x = menuBox.Left() + 100;
 	int y = menuBox.Top() + 100;
 
+	for (auto& input : playerInput_.keyCon_)
+	{
+		y += menu_y_interval;
+		menuItems_.emplace_back(input.first, Vector2(x, y),
+			[this]()
+			{
+				
+			});
+	}
+
 	menuItems_.emplace_back(L"Apply", Vector2(x, y),
 		[this]()
 		{
@@ -110,11 +120,11 @@ void KeyConfigScene::NormalDraw()
 void KeyConfigScene::NormalUpdate(const float&)
 {
 	// Move between items
-	if (sceneInput_.IsTriggered("up"))
+	if (sceneInput_.IsTriggered(L"up"))
 	{
 		currentItemNo_ = (currentItemNo_ - 1 + itemSize) % itemSize;
 	}
-	if (sceneInput_.IsTriggered("down"))
+	if (sceneInput_.IsTriggered(L"down"))
 	{
 		currentItemNo_ = (currentItemNo_ + 1) % itemSize;
 	}
@@ -122,7 +132,7 @@ void KeyConfigScene::NormalUpdate(const float&)
 	SetCurrentItem();
 
 	// Select Menu Item
-	if (sceneInput_.IsTriggered("enter"))
+	if (sceneInput_.IsTriggered(L"enter"))
 	{
 		menuItems_[currentItemNo_].func();
 	}

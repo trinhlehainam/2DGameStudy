@@ -83,13 +83,13 @@ void Player::Input(const float& deltaTime)
 {
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	input_->Update(deltaTime);
-	if (input_->IsPressed("left"))
+	if (input_->IsPressed(L"left"))
 	{
 		rigidBody_->velocity_.X = -side_move_velocity;
 		sprite->isFlipped = true;
 		
 	}
-	else if (input_->IsPressed("right"))
+	else if (input_->IsPressed(L"right"))
 	{
 		rigidBody_->velocity_.X = side_move_velocity;
 		sprite->isFlipped = false;
@@ -100,7 +100,7 @@ void Player::Input(const float& deltaTime)
 	}
 
 	// Jump
-	if (input_->IsTriggered("up") && rigidBody_->isGrounded_)
+	if (input_->IsTriggered(L"up") && rigidBody_->isGrounded_)
 	{
 		rigidBody_->velocity_.Y = -jump_velocity;
 		jumpTimeCnt = jump_time;
@@ -108,7 +108,7 @@ void Player::Input(const float& deltaTime)
 	}
 
 	// Remain jump
-	if (input_->IsPressed("up") && isJumping)
+	if (input_->IsPressed(L"up") && isJumping)
 	{
 		if (jumpTimeCnt > 0)
 		{
@@ -121,18 +121,18 @@ void Player::Input(const float& deltaTime)
 		}
 
 	}
-	if (input_->IsReleased("up"))
+	if (input_->IsReleased(L"up"))
 	{
 		isJumping = false;
 	}
 
-	if (input_->IsTriggered("switch"))
+	if (input_->IsTriggered(L"switch"))
 	{
 		currentEquip_ = (currentEquip_ + 1) % equipments_.size();
 	}
 
 	SetAngleDirection();
-	if (input_->IsTriggered("attack"))
+	if (input_->IsTriggered(L"attack"))
 	{
 		auto transform = self_->GetComponent<TransformComponent>();
 		auto startPos = transform->pos + Vector2(transform->w / 2, transform->h / 2);
@@ -143,27 +143,27 @@ void Player::Input(const float& deltaTime)
 
 void Player::SetAngleDirection()
 {
-	if (input_->IsPressed("left"))
+	if (input_->IsPressed(L"left"))
 	{
 		attackAngle_ = atan2f(0, -1);
-		if (input_->IsPressed("up"))
+		if (input_->IsPressed(L"up"))
 		{
 			attackAngle_ = atan2f(-1, -1);
 		}
 	}
-	else if (input_->IsPressed("right"))
+	else if (input_->IsPressed(L"right"))
 	{
 		attackAngle_ = atan2f(0, 1);
-		if (input_->IsPressed("up"))
+		if (input_->IsPressed(L"up"))
 		{
 			attackAngle_ = atan2f(-1, 1);
 		}
 	}
-	else if (input_->IsPressed("up"))
+	else if (input_->IsPressed(L"up"))
 	{
 		attackAngle_ = atan2f(-1, 0);
 	}
-	else if (input_->IsPressed("down"))
+	else if (input_->IsPressed(L"down"))
 	{
 		attackAngle_ = atan2f(1, 0);
 	}

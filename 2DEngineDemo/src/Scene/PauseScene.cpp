@@ -174,17 +174,17 @@ void PauseScene::DisappearDraw()
 void PauseScene::NormalUpdate(const float& deltaTime)
 {
 	// Return to previous scene
-	if (sceneInput_.IsTriggered("pause"))
+	if (sceneInput_.IsTriggered(L"pause"))
 	{
 		CloseScene();
 	}
 
 	// Move between items
-	if (sceneInput_.IsTriggered("up"))
+	if (sceneInput_.IsTriggered(L"up"))
 	{
 		currentItemNo_ = (currentItemNo_ - 1 + itemSize) % itemSize;
 	}
-	if (sceneInput_.IsTriggered("down"))
+	if (sceneInput_.IsTriggered(L"down"))
 	{
 		currentItemNo_ = (currentItemNo_ + 1) % itemSize;
 	}
@@ -192,7 +192,7 @@ void PauseScene::NormalUpdate(const float& deltaTime)
 	SetCurrentItem();
 
 	// Select Menu Item
-	if (sceneInput_.IsTriggered("enter"))
+	if (sceneInput_.IsTriggered(L"enter"))
 	{
 		menuItems_[currentItemNo_].func();
 	}

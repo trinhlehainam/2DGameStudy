@@ -7,23 +7,33 @@
 
 KeyboardInput::KeyboardInput()
 {
+	Initialize();
+}
+
+void KeyboardInput::Initialize()
+{
 	DxLib::GetHitKeyStateAll(keystate);
+
+	keyCon_.emplace(L"up", KEY_INPUT_UP);
+	keyCon_.emplace(L"down", KEY_INPUT_DOWN);
+	keyCon_.emplace(L"left", KEY_INPUT_LEFT);
+	keyCon_.emplace(L"right", KEY_INPUT_RIGHT);
+	keyCon_.emplace(L"enter", KEY_INPUT_RETURN);
+	keyCon_.emplace(L"pause", KEY_INPUT_P);
+	keyCon_.emplace(L"switch", KEY_INPUT_S);
+	keyCon_.emplace(L"attack", KEY_INPUT_Z);
+
 	currentIndexState_ = 0;
-	auto& currentInput = keyInputs_[currentIndexState_];
-	currentInput["up"] = false;
-	currentInput["down"] = false;
-	currentInput["left"] = false;
-	currentInput["right"] = false;
-	currentInput["enter"] = false;
-	currentInput["pause"] = false;
-	currentInput["switch"] = false;
-	currentInput["attack"] = false;
-	
-	
+	for (auto& key : keyCon_)
+	{
+		keyInputs_[currentIndexState_][key.first] = false;
+		keyInputs_[currentIndexState_ + 1][key.first] = false;
+	}
 }
 
 KeyboardInput::~KeyboardInput()
 {
+
 }
 
 int KeyboardInput::GetNextInputIndex()
@@ -33,7 +43,7 @@ int KeyboardInput::GetNextInputIndex()
 	return (currentIndexState_ + 1) % maxInputStates;
 }
 
-bool KeyboardInput::CurrentInputState(std::string keyID)
+bool KeyboardInput::CurrentInputState(std::wstring keyID)
 {
 	auto& currentInput = keyInputs_[currentIndexState_];
 	auto it = currentInput.find(keyID);
@@ -48,7 +58,7 @@ int KeyboardInput::GetLastInputIndex()
 	return (currentIndexState_ - 1 + maxInputStates) % maxInputStates;
 }
 
-bool KeyboardInput::LastInputState(std::string keyID)
+bool KeyboardInput::LastInputState(std::wstring keyID)
 {
 	auto idx = GetLastInputIndex();
 	assert(idx >= 0);
@@ -58,23 +68,19 @@ bool KeyboardInput::LastInputState(std::string keyID)
 	return it->second;
 }
 
-bool KeyboardInput::IsPressed(std::string keyID)
+bool KeyboardInput::IsPressed(std::wstring keyID)
 {
 	return CurrentInputState(keyID);
 }
 
-bool KeyboardInput::IsTriggered(std::string keyID)
+bool KeyboardInput::IsTriggered(std::wstring keyID)
 {
 	return CurrentInputState(keyID) && !LastInputState(keyID);
 }
 
-bool KeyboardInput::IsReleased(std::string keyID)
+bool KeyboardInput::IsReleased(std::wstring keyID)
 {
 	return !CurrentInputState(keyID);
-}
-
-void KeyboardInput::Initialize()
-{
 }
 
 void KeyboardInput::Update(const float& deltaTime)
@@ -82,13 +88,10 @@ void KeyboardInput::Update(const float& deltaTime)
 	DxLib::GetHitKeyStateAll(keystate);
 	currentIndexState_ = GetNextInputIndex();
 	auto& currentInput = keyInputs_[currentIndexState_];
-	currentInput["up"] = keystate[KEY_INPUT_UP];
-	currentInput["down"] = keystate[KEY_INPUT_DOWN];
-	currentInput["left"] = keystate[KEY_INPUT_LEFT];
-	currentInput["right"] = keystate[KEY_INPUT_RIGHT];
-	currentInput["enter"] = keystate[KEY_INPUT_RETURN];
-	currentInput["pause"] = keystate[KEY_INPUT_P];
-	currentInput["switch"] = keystate[KEY_INPUT_S];
-	currentInput["attack"] = keystate[KEY_INPUT_Z];
+	for (auto& input : currentInput)
+	{
+		currentInput[input.first] = keystate[keyCon_[input.first]];
+	}
+	
 }
 

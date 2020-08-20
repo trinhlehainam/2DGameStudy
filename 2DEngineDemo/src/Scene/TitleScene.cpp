@@ -82,7 +82,7 @@ void TitleScene::ProcessInput()
 
 void TitleScene::WaitInput()
 {
-	if (sceneInput_.IsTriggered("enter"))
+	if (sceneInput_.IsTriggered(L"enter"))
 	{
 		blinkInterval = blink_interval_fast;
 		waitTimer_ = wait_blink_time;

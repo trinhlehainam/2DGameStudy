@@ -18,7 +18,7 @@ private:
         Vector2 pos;
         std::function<void(void)> func;
         bool isActive = false;
-        MenuItem(const wchar_t* str, const Vector2& p, std::function<void(void)> f) :
+        MenuItem(std::wstring str, const Vector2& p, std::function<void(void)> f) :
             menuText(str),
             pos(p),
             func(f) {};
