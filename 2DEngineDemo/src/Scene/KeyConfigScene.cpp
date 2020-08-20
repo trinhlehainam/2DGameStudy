@@ -8,10 +8,10 @@
 
 namespace
 {
-	constexpr int menu_y_interval = 48;		// Space between each item
+	constexpr int menu_y_interval = 20;		// Space between each item
 	const wchar_t* keyconfigTitleText = L"Key Config";
+	const wchar_t* apply_text = L"Apply";
 
-	constexpr int selected_item_offset = 20;;
 	int currentItemNo_ = 0;
 	int pauseTextLength = 0;
 	int itemSize = 0;
@@ -21,6 +21,19 @@ namespace
 	const Rect menuBox(Vector2((WINDOW_WIDTH - box_width) / 2.0f, (WINDOW_HEIGHT - box_height) / 2.0f), box_width, box_height);
 	constexpr int box_offset_x = 50;
 	constexpr int box_offset_y = 50;
+	constexpr int item_offset_x = 50;
+	constexpr int item_offset_y = 50;
+	constexpr int selected_item_offset = 10;;
+	constexpr int keyboardID_offset_x = 70;
+
+	constexpr int nornal_state_color = 0xffffff;
+	constexpr int active_state_color = 0x00ffff;
+	constexpr int selected_state_color = 0xff0000;
+
+	constexpr int box_color = 0x006600;
+	constexpr int frame_color = 0xffffff;
+
+	char strBuffer_;
 }
 
 KeyConfigScene::KeyConfigScene(SceneManager& sceneMng, KeyboardInput& sceneInput, KeyboardInput& playerInput):
@@ -31,24 +44,24 @@ KeyConfigScene::KeyConfigScene(SceneManager& sceneMng, KeyboardInput& sceneInput
 
 	pauseTextLength = DxLib::GetStringLength(keyconfigTitleText);
 
-	int x = menuBox.Left() + 100;
-	int y = menuBox.Top() + 100;
+	int x = menuBox.Left() + item_offset_x;
+	int y = menuBox.Top() + item_offset_y;
 
-	for (auto& input : playerInput_.keyCon_)
-	{
-		y += menu_y_interval;
-		menuItems_.emplace_back(input.first, Vector2(x, y),
-			[this]()
-			{
-				
-			});
-	}
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"up", Vector2(x, y));
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"down", Vector2(x, y));
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"left", Vector2(x, y));
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"right", Vector2(x, y));
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"switch", Vector2(x, y));
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"attack", Vector2(x, y));
 
-	menuItems_.emplace_back(L"Apply", Vector2(x, y),
-		[this]()
-		{
-			CloseScene();
-		});
+	y += 2*menu_y_interval;
+	menuItems_.emplace_back(apply_text, Vector2(x, y));
 
 	itemSize = static_cast<int>(menuItems_.size());
 	currentItemNo_ = 0;
@@ -94,12 +107,12 @@ void KeyConfigScene::NormalDraw()
 		menuBox.Top(),
 		menuBox.Right(),
 		menuBox.Bottom(),
-		0x009900, true);
+		box_color, true);
 	DxLib::DrawBoxAA(menuBox.Left(),
 		menuBox.Top(),
 		menuBox.Right(),
 		menuBox.Bottom(),
-		0xffffff, false, 2.0f);
+		frame_color, false, 2.0f);
 
 	// Draw Menu Title Text
 	DxLib::DrawString(menuBox.Center().X - 50, menuBox.Top() + 20, keyconfigTitleText, 0xffffff);
@@ -107,13 +120,21 @@ void KeyConfigScene::NormalDraw()
 	for (auto& itr : menuItems_)
 	{
 		int offset = 0;
-		int color = 0xffffff;
+		int color = nornal_state_color;
 		if (itr.isActive)
 		{
-			color = 0xffff00;
+			color = active_state_color;
+		}
+		if (itr.isSelected == true)
+		{
+			color = selected_state_color;
+			offset = selected_item_offset;
 		}
 
 		DxLib::DrawString(itr.pos.X + offset, itr.pos.Y, itr.menuText.c_str(), color);
+		if(itr.menuText != apply_text)
+			DxLib::DrawFormatString(itr.pos.X + keyboardID_offset_x + offset, itr.pos.Y,color,
+				L"keyboardID: %d", playerInput_.keyCon_[itr.menuText]);
 	}
 }
 
@@ -134,6 +155,28 @@ void KeyConfigScene::NormalUpdate(const float&)
 	// Select Menu Item
 	if (sceneInput_.IsTriggered(L"enter"))
 	{
-		menuItems_[currentItemNo_].func();
+		if (currentItemNo_ != (itemSize - 1))
+		{
+			menuItems_[currentItemNo_].isSelected = true;
+			updateFunc_ = &KeyConfigScene::EditKeyUpdate;
+		}
+		else
+		{
+			CloseScene();
+		}
+	}
+}
+
+void KeyConfigScene::EditKeyUpdate(const float&)
+{
+	if (sceneInput_.IsTriggered(L"enter"))
+	{
+		menuItems_[currentItemNo_].isSelected = false;
+		updateFunc_ = &KeyConfigScene::NormalUpdate;
+	}
+
+	if (!sceneInput_.IsTriggered(L"enter") && !sceneInput_.IsPressed(L"enter"))
+	{
+		playerInput_.GetInputKey(playerInput_.keyCon_[menuItems_[currentItemNo_].menuText]);
 	}
 }

@@ -2,7 +2,6 @@
 #include <vector>
 #include "../Geometry/Geometry.h"
 #include <sstream>
-#include <functional>
 
 #include "BaseScene.h"
 
@@ -16,12 +15,12 @@ private:
     {
         std::wstring menuText;
         Vector2 pos;
-        std::function<void(void)> func;
         bool isActive = false;
-        MenuItem(std::wstring str, const Vector2& p, std::function<void(void)> f) :
+        bool isSelected = false;
+        MenuItem(std::wstring str, const Vector2& p) :
             menuText(str),
-            pos(p),
-            func(f) {};
+            pos(p)
+        {};
     };
     std::vector<MenuItem> menuItems_;
 
@@ -38,6 +37,7 @@ private:
 
     // Update information to PauseScene at normar state
     void NormalUpdate(const float&);
+    void EditKeyUpdate(const float&);
 
     void SetCurrentItem();
 

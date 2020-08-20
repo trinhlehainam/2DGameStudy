@@ -3,7 +3,11 @@
 #include <DxLib.h>
 #include <assert.h>
 
-
+namespace
+{
+	constexpr unsigned int all_key_buffer = 256;
+	char keystate[all_key_buffer];
+}
 
 KeyboardInput::KeyboardInput()
 {
@@ -94,4 +98,18 @@ void KeyboardInput::Update(const float& deltaTime)
 	}
 	
 }
+
+void KeyboardInput::GetInputKey(int& buffer)
+{
+	DxLib::GetHitKeyStateAll(keystate);
+	for (int id = 0; id < all_key_buffer; ++id)
+	{
+		if (keystate[id] == true)
+		{
+			buffer = id;
+			return;
+		}
+	}
+}
+
 

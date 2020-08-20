@@ -6,14 +6,15 @@
 #include <array>
 #include <vector>
 
+
 class KeyboardInput
 {
 private:
+    
     friend class KeyConfigScene;
     using InputState_t = std::unordered_map<std::wstring, bool>;
     std::array<InputState_t, 2> keyInputs_;
     std::unordered_map<std::wstring, int> keyCon_;
-    char keystate[256];
     int currentIndexState_;
 
     int GetNextInputIndex();
@@ -31,6 +32,7 @@ public:
 
     void Initialize();
     void Update(const float& deltaTime);
+    void GetInputKey(int& buffer);
 };
     
 
