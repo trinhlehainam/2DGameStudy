@@ -1,21 +1,14 @@
 #pragma once
-#include "BaseScene.h"
-#include <functional>
-#include <sstream>
 #include <vector>
 #include "../Geometry/Geometry.h"
+#include <sstream>
+#include <functional>
 
-class PauseScene:
-	public BaseScene
+#include "BaseScene.h"
+
+class KeyConfigScene :
+    public BaseScene
 {
-	friend SceneManager;
-public:
-	PauseScene(SceneManager&, KeyboardInput&, KeyboardInput&);
-	~PauseScene();
-
-	void ProcessInput() override;
-	void Update(const float& deltaTime) override;
-	void Render() override;
 private:
     KeyboardInput& playerInput_;
 
@@ -32,30 +25,28 @@ private:
     };
     std::vector<MenuItem> menuItems_;
 
-    using DrawFunc_t = void (PauseScene::*)();
-    using UpdateFunc_t = void (PauseScene::*)(const float&);
+    using DrawFunc_t = void (KeyConfigScene::*)();
+    using UpdateFunc_t = void (KeyConfigScene::*)(const float&);
 
     // Pointer function for draw method
     DrawFunc_t drawFunc_;
     // Pointer function for update method
     UpdateFunc_t updateFunc_;
 
-    // Draw after PauseScene constructed
-    void AppearDraw();
-    // Draw before PauseScene constructed
-    void DisappearDraw();
     // Draw after AppearDraw done
     void NormalDraw();
 
-    // Update information to AppearDraw()
-    void AppearUpdate(const float&);
-    // Update information to DisappearDraw()
-    void DisappearUpdate(const float&);
     // Update information to PauseScene at normar state
     void NormalUpdate(const float&);
 
     void SetCurrentItem();
 
     void CloseScene();
+public:
+    KeyConfigScene(SceneManager&, KeyboardInput&, KeyboardInput&);
+    ~KeyConfigScene();
+    void ProcessInput() override;
+    void Update(const float& deltaTime) override;
+    void Render() override;
 };
 

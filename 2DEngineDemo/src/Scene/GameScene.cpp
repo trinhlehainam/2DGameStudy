@@ -118,7 +118,7 @@ void GameScene::ProcessInput()
 {
 	if(sceneInput_.IsTriggered("pause"))
 	{
-		sceneMng_.PushScene(std::move(active_scene(new PauseScene(sceneMng_, sceneInput_))));
+		sceneMng_.PushScene(std::move(active_scene(new PauseScene(sceneMng_, sceneInput_, (*player_->input_)))));
 	}
 }
 

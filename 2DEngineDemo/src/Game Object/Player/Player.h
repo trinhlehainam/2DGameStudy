@@ -22,7 +22,7 @@ enum class MOVE
 class Player
 {
 private:
-	
+	friend GameScene;
 	GameScene& gs_;
 	RigidBody2D* rigidBody_;
 	std::unique_ptr<KeyboardInput> input_;

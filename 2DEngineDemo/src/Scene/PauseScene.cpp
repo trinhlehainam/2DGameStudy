@@ -6,6 +6,7 @@
 #include "../System/SceneManager.h"
 #include "../Input/KeyboardInput.h"
 #include "../Scene/TitleScene.h"
+#include "../Scene/KeyConfigScene.h"
 #include "../Engine.h"
 
 namespace
@@ -30,7 +31,8 @@ namespace
 	constexpr int box_offset_y = 50;
 }
 
-PauseScene::PauseScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScene(sceneMng,sceneInput)
+PauseScene::PauseScene(SceneManager& sceneMng, KeyboardInput& sceneInput, KeyboardInput& playerInput):
+	BaseScene(sceneMng,sceneInput), playerInput_(playerInput)
 {
 	drawFunc_ = &PauseScene::AppearDraw;
 	updateFunc_ = &PauseScene::AppearUpdate;
@@ -59,6 +61,12 @@ PauseScene::PauseScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseSc
 			sceneMng_.ResetScene(std::move(active_scene(new TitleScene(sceneMng_, sceneInput_))));
 		});
 	y += menu_y_interval;
+	menuItems_.emplace_back(L"キーコンフィグ", Vector2(x, y),
+		[this]()
+		{
+			sceneMng_.PushScene(std::move(active_scene(new KeyConfigScene(sceneMng_, sceneInput_, playerInput_))));
+		});
+	y += menu_y_interval;
 	menuItems_.emplace_back(L"ゲームを終了", Vector2(x, y),
 		[this]()
 		{
@@ -79,10 +87,7 @@ PauseScene::~PauseScene()
 
 void PauseScene::ProcessInput()
 {
-	if (sceneInput_.IsTriggered("pause"))
-	{
-		sceneMng_.PopScene();
-	}
+
 }
 
 void PauseScene::Update(const float& deltaTime)
@@ -187,7 +192,7 @@ void PauseScene::NormalUpdate(const float& deltaTime)
 	SetCurrentItem();
 
 	// Select Menu Item
-	if (sceneInput_.IsPressed("enter"))
+	if (sceneInput_.IsTriggered("enter"))
 	{
 		menuItems_[currentItemNo_].func();
 	}

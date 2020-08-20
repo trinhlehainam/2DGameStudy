@@ -8,7 +8,7 @@
 class KeyboardInput
 {
 private:
-
+    friend class KeyConfigScene;
     using InputState_t = std::unordered_map<std::string, bool>;
     std::array<InputState_t, 2> keyInputs_;
     char keystate[256];

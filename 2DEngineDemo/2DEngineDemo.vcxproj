@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Scene\KeyConfigScene.cpp" />
     <ClCompile Include="src\Game Object\Environment.cpp" />
     <ClCompile Include="src\Game Object\Player\BombEquip.cpp" />
     <ClCompile Include="src\Game Object\Player\ShurikenEquip.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="src\Component\TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Scene\KeyConfigScene.h" />
     <ClInclude Include="src\Game Object\Environment.h" />
     <ClInclude Include="src\Game Object\Player\BombEquip.h" />
     <ClInclude Include="src\Game Object\Player\ShurikenEquip.h" />
