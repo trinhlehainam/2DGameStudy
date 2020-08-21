@@ -7,6 +7,7 @@ class Slasher:
 private:
 	using ActionUpdate_t = void (Slasher::*)(const float& deltaTime);
 	ActionUpdate_t actionUpdate;
+	RigidBody2D* rigidBody_ = nullptr;
 
 	void AimPlayer(const float& deltaTime);
 	void SlashUpdate(const float& deltaTime);

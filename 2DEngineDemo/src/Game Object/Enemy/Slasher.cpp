@@ -34,6 +34,7 @@ Slasher::Slasher(GameScene& gs, TransformComponent& playerPos):Enemy(gs, playerP
 
 Slasher::~Slasher()
 {
+	rigidBody_ = nullptr;
 }
 
 void Slasher::Initialize()
@@ -51,7 +52,6 @@ void Slasher::Initialize()
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", Rect(0, 0, 32, 32), 3, run_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", Rect(0, 0, 32, 32), 4, slash_animation_speed);
 	anim->Play("run");
-
 }
 
 std::unique_ptr<Enemy> Slasher::MakeClone()
@@ -93,8 +93,6 @@ void Slasher::SlashUpdate(const float& deltaTime)
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	
-	
-
 	if (std::abs(playerPos_.pos.X - transform->pos.X) > slash_distancce)
 	{
 		if (sprite->IsFinished())

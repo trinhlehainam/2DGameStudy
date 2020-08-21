@@ -2,7 +2,6 @@
 
 #include <memory>
 
-
 class GameScene;
 class TransformComponent;
 class Entity;
@@ -15,7 +14,6 @@ protected:
 	GameScene& gs_;
 	TransformComponent& playerPos_;
 	std::shared_ptr<Entity> self_;
-	RigidBody2D* rigidBody_ = nullptr;
 public:
 	Enemy(GameScene& gs, TransformComponent& playerPos_);
 	virtual ~Enemy() = default;

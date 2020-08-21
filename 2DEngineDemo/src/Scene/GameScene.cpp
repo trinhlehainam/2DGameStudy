@@ -75,8 +75,9 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("chain-icon", L"assets/Image/UI/chain.png");
 	assetMng_->AddTexture("bomb-icon", L"assets/Image/UI/bomb.png");
 
-	assetMng_->AddTexture("slasher-run", L"assets/Image/Character/Enemy/slasher-run-Sheet.png");
-	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher-slash-Sheet.png");
+	assetMng_->AddTexture("slasher-run", L"assets/Image/Character/Enemy/slasher/slasher-run-Sheet.png");
+	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher/slasher-slash-Sheet.png");
+	assetMng_->AddTexture("boss-asura", L"assets/Image/Character/Enemy/asura/ashura.png");
 	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
 
 	assetMng_->AddTexture("environment-1", L"assets/Image/Environment/environment_1.png");
@@ -156,7 +157,6 @@ void GameScene::GameUpdate(const float& deltaTime)
 	player_->UpdateState();
 }
 
-
 void GameScene::Render()
 {
 	(this->*renderFunc_)();
@@ -179,12 +179,9 @@ void GameScene::GameRender()
 	environment_->RenderBackGround();
 	entityMng_->Render();
 	/*collisionMng_->Render();*/
-	/*environment_->RenderForeGround();*/
 	player_->RenderUI();
 	
 }
-
-
 
 GameScene::~GameScene()
 {

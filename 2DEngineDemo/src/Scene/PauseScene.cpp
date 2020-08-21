@@ -42,7 +42,6 @@ PauseScene::PauseScene(SceneManager& sceneMng, KeyboardInput& sceneInput, Keyboa
 		indicatorTexture_ = DxLib::LoadGraph(L"assets/Image/UI/indicator.png");
 	}
 	
-
 	frame_ = 0;
 
 	pauseTextLength = DxLib::GetStringLength(pauseTitleText);
