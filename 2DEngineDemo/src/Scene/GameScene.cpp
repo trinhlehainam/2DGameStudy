@@ -16,6 +16,8 @@
 #include "../Game Object/Enemy/Slasher.h"
 #include "../Game Object/Enemy/SideSpawner.h"
 #include "../Game Object/Environment.h"
+#include "../Game Object/Enemy/BossSpawner.h"
+#include "../Game Object/Enemy/Asura.h"
 
 #include "../System/CollisionManager.h"
 
@@ -33,7 +35,8 @@ namespace
 {
 	float waitTimer_ = 0.0f;
 	constexpr float wait_fade_time = 0.6f;
-
+	const Vector2 slasher_start_pos = Vector2(100.0f, 100.0f);
+	constexpr float gravity_force_y = 1000.f;
 	Rect windowBox_;
 
 }
@@ -94,7 +97,7 @@ void GameScene::LoadLevel(const int& level)
 	// Load Collision Map
 	map_->LoadCollisionLayer("GROUND", "assets/Image/Tilemap/ground.map", MAP_SIZE_X, MAP_SIZE_Y);
 	map_->LoadCollisionLayer("BRICK", "assets/Image/Tilemap/brick.map", MAP_SIZE_X, MAP_SIZE_Y);
-
+	map_->LoadCollisionLayer("ASURA", "assets/Image/Tilemap/boss-position.map", MAP_SIZE_X, MAP_SIZE_Y);
 
 	// Initialize Camera ( Track Camera to Player )
 	Camera::Instance().viewport.w = WINDOW_WIDTH;
@@ -109,10 +112,10 @@ void GameScene::LoadLevel(const int& level)
 
 	// Create spawn enemy
 	auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
-	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), Vector2(100, 100), *enemyMng_);
+	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	spawners_.emplace_back(std::move(sideSpawner));
 	
-	collisionMng_->SetGravity(Vector2(0, 1500));
+	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
 }
 
 void GameScene::ProcessInput()
@@ -152,9 +155,22 @@ void GameScene::GameUpdate(const float& deltaTime)
 	entityMng_->Update(deltaTime);
 	Camera::Instance().Update();
 	environment_->Update(deltaTime);
+	ProcessEnterBossArea();
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	player_->UpdateState();
+}
+
+void GameScene::ProcessEnterBossArea()
+{
+	Vector2 bossPos;
+	if (collisionMng_->IsEnterBossArea("ASURA", bossPos) && !isBossAdded)
+	{
+		auto asuraClone = std::make_unique<Asura>(*this, player_->GetPlayerTransform());
+		auto bossSpawner = std::make_unique<BossSpawner>(std::move(asuraClone), bossPos, *enemyMng_);
+		spawners_.emplace_back(std::move(bossSpawner));
+		isBossAdded = true;
+	}
 }
 
 void GameScene::Render()
@@ -178,9 +194,8 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	/*collisionMng_->Render();*/
+	collisionMng_->Render();
 	player_->RenderUI();
-	
 }
 
 GameScene::~GameScene()

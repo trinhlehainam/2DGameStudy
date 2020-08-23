@@ -19,9 +19,12 @@ class CollisionManager
 {
 private:
 	friend class EntityManager;
+	friend class Map;
+
 	std::vector<AABBColliderComponent> mapColliders_;
 	std::vector<RigidBody2D> actorColliders_;
 	std::vector<CircleColliderComponent> projectileColliders_;
+	std::vector<CircleColliderComponent> bossColliders_;
 
 	Vector2 gravity_;
 	Vector2 friction_;
@@ -42,17 +45,8 @@ public:
 	~CollisionManager() = default;
 
 	void SetGravity(const Vector2& gravity);
-
 	void ApplyForce(const float& deltaTime);
 	void Update(const float& deltaTime);
-
-	void TurnOnRemoveFlag()
-	{
-		removeFlag_ = true;
-	}
-
-	// Process moving objects when they touch on platforms
-	void PlatformResolution(const float& deltaTime);
 	void Render();
 
 	template<typename...Args>
@@ -68,8 +62,22 @@ public:
 		return (*actorColliders_.rbegin());
 	}
 
+	std::vector<CircleColliderComponent>& AddBossCollider(std::shared_ptr<Entity> owner, std::string tag,
+		const float& posX, const float& posY, const float& radius);
+
 	void AddProjectileCollider(std::shared_ptr<Entity> owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
+
+	inline void TurnOnRemoveFlag()
+	{
+		removeFlag_ = true;
+	}
+
+	// Process moving objects when they touch on platforms
+	void PlatformResolution(const float& deltaTime);
+
+	// Check if player enter the boss area
+	bool IsEnterBossArea(const std::string& bossID, Vector2& bossPos);
 
 	// AABB vs AABB
 	bool CheckCollision(const Rect& rectA, const Rect& rectB);
@@ -103,7 +111,5 @@ public:
 	{
 		return minA <= maxB && maxA >= minB;
 	}
-
-
 };
 

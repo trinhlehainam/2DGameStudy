@@ -10,10 +10,7 @@
 namespace
 {
     constexpr unsigned int actor_size = 100;
-
-    
 }
-
 
 CollisionManager::CollisionManager()
 {
@@ -28,7 +25,11 @@ void CollisionManager::AddProjectileCollider(std::shared_ptr<Entity> owner,
     projectileColliders_.emplace_back(owner, tag, posX, posY, radius);
 }
 
-
+std::vector<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity> owner, std::string tag, const float& posX, const float& posY, const float& radius)
+{
+    bossColliders_.emplace_back(owner, tag, posX, posY, radius);
+    return bossColliders_;
+}
 
 bool CollisionManager::CheckCollision(const Rect& rectA, const Rect& rectB)
 {
@@ -138,8 +139,6 @@ void CollisionManager::RemoveCollider()
     ProcessRemoveCollider(projectileColliders_);
 }
 
-
-
 void CollisionManager::PlatformResolution(const float& deltaTime)
 {
     for (auto& actor : actorColliders_)
@@ -148,11 +147,11 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
         {
             Vector2 cn;
             float ct;
+            if (target.tag_ == "ASURA") continue;
             if (actor.velocity_.Y != 0)  actor.isGrounded_ = false;
             if (CheckSweptAABB(actor.collider_, actor.velocity_, target.collider_, cn,
                 ct, deltaTime))
             {
-                
                 if (actor.collider_.Bottom() <= target.collider_.origin.Y)
                 {
                     actor.isGrounded_ = true;
@@ -160,6 +159,23 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
                 }
                 else  actor.velocity_.X = 0;
                 
+            }
+        }
+    }
+}
+
+bool CollisionManager::IsEnterBossArea(const std::string& bossID, Vector2& bossPos)
+{
+    for (auto& actor : actorColliders_)
+    {
+        for (auto& target : mapColliders_)
+        {
+            if (target.tag_ != bossID) continue;
+            else
+            {
+                target.flag_ = true;
+                bossPos = target.collider_.origin;
+                return CheckCollision(actor.collider_, target.collider_);
             }
         }
     }
@@ -182,5 +198,7 @@ void CollisionManager::Render()
         projectileCollider.Render();
     }
 }
+
+
 
 

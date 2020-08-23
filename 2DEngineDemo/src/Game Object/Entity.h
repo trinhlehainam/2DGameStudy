@@ -20,14 +20,17 @@ protected:
 	std::string name_;
 	float isActive_ = false;
 public:
-
-	
 	Entity(EntityManager& entityMng, std::string name);
 	void Update(const float& deltaTime);
 	void Render();
 	bool IsActive()
 	{
 		return isActive_;
+	}
+
+	inline std::string GetName()
+	{
+		return name_;
 	}
 
 	void Destroy()

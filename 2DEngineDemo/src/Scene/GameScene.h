@@ -23,6 +23,7 @@ class GameScene :
     friend class ShurikenEquip;
     friend class BombEquip;
     friend Environment;
+    friend class Asura;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;
@@ -32,6 +33,8 @@ private:
     std::unique_ptr<EnemyManager> enemyMng_;
     std::vector<std::unique_ptr<Spawner>> spawners_;
     std::unique_ptr<Environment> environment_;
+
+    bool isBossAdded = false;
 
     using UpdateFunc_t = void(GameScene::*)(const float&);
     UpdateFunc_t updateFunc_;
@@ -43,6 +46,7 @@ private:
     void Update(const float& deltaTime) override;
     void FadeInUpdate(const float& deltaTime);
     void GameUpdate(const float& deltaTime);
+    void ProcessEnterBossArea();
 
     void Render() override;
     void FadeInRender();

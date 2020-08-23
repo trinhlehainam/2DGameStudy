@@ -30,7 +30,6 @@ void CircleColliderComponent::Update(const float& deltaTime)
 	{
 		return;
 	}
-	
 
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
 	/*---------------------------NEED-TO-BE-CAUTIOUS-------------------------------*/
@@ -46,6 +45,6 @@ void CircleColliderComponent::Render()
 {
 	destCir_.pos = collider_.pos - Camera::Instance().viewport.origin;
 	int color = flag_ ? 0xffff00 : 0xff0000;
-	/*TextureManager::DrawCircle(destCir_, color);*/
+	TextureManager::DrawCircle(destCir_, color);
 }
 
