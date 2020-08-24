@@ -14,11 +14,16 @@
 class TransformComponent :
     public Component
 {
+private:
+    float leftLimit_;
+    float rightLimit_;
 public:
     Vector2 pos;
     float w, h;
     float scale;
 
+    void SetLeftLimit(const float& limit);
+    void SetRightLimit(const float& limit);
     void Initialize() override;
     void Update(const float& deltaTime) override;
     void Render() override;

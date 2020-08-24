@@ -86,7 +86,6 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("environment-1", L"assets/Image/Environment/environment_1.png");
 	assetMng_->AddTexture("environment-2", L"assets/Image/Environment/environment_2.png");
 	
-
 	// Create Title Map
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
 	map_->LoadMapLayer("background",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
@@ -169,6 +168,7 @@ void GameScene::ProcessEnterBossArea()
 		auto asuraClone = std::make_unique<Asura>(*this, player_->GetPlayerTransform());
 		auto bossSpawner = std::make_unique<BossSpawner>(std::move(asuraClone), bossPos, *enemyMng_);
 		spawners_.emplace_back(std::move(bossSpawner));
+		Camera::Instance().LockCamera();
 		isBossAdded = true;
 	}
 }
@@ -194,7 +194,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	collisionMng_->Render();
+	/*collisionMng_->Render();*/
 	player_->RenderUI();
 }
 

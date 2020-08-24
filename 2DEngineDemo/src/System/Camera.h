@@ -10,7 +10,7 @@ class TransformComponent;
 class Camera
 {
 private:
-	Camera() = default;
+	Camera();
 	Camera(const Camera&) = delete;
 	Camera(Camera&&) = delete;
 	void operator = (const Camera&) = delete;
@@ -19,11 +19,18 @@ private:
 	std::weak_ptr<TransformComponent> trackEntity_;
 
 	Vector2 offSet_;
+
+	using Updater_t = void (Camera::*)();
+	Updater_t updater_;
+
+	void TrackingUpdate();
+	void LockUpdate();
 public:
 	~Camera() = default;
 	static Camera& Instance();
 	void Update();
 	void TrackingOn(std::shared_ptr<TransformComponent> entity);
+	void LockCamera();
 
 	Rect viewport;
 };

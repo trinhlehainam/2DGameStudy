@@ -64,9 +64,10 @@ void EntityManager::Render()
         }
     }
 
-    for (auto& entity : entities_)
+    // Reverse order to draw Player on top of other Entities
+    for (auto it = entities_.rbegin(); it != entities_.rend(); ++it)
     {
-        entity->Render();
+        (*it)->Render();
     }
 
     for (auto& projectile : projectiles_)
@@ -93,7 +94,6 @@ void EntityManager::AddMapLayer(std::string layerID, const int& sizeX, const int
 {
     if (mapLayers_.count(layerID)) return;
     mapLayers_[layerID].reserve(sizeX*sizeY);
-
 }
 
 std::shared_ptr<Entity> EntityManager::AddProjectTile(std::string name)

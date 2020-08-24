@@ -11,7 +11,18 @@ TransformComponent::TransformComponent(Entity& owner, const Vector2& pos, const 
 	this->w = w;
 	this->h = h;
 	this->scale = scale;
+	leftLimit_ = 0.0f;
+	rightLimit_ = WORLD_MAP_X - w;
+}
 
+void TransformComponent::SetLeftLimit(const float& limit)
+{
+	leftLimit_ = limit;
+}
+
+void TransformComponent::SetRightLimit(const float& limit)
+{
+	rightLimit_ = limit;
 }
 
 void TransformComponent::Initialize()
@@ -20,12 +31,11 @@ void TransformComponent::Initialize()
 
 void TransformComponent::Update(const float& deltaTime)
 {
-	pos.X = clamp(pos.X, 0.0f, WORLD_MAP_X-w);
+	pos.X = clamp(pos.X, leftLimit_, rightLimit_);
 }
 
 void TransformComponent::Render()
 {
-
 }
 
 
