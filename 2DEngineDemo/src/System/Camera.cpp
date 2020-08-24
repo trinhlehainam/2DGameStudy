@@ -39,7 +39,8 @@ void Camera::TrackingOn(std::shared_ptr<TransformComponent> entity)
 void Camera::LockCamera()
 {
     auto transform = trackEntity_.lock();
-    transform->SetLeftLimit(transform->pos.X - WINDOW_WIDTH / 2);
+    transform->SetLeftLimit(transform->pos.X - WINDOW_WIDTH / 2.0f);
+    transform->SetRightLimit(transform->pos.X + WINDOW_WIDTH / 2.0f - transform->w * transform->scale);
     updater_ = &Camera::LockUpdate;
 }
 

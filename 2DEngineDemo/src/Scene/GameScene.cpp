@@ -37,6 +37,9 @@ namespace
 	constexpr float wait_fade_time = 0.6f;
 	const Vector2 slasher_start_pos = Vector2(100.0f, 100.0f);
 	constexpr float gravity_force_y = 1000.f;
+	constexpr float side_spawn_offset_x = 100.0f;
+	constexpr float side_spawn_offset_y = WINDOW_HEIGHT/2.0f;
+
 	Rect windowBox_;
 
 }
@@ -112,6 +115,7 @@ void GameScene::LoadLevel(const int& level)
 	// Create spawn enemy
 	auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
+	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
 	spawners_.emplace_back(std::move(sideSpawner));
 	
 	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
