@@ -39,6 +39,8 @@ public:
 		entityMng_->TurnOnRemove();
 	}
 
+	Vector2 GetProjectileVelocity();
+
 	template<typename T, typename...Args>
 	void AddComponent(Args&&...args)
 	{

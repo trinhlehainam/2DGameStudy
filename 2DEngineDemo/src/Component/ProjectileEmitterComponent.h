@@ -7,6 +7,8 @@ class ProjectileEmitterComponent :
     public Component
 {
 private:
+    friend class Entity;
+
     Vector2 start_;
     Vector2 velocity_;
     float range_;

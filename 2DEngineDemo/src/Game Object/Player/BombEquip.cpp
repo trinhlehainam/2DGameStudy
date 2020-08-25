@@ -12,7 +12,7 @@
 
 namespace
 {
-	constexpr unsigned int bomb_width = 67;
+	constexpr unsigned int bomb_width = 50;
 	constexpr unsigned int bomb_height = 35;
 	constexpr float scale = 0.6f;
 	constexpr float move_speed = 400.0f;
@@ -39,7 +39,7 @@ void BombEquip::Attack(const Vector2& startPos, const float& angle)
 		1, 1, rotate_speed);
 	anim->Play("attack");
 	gs_.collisionMng_->AddProjectileCollider(projectile,
-		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_width / 2);
+		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_width / 2.0f);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
 	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range);
