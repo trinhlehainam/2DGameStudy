@@ -68,6 +68,8 @@ public:
 	void AddProjectileCollider(std::shared_ptr<Entity> owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
+	void ProjectileCollision();
+
 	inline void TurnOnRemoveFlag()
 	{
 		removeFlag_ = true;

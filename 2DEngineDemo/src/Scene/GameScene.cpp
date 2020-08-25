@@ -161,6 +161,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	ProcessEnterBossArea();
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
+	collisionMng_->ProjectileCollision();
 	player_->UpdateState();
 }
 
@@ -198,7 +199,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	/*collisionMng_->Render();*/
+	collisionMng_->Render();
 	player_->RenderUI();
 }
 

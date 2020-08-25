@@ -137,6 +137,7 @@ void CollisionManager::Update(const float& deltaTime)
 void CollisionManager::RemoveCollider()
 {
     ProcessRemoveCollider(projectileColliders_);
+    ProcessRemoveCollider(actorColliders_);
 }
 
 void CollisionManager::PlatformResolution(const float& deltaTime)
@@ -176,6 +177,24 @@ bool CollisionManager::IsEnterBossArea(const std::string& bossID, Vector2& bossP
                 target.flag_ = true;
                 bossPos = target.collider_.origin;
                 return CheckCollision(actor.collider_, target.collider_);
+            }
+        }
+    }
+}
+
+void CollisionManager::ProjectileCollision()
+{
+    for (auto& actor : actorColliders_)
+    {
+        if (actor.tag_ == "PLAYER") continue;
+        for (auto& projectile : projectileColliders_)
+        {
+            if (CheckCollision(projectile.collider_, actor.collider_) && !actor.flag_)
+            {
+                actor.flag_ = false;
+                projectile.flag_ = false;
+                actor.owner_.lock()->Destroy();
+                projectile.owner_.lock()->Destroy();
             }
         }
     }

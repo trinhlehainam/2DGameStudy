@@ -40,15 +40,16 @@ Slasher::~Slasher()
 void Slasher::Initialize()
 {
 	self_ = gs_.entityMng_->AddEntity("slasher");
-	self_->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
+	self_.lock()->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
 	auto& body = gs_.collisionMng_->AddRigidBody2D(
-		self_->GetComponent<TransformComponent>(), start_pos, 
+		self_.lock(), start_pos, 
 		slasher_width * body_width_scale,
 		slasher_height * body_heigth_scale
 	);
 	rigidBody_ = &body;
-	self_->AddComponent<SpriteComponent>();
-	auto anim = self_->GetComponent<SpriteComponent>();
+	rigidBody_->tag_ = "SLASHER";
+	self_.lock()->AddComponent<SpriteComponent>();
+	auto anim = self_.lock()->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", Rect(0, 0, 32, 32), 3, run_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", Rect(0, 0, 32, 32), 4, slash_animation_speed);
 	anim->Play("run");
@@ -61,22 +62,20 @@ std::unique_ptr<Enemy> Slasher::MakeClone()
 
 void Slasher::SetPosition(const Vector2& pos)
 {
-	auto transform = self_->GetComponent<TransformComponent>();
+	auto transform = self_.lock()->GetComponent<TransformComponent>();
 	transform->pos = pos;
 }
 
 void Slasher::Update(const float& deltaTime)
 {
-	auto transform = self_->GetComponent<TransformComponent>();
-	auto sprite = self_->GetComponent<SpriteComponent>();
+	if (self_.expired()) return;
 	(this->*actionUpdate)(deltaTime);
-	
 }
 
 void Slasher::AimPlayer(const float& deltaTime)
 {
-	auto transform = self_->GetComponent<TransformComponent>();
-	auto sprite = self_->GetComponent<SpriteComponent>();
+	auto transform = self_.lock()->GetComponent<TransformComponent>();
+	auto sprite = self_.lock()->GetComponent<SpriteComponent>();
 
 	rigidBody_->velocity_.X = playerPos_.pos.X - transform->pos.X > 0 ? side_move_velocity : -side_move_velocity;
 	sprite->isFlipped = rigidBody_->velocity_.X > 0 ? false : true;
@@ -90,8 +89,8 @@ void Slasher::AimPlayer(const float& deltaTime)
 
 void Slasher::SlashUpdate(const float& deltaTime)
 {
-	auto transform = self_->GetComponent<TransformComponent>();
-	auto sprite = self_->GetComponent<SpriteComponent>();
+	auto transform = self_.lock()->GetComponent<TransformComponent>();
+	auto sprite = self_.lock()->GetComponent<SpriteComponent>();
 	
 	if (std::abs(playerPos_.pos.X - transform->pos.X) > slash_distancce)
 	{

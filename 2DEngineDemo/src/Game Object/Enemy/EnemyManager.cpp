@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "Enemy.h"
+#include <algorithm>
 
 EnemyManager::EnemyManager(TransformComponent& playerPos, GameScene& gs):playerPos_(playerPos), gs_(gs)
 {
@@ -15,10 +16,11 @@ void EnemyManager::Update(const float& deltaTime)
 	{
 		enemy->Update(deltaTime);
 	}
-}
 
-void EnemyManager::SpawnEnemy(const float& deltaTime)
-{
+	enemies_.erase(std::remove_if(enemies_.begin(), enemies_.end(), [](std::unique_ptr<Enemy>& enemy) {
+		return enemy->IsOwnerExist();
+		}), 
+		enemies_.end());
 }
 
 void EnemyManager::AddEnemy(std::unique_ptr<Enemy> enemy)
