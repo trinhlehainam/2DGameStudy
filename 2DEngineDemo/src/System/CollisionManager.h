@@ -13,7 +13,7 @@ class CircleColliderComponent;
 class TransformComponent;
 class Entity;
 
-// Class managing all objects' collider and solve them
+// Class managing all objects' collider and resolve them
 // This class also manage physic of the game
 class CollisionManager
 {

@@ -1,8 +1,8 @@
 #include "BossSpawner.h"
 
 #include "../Enemy/Enemy.h"
-#include "../EntityManager.h"
-#include "../Enemy/EnemyManager.h"
+#include "../../System/EnemyManager.h"
+#include "../../System/EntityManager.h"
 
 BossSpawner::BossSpawner(std::unique_ptr<Enemy> protoype, Vector2 pos, EnemyManager& enemyMng) :
 	Spawner(std::move(protoype), pos, enemyMng)

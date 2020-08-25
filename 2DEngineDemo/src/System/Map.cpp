@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "../Game Object/Entity.h"
-#include "../Game Object/EntityManager.h"
+#include "../System/EntityManager.h"
 #include "TextureManager.h"
 #include "CollisionManager.h"
 #include "../Component/TileComponent.h"

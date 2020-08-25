@@ -156,7 +156,7 @@
     <ClCompile Include="src\Game Object\Enemy\SideSpawner.cpp" />
     <ClCompile Include="src\Game Object\Enemy\Spawner.cpp" />
     <ClCompile Include="src\Game Object\Enemy\Enemy.cpp" />
-    <ClCompile Include="src\Game Object\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="src\System\EnemyManager.cpp" />
     <ClCompile Include="src\Game Object\Enemy\Slasher.cpp" />
     <ClCompile Include="src\Game Object\Player\Player.cpp" />
     <ClCompile Include="src\Component\RigidBody2D.cpp" />
@@ -169,7 +169,7 @@
     <ClCompile Include="src\System\Map.cpp" />
     <ClCompile Include="src\System\Debugger.cpp" />
     <ClCompile Include="src\Component\SpriteComponent.cpp" />
-    <ClCompile Include="src\Game Object\EntityManager.cpp" />
+    <ClCompile Include="src\System\EntityManager.cpp" />
     <ClCompile Include="src\Game Object\Entity.cpp" />
     <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\System\AssetManager.cpp" />
@@ -197,7 +197,7 @@
     <ClInclude Include="src\Game Object\Enemy\SideSpawner.h" />
     <ClInclude Include="src\Game Object\Enemy\Spawner.h" />
     <ClInclude Include="src\Game Object\Enemy\Enemy.h" />
-    <ClInclude Include="src\Game Object\Enemy\EnemyManager.h" />
+    <ClInclude Include="src\System\EnemyManager.h" />
     <ClInclude Include="src\Game Object\Enemy\Slasher.h" />
     <ClInclude Include="src\Game Object\Player\Player.h" />
     <ClInclude Include="src\Component\RigidBody2D.h" />
@@ -210,7 +210,7 @@
     <ClInclude Include="src\System\Map.h" />
     <ClInclude Include="src\System\Debugger.h" />
     <ClInclude Include="src\Component\SpriteComponent.h" />
-    <ClInclude Include="src\Game Object\EntityManager.h" />
+    <ClInclude Include="src\System\EntityManager.h" />
     <ClInclude Include="src\Game Object\Entity.h" />
     <ClInclude Include="src\Component\Component.h" />
     <ClInclude Include="src\System\AssetManager.h" />

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "Entity.h"
+#include "../Game Object/Entity.h"
 
 namespace
 {

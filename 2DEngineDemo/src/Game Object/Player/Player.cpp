@@ -6,7 +6,7 @@
 #include "../../System/CollisionManager.h"
 
 #include "../Entity.h"
-#include "../EntityManager.h"
+#include "../../System/EntityManager.h"
 #include "../Player/ShurikenEquip.h"
 #include "../Player/BombEquip.h"
 

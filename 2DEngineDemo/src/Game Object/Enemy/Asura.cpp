@@ -1,7 +1,7 @@
 #include "Asura.h"
 
 #include "../Entity.h"
-#include "../EntityManager.h"
+#include "../../System/EntityManager.h"
 #include "../../Scene/GameScene.h"
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"

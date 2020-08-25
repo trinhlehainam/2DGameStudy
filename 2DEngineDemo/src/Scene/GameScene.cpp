@@ -10,9 +10,9 @@
 #include "../System/AssetManager.h"
 
 #include "../Game Object/Entity.h"
-#include "../Game Object/EntityManager.h"
+#include "../System/EntityManager.h"
 #include "../Game Object/Player/Player.h"
-#include "../Game Object/Enemy/EnemyManager.h"
+#include "../System/EnemyManager.h"
 #include "../Game Object/Enemy/Slasher.h"
 #include "../Game Object/Enemy/SideSpawner.h"
 #include "../Game Object/Environment.h"

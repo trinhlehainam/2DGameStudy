@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include "../Enemy/Enemy.h"
-#include "../EntityManager.h"
+#include "../../System/EntityManager.h"
 #include "../../System/Camera.h"
 
 namespace

@@ -35,7 +35,6 @@ void Engine::Start()
 
     sceneMng_.reset(new SceneManager(*sceneInput_));
 
-    
 }
 
 void Engine::Run()
@@ -55,7 +54,6 @@ void Engine::Run()
         sceneMng_->ProcessInput();
         sceneMng_->Update(deltaTime);
 
-        
         // Game Draw
         sceneMng_->Render();
         // Debug Draw

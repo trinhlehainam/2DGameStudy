@@ -6,7 +6,7 @@
 #include <typeinfo>
 #include <string>
 
-#include "EntityManager.h"
+#include "../System/EntityManager.h"
 #include "../Component/Component.h"
 
 

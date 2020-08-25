@@ -2,7 +2,7 @@
 
 #include "../../Scene/GameScene.h"
 #include "../Entity.h"
-#include "../EntityManager.h"
+#include "../../System/EntityManager.h"
 #include "../../Geometry/Geometry.h"
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
