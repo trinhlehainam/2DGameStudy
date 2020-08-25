@@ -39,7 +39,7 @@ void BombEquip::Attack(const Vector2& startPos, const float& angle)
 		1, 1, rotate_speed);
 	anim->Play("attack");
 	gs_.collisionMng_->AddProjectileCollider(projectile,
-		"PLAYER-SHURIKEN", startPos.X, startPos.Y, bomb_width / 2);
+		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_width / 2);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
 	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range);

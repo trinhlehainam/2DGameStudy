@@ -2,6 +2,7 @@
 
 class Entity;
 
+// Base class for other components
 class Component
 {
 public:
@@ -11,6 +12,6 @@ public:
 	virtual void Update(const float& deltaTime) = 0;
 	virtual void Render() = 0;
 protected:
-	Entity& owner_;
+	Entity* owner_;
 };
 

@@ -1,8 +1,7 @@
 #include "Entity.h"
 
 
-Entity::Entity(EntityManager& entityMng, std::string name) :
-	entityMng_(entityMng), name_(name)
+Entity::Entity(EntityManager& entityMng, std::string name) : name_(name), entityMng_(&entityMng)
 {
 	isActive_ = true;
 }

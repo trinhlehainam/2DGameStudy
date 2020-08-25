@@ -58,6 +58,8 @@ void EntityManager::RemoveEntity()
     RemoveEntityProcess(entities_);
     // Remove projectile entity
     RemoveEntityProcess(projectiles_);
+    // Remove effect
+    RemoveEntityProcess(effects_);
 }
 
 void EntityManager::Render()
@@ -91,7 +93,7 @@ std::shared_ptr<Entity> EntityManager::AddEntity(std::string name)
 
 std::shared_ptr<Entity> EntityManager::AddTileEntity(std::string layerID)
 {
-    auto tileEntity = std::make_shared <Entity> (*this, layerID);
+    auto tileEntity = std::make_shared<Entity>(*this, layerID);
     mapLayers_.at(layerID).emplace_back(tileEntity);
     return tileEntity;
 }
@@ -104,9 +106,16 @@ void EntityManager::AddMapLayer(std::string layerID, const int& sizeX, const int
 
 std::shared_ptr<Entity> EntityManager::AddProjectTile(std::string name)
 {
-    auto projectile = std::make_shared<Entity>(*this,name);
+    auto projectile = std::make_shared<Entity>(*this, name);
     projectiles_.emplace_back(projectile);
     return projectile;
+}
+
+std::shared_ptr<Entity> EntityManager::AddEffect(std::string effectID)
+{
+    auto effect = std::make_shared<Entity>(*this, effectID);
+    effects_.emplace_back(effect);
+    return effect;
 }
 
 

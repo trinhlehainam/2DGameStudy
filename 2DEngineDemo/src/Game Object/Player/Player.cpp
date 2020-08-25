@@ -63,10 +63,10 @@ void Player::Initialize()
 	rigidBody.tag_ = "PLAYER";
 	self_->AddComponent<SpriteComponent>();
 	auto playerAnim = self_->GetComponent<SpriteComponent>();
-	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", Rect(0, 0, 32, 32), 4, idle_animation_speed);
-	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-run"), "run", Rect(0, 0, 32, 32), 6, run_animation_speed);
-	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-jump"), "jump", Rect(0, 0, 32, 32), 4, jump_animation_speed);
-	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-fall"), "fall", Rect(0, 0, 32, 32), 2, fall_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", Rect(0, 0, 32, 32), idle_animation_speed, 4);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-run"), "run", Rect(0, 0, 32, 32), run_animation_speed, 6);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-jump"), "jump", Rect(0, 0, 32, 32), jump_animation_speed, 4);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-fall"), "fall", Rect(0, 0, 32, 32), fall_animation_speed, 2);
 	playerAnim->Play("idle");
 
 	// Set camera track to player

@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "../Scene/GameScene.h"
+#include "../System/EffectManager.h"
 #include "../Game Object/Entity.h"
 #include "../Component/CircleColliderComponent.h"
 #include "../Component/AABBColliderComponent.h"
@@ -12,7 +14,7 @@ namespace
     constexpr unsigned int actor_size = 100;
 }
 
-CollisionManager::CollisionManager()
+CollisionManager::CollisionManager(GameScene& gs):gs_(gs)
 {
     // Reserve to avoid reallocate memory when the container is out of size
     // Also avoid raw pointer to lose track of container's time
@@ -195,6 +197,7 @@ void CollisionManager::ProjectileCollision()
                 projectile.flag_ = false;
                 actor.owner_.lock()->Destroy();
                 projectile.owner_.lock()->Destroy();
+                gs_.effectMng_->EmitBloodEffect(actor.collider_.Center().X,actor.collider_.Center().Y);
             }
         }
     }

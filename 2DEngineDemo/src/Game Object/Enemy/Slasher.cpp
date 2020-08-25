@@ -50,8 +50,8 @@ void Slasher::Initialize()
 	rigidBody_->tag_ = "SLASHER";
 	self_.lock()->AddComponent<SpriteComponent>();
 	auto anim = self_.lock()->GetComponent<SpriteComponent>();
-	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", Rect(0, 0, 32, 32), 3, run_animation_speed);
-	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", Rect(0, 0, 32, 32), 4, slash_animation_speed);
+	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", Rect(0, 0, 32, 32), run_animation_speed,3);
+	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", Rect(0, 0, 32, 32), slash_animation_speed,4);
 	anim->Play("run");
 }
 

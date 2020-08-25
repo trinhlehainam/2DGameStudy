@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\System\EffectManager.cpp" />
     <ClCompile Include="src\Game Object\Enemy\Asura.cpp" />
     <ClCompile Include="src\Game Object\Enemy\BossSpawner.cpp" />
     <ClCompile Include="src\Scene\KeyConfigScene.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="src\Component\TileComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\System\EffectManager.h" />
     <ClInclude Include="src\Game Object\Enemy\Asura.h" />
     <ClInclude Include="src\Game Object\Enemy\BossSpawner.h" />
     <ClInclude Include="src\Scene\KeyConfigScene.h" />

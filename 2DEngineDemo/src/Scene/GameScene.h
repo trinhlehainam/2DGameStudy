@@ -14,6 +14,7 @@ class Slasher;
 class EnemyManager;
 class Spawner;
 class Environment;
+class EffectManager;
 
 class GameScene :
     public BaseScene
@@ -24,6 +25,8 @@ class GameScene :
     friend class BombEquip;
     friend Environment;
     friend class Asura;
+    friend EffectManager;
+    friend CollisionManager;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;
@@ -33,6 +36,7 @@ private:
     std::unique_ptr<EnemyManager> enemyMng_;
     std::vector<std::unique_ptr<Spawner>> spawners_;
     std::unique_ptr<Environment> environment_;
+    std::unique_ptr<EffectManager> effectMng_;
 
     bool isBossAdded = false;
 

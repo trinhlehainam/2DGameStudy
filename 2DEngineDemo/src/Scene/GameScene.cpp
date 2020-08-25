@@ -4,22 +4,24 @@
 
 #include "../Constant.h"
 
-#include "../System/SceneManager.h"
 #include "PauseScene.h"
 
 #include "../System/AssetManager.h"
+#include "../System/EnemyManager.h"
+#include "../System/EntityManager.h"
+#include "../System/SceneManager.h"
+#include "../System/CollisionManager.h"
+#include "../System/Map.h"
+#include "../System/Camera.h"
+#include "../System/EffectManager.h"
 
 #include "../Game Object/Entity.h"
-#include "../System/EntityManager.h"
 #include "../Game Object/Player/Player.h"
-#include "../System/EnemyManager.h"
 #include "../Game Object/Enemy/Slasher.h"
 #include "../Game Object/Enemy/SideSpawner.h"
 #include "../Game Object/Environment.h"
 #include "../Game Object/Enemy/BossSpawner.h"
 #include "../Game Object/Enemy/Asura.h"
-
-#include "../System/CollisionManager.h"
 
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
@@ -27,8 +29,6 @@
 #include "../Component/CircleColliderComponent.h"
 #include "../Component/RigidBody2D.h"
 
-#include "../System/Map.h"
-#include "../System/Camera.h"
 #include "../Input/KeyboardInput.h"
 
 namespace
@@ -58,7 +58,8 @@ GameScene::GameScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScen
 
 	assetMng_ = std::make_unique<AssetManager>();
 	entityMng_ = std::make_unique<EntityManager>();
-	collisionMng_ = std::make_unique<CollisionManager>();
+	collisionMng_ = std::make_unique<CollisionManager>(*this);
+	effectMng_ = std::make_unique<EffectManager>(*this);
 	
 	LoadLevel(1);
 
@@ -69,14 +70,16 @@ void GameScene::LoadLevel(const int& level)
 {
 	// Load assets
 	assetMng_->AddTexture("bg", L"assets/Title.png");
+	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
+
 	assetMng_->AddTexture("player-run", L"assets/Image/Character/Player/adventurer-run-sheet.png");
 	assetMng_->AddTexture("player-idle", L"assets/Image/Character/Player/adventurer-idle-00-sheet.png");
 	assetMng_->AddTexture("player-jump", L"assets/Image/Character/Player/adventurer-roll-sheet.png");
 	assetMng_->AddTexture("player-fall", L"assets/Image/Character/Player/adventurer-fall-sheet.png");
+
 	assetMng_->AddTexture("bomb-equip", L"assets/Image/Character/Player/Equipment/bombshot.png");
 	assetMng_->AddTexture("shuriken-equip", L"assets/Image/Character/Player/Equipment/shuriken.png");
 	assetMng_->AddTexture("chain-equip", L"assets/Image/Character/Player/Equipment/chainsickle.png");
-
 	assetMng_->AddTexture("shuriken-icon", L"assets/Image/UI/shuriken.png");
 	assetMng_->AddTexture("chain-icon", L"assets/Image/UI/chain.png");
 	assetMng_->AddTexture("bomb-icon", L"assets/Image/UI/bomb.png");
@@ -84,10 +87,12 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("slasher-run", L"assets/Image/Character/Enemy/slasher/slasher-run-Sheet.png");
 	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher/slasher-slash-Sheet.png");
 	assetMng_->AddTexture("boss-asura", L"assets/Image/Character/Enemy/asura/ashura.png");
-	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
-
+	
 	assetMng_->AddTexture("environment-1", L"assets/Image/Environment/environment_1.png");
 	assetMng_->AddTexture("environment-2", L"assets/Image/Environment/environment_2.png");
+
+	assetMng_->AddTexture("blood", L"assets/Image/Effect/blood.png");
+	assetMng_->AddTexture("bomb-explosion", L"assets/Image/Effect/bomb_exp.png");
 	
 	// Create Title Map
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
@@ -162,6 +167,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	collisionMng_->ProjectileCollision();
+	effectMng_->Update(deltaTime);
 	player_->UpdateState();
 }
 
@@ -200,6 +206,7 @@ void GameScene::GameRender()
 	environment_->RenderBackGround();
 	entityMng_->Render();
 	/*collisionMng_->Render();*/
+	effectMng_->Render();
 	player_->RenderUI();
 }
 

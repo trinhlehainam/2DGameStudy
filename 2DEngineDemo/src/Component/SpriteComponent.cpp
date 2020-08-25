@@ -14,7 +14,7 @@ SpriteComponent::SpriteComponent(Entity& owner, bool isFixed):Component(owner),i
 
 void SpriteComponent::Initialize()
 {
-	transform_ = owner_.GetComponent<TransformComponent>();
+	transform_ = owner_->GetComponent<TransformComponent>();
 	auto transform = transform_.lock();
 	desRect.origin = transform->pos;
 	desRect.w = transform->w * transform->scale;
@@ -22,7 +22,7 @@ void SpriteComponent::Initialize()
 }
 
 void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& srcRect,
-	const unsigned int& numCels, const unsigned& animSpeed, const float& rotateSpeed)
+	 const unsigned& animSpeed, const unsigned int& numCels, const float& rotateSpeed)
 {
 	Animation anim;
 	anim.texture = texture;
@@ -30,20 +30,26 @@ void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& 
 	anim.numCels = numCels;
 	anim.animSpeed = animSpeed;
 	anim.rotateSpeed = rotateSpeed;
-	anim.index = 0;
+	DxLib::GetGraphSize(anim.texture, &anim.textureW, &anim.textureH);
+	anim.indexX = 0;
+	anim.indexY = 0;
 	animations_.emplace(animID, std::move(anim));
 }
 
 void SpriteComponent::Update(const float& deltaTime)
 {
 	auto& animation = animations_.at(currentAnimID);
+	auto celX = animation.textureW / static_cast<int>(animation.srcRect.w);
+	auto celY = animation.textureH / static_cast<int>(animation.srcRect.h);
 	speedTimer_ += deltaTime * 1000.0f;
-	animation.index = (speedTimer_ / animation.animSpeed) % animation.numCels;
-	animation.srcRect.origin.X =  animation.index * animation.srcRect.w;
-	angleRad_ += animation.rotateSpeed * deltaTime;
+	animation.indexX = (speedTimer_ / animation.animSpeed) % celX;
+	if (animation.indexX == celX - 1 && celX > 1) animation.indexY = (animation.indexY + 1) % celY;
+	else animation.indexY = (speedTimer_ / animation.animSpeed) % celY;
+	animation.srcRect.origin.X = animation.indexX * animation.srcRect.w;
+	animation.srcRect.origin.Y = animation.indexY * animation.srcRect.w;
 
-	transform_ = owner_.GetComponent<TransformComponent>();
-	
+	angleRad_ += animation.rotateSpeed * deltaTime;
+	transform_ = owner_->GetComponent<TransformComponent>();
 }
 
 void SpriteComponent::Render()
@@ -61,7 +67,7 @@ void SpriteComponent::Render()
 	{
 		if (animations_.count(currentAnimID))
 		{
-			transform_ = owner_.GetComponent<TransformComponent>();
+			transform_ = owner_->GetComponent<TransformComponent>();
 			auto transform = transform_.lock();
 			TextureManager::DrawRectRota(animations_.at(currentAnimID).texture, animations_.at(currentAnimID).srcRect,
 				desRect, transform->scale, angleRad_, isFlipped);
@@ -73,7 +79,8 @@ void SpriteComponent::Play(std::string animID)
 {
 	if (IsPlaying(animID)) return;
 	currentAnimID = animID;
-	animations_.at(animID).index = 0;
+	animations_.at(animID).indexX = 0;
+	animations_.at(animID).indexY = 0;
 	speedTimer_ = 0;
 	angleRad_ = 0.0f;
 }
@@ -86,11 +93,11 @@ bool SpriteComponent::IsPlaying(std::string animID)
 bool SpriteComponent::IsFinished()
 {
 	auto& animation = animations_.at(currentAnimID);
-	return animation.index == (animation.numCels - 1);
+	auto celX = animation.textureW / static_cast<int>(animation.srcRect.w);
+	auto celY = animation.textureH / static_cast<int>(animation.srcRect.h);
+	return animation.indexX == (celX - 1) && animation.indexY == (celY - 1);
 }
-
 
 SpriteComponent::~SpriteComponent()
 {
-	
 }

@@ -12,6 +12,7 @@ class AABBColliderComponent;
 class CircleColliderComponent;
 class TransformComponent;
 class Entity;
+class GameScene;
 
 // Class managing all objects' collider and resolve them
 // This class also manage physic of the game
@@ -40,8 +41,9 @@ private:
 			container.end());
 	}
 
+	GameScene& gs_;
 public:
-	CollisionManager();
+	CollisionManager(GameScene& gs);
 	~CollisionManager() = default;
 
 	void SetGravity(const Vector2& gravity);

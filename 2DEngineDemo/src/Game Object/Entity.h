@@ -9,16 +9,16 @@
 #include "../System/EntityManager.h"
 #include "../Component/Component.h"
 
-
 class Entity
 {
 	friend class EntityManager;
+	friend class EffectManager;
 protected:
 	std::vector<std::shared_ptr<Component>> components_;
 	std::unordered_map < const type_info*, std::shared_ptr<Component>> componentMap_;
-	EntityManager& entityMng_;
 	std::string name_;
 	float isActive_ = false;
+	EntityManager* entityMng_ = nullptr;
 public:
 	Entity(EntityManager& entityMng, std::string name);
 	void Update(const float& deltaTime);
@@ -36,7 +36,7 @@ public:
 	void Destroy()
 	{
 		isActive_ = false;
-		entityMng_.TurnOnRemove();
+		entityMng_->TurnOnRemove();
 	}
 
 	template<typename T, typename...Args>

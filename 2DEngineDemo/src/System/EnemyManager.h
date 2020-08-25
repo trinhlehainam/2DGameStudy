@@ -20,7 +20,7 @@ public:
 	void Update(const float& deltaTime);
 	
 	template<typename T,typename...Args>
-	void AddEnemy(Args...args)
+	void AddEnemy(Args&&...args)
 	{
 		enemies_.emplace_back(std::make_unique<T>(gs_, playerPos_.lock(), std::forward<Args>(args)...));
 	}

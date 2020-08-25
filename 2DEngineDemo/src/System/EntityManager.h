@@ -12,9 +12,12 @@ class Entity;
 class EntityManager
 {
 private:
+	friend class EffectManager;
+
 	std::vector<std::shared_ptr<Entity>> entities_;
 	std::unordered_map<std::string, std::vector<std::shared_ptr<Entity>>> mapLayers_;
 	std::vector<std::shared_ptr<Entity>> projectiles_;
+	std::vector<std::shared_ptr<Entity>> effects_;
 	bool removeFlag_ = false;
 
 	void RemoveEntity();
@@ -25,7 +28,7 @@ public:
 	void ClearData();
 	void Update(const float& deltaTime);
 	void Render();
-	void TurnOnRemove()
+	inline void TurnOnRemove()
 	{
 		removeFlag_ = true;
 	}
@@ -38,5 +41,6 @@ public:
 
 	std::shared_ptr<Entity> AddProjectTile(std::string name);
 
+	std::shared_ptr<Entity> AddEffect(std::string effectID);
 };
 

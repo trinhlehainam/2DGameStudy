@@ -14,9 +14,12 @@ struct Animation
     // Source Data
     int texture;
     Rect srcRect;
+    int textureW;
+    int textureH;
 
     // Animation
-    unsigned int index;
+    unsigned int indexX;
+    unsigned int indexY;
     unsigned int animSpeed;
     unsigned int numCels;
     float rotateSpeed = 0.0f;
@@ -24,13 +27,12 @@ struct Animation
 
 class TransformComponent;
 
-
-
-
 class SpriteComponent :
     public Component
 {
 private:
+    friend class EffectManager;
+
     // This variable is used for tracking position of Owner (Entity owner)
     std::weak_ptr<TransformComponent> transform_;           
     
@@ -54,16 +56,13 @@ public:
     void Update(const float& deltaTime) override;
     void Render() override;
 
-
-    void AddAnimation(int texture, std::string animID,const Rect& srcRect, 
-        const unsigned int& numCels, const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
+    void AddAnimation(int texture, std::string animID, const Rect& srcRect,
+        const unsigned& animSpeed, const unsigned int& numCels = 1, const float& rotateSpeed = 0.0f);
 
     void Play(std::string animID);
     bool IsPlaying(std::string animID);
-
     bool IsFinished();
 
-    
     SpriteComponent(Entity& owner, bool isFixed = false);
     ~SpriteComponent();
 };
