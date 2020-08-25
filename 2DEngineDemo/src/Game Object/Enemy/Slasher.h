@@ -12,8 +12,10 @@ private:
 	void AimPlayer(const float& deltaTime);
 	void SlashUpdate(const float& deltaTime);
 public:
-	Slasher(GameScene& gs, TransformComponent& playerPos);
+	Slasher(GameScene& gs, std::shared_ptr<TransformComponent> playerPos);
+
 	~Slasher();
+
 	void Update(const float& deltaTime) override;
 	void Initialize() override;
 	std::unique_ptr<Enemy> MakeClone();

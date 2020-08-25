@@ -43,8 +43,6 @@ namespace
 	bool isJumping = false;
 }
 
-
-
 Player::Player(GameScene& gs):gs_(gs)
 {
 	rigidBody_ = nullptr;
@@ -186,7 +184,6 @@ void Player::UpdateState()
 		}
 	}
 	
-	
 	if (!rigidBody_->isGrounded_ && isJumping)
 	{
 		moveState_ = MOVE::JUMP;
@@ -218,9 +215,9 @@ void Player::UpdateState()
 	}
 }
 
-TransformComponent& Player::GetPlayerTransform()
+std::shared_ptr<TransformComponent> Player::GetPlayerTransform()
 {
-	return (*self_->GetComponent<TransformComponent>());
+	return self_->GetComponent<TransformComponent>();
 }
 
 void Player::RenderUI()

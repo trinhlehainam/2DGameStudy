@@ -27,7 +27,7 @@ namespace
 	constexpr unsigned int slash_distancce = 50;
 }
 
-Slasher::Slasher(GameScene& gs, TransformComponent& playerPos):Enemy(gs, playerPos)
+Slasher::Slasher(GameScene& gs, std::shared_ptr<TransformComponent> playerPos):Enemy(gs, playerPos)
 {
 	actionUpdate = &Slasher::AimPlayer;
 }
@@ -57,7 +57,7 @@ void Slasher::Initialize()
 
 std::unique_ptr<Enemy> Slasher::MakeClone()
 {
-	return std::make_unique<Slasher>(gs_,playerPos_);
+	return std::make_unique<Slasher>(gs_,playerPos_.lock());
 }
 
 void Slasher::SetPosition(const Vector2& pos)
@@ -77,9 +77,9 @@ void Slasher::AimPlayer(const float& deltaTime)
 	auto transform = self_.lock()->GetComponent<TransformComponent>();
 	auto sprite = self_.lock()->GetComponent<SpriteComponent>();
 
-	rigidBody_->velocity_.X = playerPos_.pos.X - transform->pos.X > 0 ? side_move_velocity : -side_move_velocity;
+	rigidBody_->velocity_.X = playerPos_.lock()->pos.X - transform->pos.X > 0 ? side_move_velocity : -side_move_velocity;
 	sprite->isFlipped = rigidBody_->velocity_.X > 0 ? false : true;
-	if (std::abs(playerPos_.pos.X - transform->pos.X) < slash_distancce)
+	if (std::abs(playerPos_.lock()->pos.X - transform->pos.X) < slash_distancce)
 	{
 		actionUpdate = &Slasher::SlashUpdate;
 		sprite->Play("slash");
@@ -92,7 +92,7 @@ void Slasher::SlashUpdate(const float& deltaTime)
 	auto transform = self_.lock()->GetComponent<TransformComponent>();
 	auto sprite = self_.lock()->GetComponent<SpriteComponent>();
 	
-	if (std::abs(playerPos_.pos.X - transform->pos.X) > slash_distancce)
+	if (std::abs(playerPos_.lock()->pos.X - transform->pos.X) > slash_distancce)
 	{
 		if (sprite->IsFinished())
 		{

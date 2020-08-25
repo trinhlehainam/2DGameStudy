@@ -2,7 +2,7 @@
 #include "Enemy.h"
 #include <algorithm>
 
-EnemyManager::EnemyManager(TransformComponent& playerPos, GameScene& gs):playerPos_(playerPos), gs_(gs)
+EnemyManager::EnemyManager(std::shared_ptr<TransformComponent> playerPos, GameScene& gs):playerPos_(playerPos), gs_(gs)
 {
 }
 

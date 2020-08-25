@@ -4,13 +4,23 @@
 
 #include "Entity.h"
 
+namespace
+{
+    template<typename T>
+    void RemoveEntityProcess(std::vector<T>& container)
+    {
+        container.erase(std::remove_if(container.begin(), container.end(), [](T& entity) {
+            return !entity->IsActive(); }),
+            container.end());
+    }
+}
+
 EntityManager::EntityManager()
 {
 }
 
 EntityManager::~EntityManager()
 {
-    
 }
 
 void EntityManager::ClearData()
@@ -44,14 +54,10 @@ void EntityManager::Update(const float& deltaTime)
 void EntityManager::RemoveEntity()
 {
     if (!removeFlag_) return;
-    // Remove actor object
-    entities_.erase(std::remove_if(entities_.begin(), entities_.end(), [](std::shared_ptr<Entity>& entity) {
-        return !entity->IsActive();
-        }), entities_.end());
+    // Remove actors
+    RemoveEntityProcess(entities_);
     // Remove projectile entity
-    projectiles_.erase(std::remove_if(projectiles_.begin(), projectiles_.end(), [](std::shared_ptr<Entity>& entity) {
-        return !entity->IsActive();
-        }), projectiles_.end());
+    RemoveEntityProcess(projectiles_);
 }
 
 void EntityManager::Render()

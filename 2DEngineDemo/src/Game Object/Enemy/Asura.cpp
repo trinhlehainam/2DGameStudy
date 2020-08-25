@@ -52,7 +52,7 @@ void Asura::DeadUpdate(const float& deltaTime)
 {
 }
 
-Asura::Asura(GameScene& gs, TransformComponent& playerPos_):Enemy(gs,playerPos_)
+Asura::Asura(GameScene& gs, std::shared_ptr<TransformComponent> playerPos_):Enemy(gs,playerPos_)
 {
 	updater_ = &Asura::EnteringUpdate;
 }
@@ -79,7 +79,7 @@ void Asura::Update(const float& deltaTime)
 
 std::unique_ptr<Enemy> Asura::MakeClone()
 {
-	return std::make_unique<Asura>(gs_, playerPos_);
+	return std::make_unique<Asura>(gs_, playerPos_.lock());
 }
 
 void Asura::SetPosition(const Vector2& pos)

@@ -41,7 +41,7 @@ public:
 	Player(GameScene& gs);
 	void Initialize();
 	void Input(const float& deltaTime);
-	TransformComponent& GetPlayerTransform();
+	std::shared_ptr<TransformComponent> GetPlayerTransform();
 	void RenderUI();
 	~Player();
 };

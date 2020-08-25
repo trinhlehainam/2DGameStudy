@@ -199,7 +199,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	collisionMng_->Render();
+	/*collisionMng_->Render();*/
 	player_->RenderUI();
 }
 

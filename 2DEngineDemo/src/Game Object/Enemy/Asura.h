@@ -19,7 +19,7 @@ private:
     void ExitingUpdate(const float& deltaTime);
     void DeadUpdate(const float& deltaTime);
 public:
-    Asura(GameScene& gs, TransformComponent& playerPos_);
+    Asura(GameScene& gs, std::shared_ptr<TransformComponent> playerPos_);
     ~Asura();
 
     void Initialize() override;

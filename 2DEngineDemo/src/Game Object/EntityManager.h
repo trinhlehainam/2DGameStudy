@@ -18,6 +18,7 @@ private:
 	bool removeFlag_ = false;
 
 	void RemoveEntity();
+
 public:
 	EntityManager();
 	~EntityManager();
