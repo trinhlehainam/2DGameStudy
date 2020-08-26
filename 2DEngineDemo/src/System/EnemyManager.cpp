@@ -18,7 +18,7 @@ void EnemyManager::Update(const float& deltaTime)
 	}
 
 	enemies_.erase(std::remove_if(enemies_.begin(), enemies_.end(), [](std::unique_ptr<Enemy>& enemy) {
-		return enemy->IsOwnerExist();
+		return !enemy->IsOwnerExist();
 		}), 
 		enemies_.end());
 }

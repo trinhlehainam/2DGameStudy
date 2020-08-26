@@ -9,5 +9,5 @@ Enemy::Enemy(GameScene& gs, std::shared_ptr<TransformComponent> playerPos):gs_(g
 
 bool Enemy::IsOwnerExist()
 {
-    return self_.expired();
+    return self_->IsActive();
 }

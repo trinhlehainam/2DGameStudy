@@ -23,7 +23,8 @@ private:
 	friend class Map;
 
 	std::vector<AABBColliderComponent> mapColliders_;
-	std::vector<RigidBody2D> actorColliders_;
+	// Use pointer for RigidBody2D to its owner could track on it
+	std::vector<std::shared_ptr<RigidBody2D>> actorColliders_;
 	std::vector<CircleColliderComponent> projectileColliders_;
 	std::vector<CircleColliderComponent> bossColliders_;
 
@@ -37,7 +38,7 @@ private:
 	void ProcessRemoveCollider(std::vector<T>& container)
 	{
 		container.erase(std::remove_if(container.begin(), container.end(), [](T& collider) {
-			return collider.IsOwnerExist(); }),
+			return !collider.IsOwnerExist(); }),
 			container.end());
 	}
 
@@ -58,9 +59,9 @@ public:
 	}
 
 	template<typename...Args>
-	RigidBody2D& AddRigidBody2D(Args&&...args)
+	std::shared_ptr<RigidBody2D> AddRigidBody2D(Args&&...args)
 	{
-		actorColliders_.emplace_back(std::forward<Args>(args)...);
+		actorColliders_.emplace_back(std::make_shared<RigidBody2D>(std::forward<Args>(args)...));
 		return (*actorColliders_.rbegin());
 	}
 

@@ -5,7 +5,6 @@
 class GameScene;
 class TransformComponent;
 class Entity;
-class RigidBody2D;
 class Vector2;
 
 class Enemy
@@ -13,7 +12,7 @@ class Enemy
 protected:
 	GameScene& gs_;
 	std::weak_ptr<TransformComponent> playerPos_;
-	std::weak_ptr<Entity> self_;
+	std::shared_ptr<Entity> self_;
 public:
 	Enemy(GameScene& gs, std::shared_ptr<TransformComponent> playerPos_);
 	virtual ~Enemy() = default;

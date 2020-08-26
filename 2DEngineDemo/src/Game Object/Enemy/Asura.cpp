@@ -26,7 +26,7 @@ namespace {
 
 void Asura::EnteringUpdate(const float& deltaTime)
 {
-	auto transform = self_.lock()->GetComponent<TransformComponent>();
+	auto transform = self_->GetComponent<TransformComponent>();
 	if (transform->pos.Y <= ground_line)
 	{
 		transform->pos.Y = ground_line;
@@ -64,12 +64,12 @@ Asura::~Asura()
 void Asura::Initialize()
 {
 	self_ = gs_.entityMng_->AddEntity("asura");
-	self_.lock()->AddComponent<TransformComponent>(start_pos, asura_width, asura_height, size_scale);
-	self_.lock()->AddComponent<SpriteComponent>();
-	auto anim = self_.lock()->GetComponent<SpriteComponent>();
+	self_->AddComponent<TransformComponent>(start_pos, asura_width, asura_height, size_scale);
+	self_->AddComponent<SpriteComponent>();
+	auto anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1, 1);
 	anim->Play("idle");
-	colliders_ = &gs_.collisionMng_->AddBossCollider(self_.lock(), "asura", collider_pos_x, collider_pos_y, collider_radius);
+	colliders_ = &gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
 }
 
 void Asura::Update(const float& deltaTime)
@@ -84,7 +84,7 @@ std::unique_ptr<Enemy> Asura::MakeClone()
 
 void Asura::SetPosition(const Vector2& pos)
 {
-	auto transform = self_.lock()->GetComponent<TransformComponent>();
+	auto transform = self_->GetComponent<TransformComponent>();
 	transform->pos.X = pos.X - asura_width / 2.0f;
 	transform->pos.Y = pos.Y;
 }

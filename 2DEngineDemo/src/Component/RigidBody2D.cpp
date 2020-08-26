@@ -11,6 +11,24 @@ RigidBody2D::RigidBody2D(std::shared_ptr<Entity> owner,
 	desRect_ = collider_;
 }
 
+RigidBody2D::RigidBody2D(const RigidBody2D& other)
+{
+	auto owner = other.owner_.lock();
+	owner_ = owner;
+	collider_ = other.collider_;
+	desRect_ = other.desRect_;
+	velocity_ = other.velocity_;
+}
+
+void RigidBody2D::operator=(const RigidBody2D& other)
+{
+	auto owner = other.owner_.lock();
+	owner_ = owner;
+	collider_ = other.collider_;
+	desRect_ = other.desRect_;
+	velocity_ = other.velocity_;
+}
+
 void RigidBody2D::SetVelocity(const Vector2& velocity)
 {
 }
@@ -30,11 +48,12 @@ void RigidBody2D::Update(const float& deltaTime)
 void RigidBody2D::Render()
 {
 	desRect_.origin = collider_.origin - Camera::Instance().viewport.origin;
+	TextureManager::DrawBox(desRect_, 0xffffff);
 }
 
 bool RigidBody2D::IsOwnerExist()
 {
-	return owner_.expired();
+	return !owner_.expired();
 }
 
 

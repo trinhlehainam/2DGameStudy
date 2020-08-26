@@ -39,7 +39,7 @@ void EffectManager::EmitBloodEffect(const float& posX, const float& posY, bool f
 void EffectManager::BombExplosionEffect(const float& posX, const float& posY)
 {
 	auto effect = gs_.entityMng_->AddEffect("bomb-explosion");
-	effect->AddComponent<TransformComponent>(Vector2(posX-48/2.0f, posY), 48, 48, 2.0f);
+	effect->AddComponent<TransformComponent>(Vector2(posX - 48 / 2.0f, posY - 48 / 2.0f), 48, 48, 2.0f);
 	effect->AddComponent<SpriteComponent>();
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("bomb-explosion"), "explosion", Rect(0, 0, 48, 48), 100);

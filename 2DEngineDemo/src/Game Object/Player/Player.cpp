@@ -54,13 +54,13 @@ void Player::Initialize()
 
 	self_ = gs_.entityMng_->AddEntity("player");
 	self_->AddComponent<TransformComponent>(start_pos, player_width, player_height, player_scale);
-	auto& rigidBody = gs_.collisionMng_->AddRigidBody2D(
+	auto rigidBody = gs_.collisionMng_->AddRigidBody2D(
 		self_, 
 		start_pos,
 		player_width * rigidbody_width_scale,
 		player_height * rigidbody_height_scale);
-	rigidBody_ = &rigidBody;
-	rigidBody.tag_ = "PLAYER";
+	rigidBody_ = rigidBody;
+	rigidBody->tag_ = "PLAYER";
 	self_->AddComponent<SpriteComponent>();
 	auto playerAnim = self_->GetComponent<SpriteComponent>();
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", Rect(0, 0, 32, 32), idle_animation_speed, 4);

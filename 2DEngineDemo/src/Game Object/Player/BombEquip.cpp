@@ -14,10 +14,12 @@ namespace
 {
 	constexpr unsigned int bomb_width = 50;
 	constexpr unsigned int bomb_height = 35;
+	constexpr float bomb_radius = bomb_width / 2.0f;
 	constexpr float scale = 0.6f;
 	constexpr float move_speed = 400.0f;
 	constexpr int rotate_speed = 20;
 	constexpr float move_range = 700.0f;
+	
 }
 
 BombEquip::BombEquip(GameScene& gs):Equipment(gs)
@@ -39,7 +41,7 @@ void BombEquip::Attack(const Vector2& startPos, const float& angle)
 		1, 1, rotate_speed);
 	anim->Play("attack");
 	gs_.collisionMng_->AddProjectileCollider(projectile,
-		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_width / 2.0f);
+		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_radius);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
 	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range);

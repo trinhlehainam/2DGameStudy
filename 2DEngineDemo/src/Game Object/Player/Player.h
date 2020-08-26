@@ -24,7 +24,7 @@ class Player
 private:
 	friend GameScene;
 	GameScene& gs_;
-	RigidBody2D* rigidBody_;
+	std::shared_ptr<RigidBody2D> rigidBody_;
 	std::unique_ptr<KeyboardInput> input_;
 	std::shared_ptr<Entity> self_;
 	MOVE moveState_ = MOVE::IDLE;

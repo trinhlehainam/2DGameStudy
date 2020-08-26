@@ -5,7 +5,7 @@
 
 bool ColliderComponent::IsOwnerExist()
 {
-	return owner_.expired();
+	return !owner_.expired();
 }
 
 std::string ColliderComponent::OwnerTag()

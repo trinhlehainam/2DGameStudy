@@ -17,6 +17,8 @@ namespace
 
 EntityManager::EntityManager()
 {
+    entities_.reserve(300);
+    projectiles_.reserve(500);
 }
 
 EntityManager::~EntityManager()
