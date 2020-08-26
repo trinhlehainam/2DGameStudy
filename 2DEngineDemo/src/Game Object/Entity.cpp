@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "../Component/ProjectileEmitterComponent.h"
+#include "../Component/HealthComponent.h"
 
 
 Entity::Entity(EntityManager& entityMng, std::string name) : name_(name), entityMng_(&entityMng)
@@ -22,6 +23,23 @@ void Entity::Render()
 	{
 		component->Render();
 	}
+}
+
+int Entity::GetProjectileDamage() const
+{
+	if (HasComponent<ProjectileEmitterComponent>())
+	{
+		auto& damage = GetComponent<ProjectileEmitterComponent>()->damage_;
+		return damage;
+	}
+	return -1;
+}
+
+void Entity::TakeDamage(const int& damage)
+{
+	auto health = GetComponent<HealthComponent>();
+	health->TakeDamage(damage);
+	isHit_ = true;
 }
 
 Vector2 Entity::GetProjectileVelocity()

@@ -103,7 +103,6 @@ bool CollisionManager::CheckCollision(const Circle& cir, const Rect& rect)
     return CheckCollision(cir, clamp_on_AABB(cir.pos, rect));
 }
 
-
 void CollisionManager::SetGravity(const Vector2& gravity)
 {
     gravity_ = gravity;
@@ -200,15 +199,23 @@ void CollisionManager::ProjectileCollision()
                 projectile.owner_.lock()->Destroy();
                 if (projectile.tag_ == "PLAYER-SHURIKEN")
                 {
-                    actor->IsHitBy(ATTACK::SHURIKEN);
-                    bool flip = projectile.owner_.lock()->GetProjectileVelocity().X > 0 ? true : false;
+                    auto projectile_owner = projectile.owner_.lock();
+                    auto actor_owner = actor->owner_.lock();
+                    auto damage = projectile_owner->GetProjectileDamage();
+                    actor_owner->TakeDamage(damage);
+
+                    bool flip = projectile_owner->GetProjectileVelocity().X > 0 ? true : false;
                     gs_.effectMng_->EmitBloodEffect(actor->collider_.Center().X, projectile.collider_.pos.Y, flip);
                 }
                 if (projectile.tag_ == "PLAYER-BOMB")
                 {
+                    auto projectile_owner = projectile.owner_.lock();
+                    auto actor_owner = actor->owner_.lock();
+                    auto damage = projectile_owner->GetProjectileDamage();
+                    actor_owner->TakeDamage(damage);
+
                     float X = projectile.collider_.pos.X;
                     float Y = projectile.collider_.pos.Y;
-                    actor->IsHitBy(ATTACK::BOMB);
                     gs_.effectMng_->BombExplosionEffect(X,Y);
                 }
             }

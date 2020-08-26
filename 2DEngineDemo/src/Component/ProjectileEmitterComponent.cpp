@@ -16,12 +16,14 @@ bool ProjectileEmitterComponent::IsOutOfWorld()
 		transform->pos.Y < 0.0f || (transform->pos.Y + transform->h) > WORLD_MAP_Y;
 }
 
-ProjectileEmitterComponent::ProjectileEmitterComponent(Entity& owner, Vector2 startPos, Vector2 velocity, const float& range):
+ProjectileEmitterComponent::ProjectileEmitterComponent(Entity& owner, Vector2 startPos,
+	Vector2 velocity, const float& range, const int& damage):
 	Component(owner)
 {
 	start_ = startPos;
 	velocity_ = velocity;
 	range_ = range;
+	damage_ = damage;
 }
 
 void ProjectileEmitterComponent::Initialize()

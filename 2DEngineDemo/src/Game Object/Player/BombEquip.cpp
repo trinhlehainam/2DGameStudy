@@ -19,6 +19,7 @@ namespace
 	constexpr float move_speed = 400.0f;
 	constexpr int rotate_speed = 20;
 	constexpr float move_range = 700.0f;
+	constexpr int bomb_damage = 5;
 	
 }
 
@@ -44,7 +45,7 @@ void BombEquip::Attack(const Vector2& startPos, const float& angle)
 		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_radius);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
-	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range);
+	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range, bomb_damage);
 }
 
 void BombEquip::Render()

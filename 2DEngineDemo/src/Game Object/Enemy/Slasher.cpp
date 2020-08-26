@@ -1,14 +1,17 @@
 #include "Slasher.h"
 
 #include "../Entity.h"
-#include "../../System/EntityManager.h"
+
 #include "../../Scene/GameScene.h"
+
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/RigidBody2D.h"
+#include "../../Component/HealthComponent.h"
 
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
+#include "../../System/EntityManager.h"
 
 namespace
 {
@@ -28,6 +31,8 @@ namespace
 
 	constexpr int side_move_velocity = 100;
 	constexpr unsigned int slash_distancce = 50;
+
+	constexpr int max_health = 5;
 }
 
 Slasher::Slasher(GameScene& gs, std::shared_ptr<TransformComponent> playerPos):Enemy(gs, playerPos)
@@ -42,7 +47,6 @@ Slasher::~Slasher()
 
 void Slasher::Initialize()
 {
-	health_ = 10;
 	self_ = gs_.entityMng_->AddEntity("slasher");
 	self_->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
 	auto body = gs_.collisionMng_->AddRigidBody2D(
@@ -59,6 +63,7 @@ void Slasher::Initialize()
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-hurt"), "hurt", src_rect, hurt_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-death"), "death", src_rect, death_animation_speed);
 	anim->Play("run");
+	self_->AddComponent<HealthComponent>(max_health);
 	actionUpdate = &Slasher::AimPlayer;
 }
 
@@ -133,24 +138,16 @@ void Slasher::DeathUpdate(const float& deltaTime)
 
 void Slasher::CheckHit()
 {
-	if (health_ <= 0)
+	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
+	if (health <= 0)
 	{
 		actionUpdate = &Slasher::DeathUpdate;
 		return;
 	}
 
-	switch (self_->attackID_)
+	if (self_->IsHit())
 	{
-	case ATTACK::BOMB:
-		health_ -= 2;
-		break;
-	case ATTACK::SHURIKEN:
-		health_ -= 1;
-		break;
-	case ATTACK::NONE:
-		return;
+		self_->RecoverHit();
+		actionUpdate = &Slasher::HurtUpdate;
 	}
-
-	self_->attackID_ = ATTACK::NONE;
-	actionUpdate = &Slasher::HurtUpdate;
 }

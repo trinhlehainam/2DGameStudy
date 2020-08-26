@@ -19,6 +19,7 @@ namespace
 	constexpr float move_speed = 700.0f;
 	constexpr float rotate_speed = 60.0f;
 	constexpr float move_range = 1000.0f;
+	constexpr int shuriken_damage = 1;
 }
 
 ShurikenEquip::ShurikenEquip(GameScene& gs):Equipment(gs)
@@ -43,7 +44,7 @@ void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_radius);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
-	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range);
+	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range, shuriken_damage);
 }
 
 void ShurikenEquip::Initialize()
