@@ -9,21 +9,33 @@
 #include "../System/EntityManager.h"
 #include "../Component/Component.h"
 
+enum class ATTACK
+{
+	BOMB,
+	SHURIKEN,
+	NONE
+};
+
 class Entity
 {
+private:
 	friend class EntityManager;
 	friend class EffectManager;
-protected:
+
 	std::vector<std::shared_ptr<Component>> components_;
 	std::unordered_map < const type_info*, std::shared_ptr<Component>> componentMap_;
 	std::string name_;
 	float isActive_ = false;
 	EntityManager* entityMng_ = nullptr;
+	float isHit = false;
+
 public:
+	ATTACK attackID_ = ATTACK::NONE;
+
 	Entity(EntityManager& entityMng, std::string name);
 	void Update(const float& deltaTime);
 	void Render();
-	bool IsActive()
+	bool IsActive() const
 	{
 		return isActive_;
 	}

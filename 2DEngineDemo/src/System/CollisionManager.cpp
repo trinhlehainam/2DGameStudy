@@ -197,10 +197,10 @@ void CollisionManager::ProjectileCollision()
             {
                 actor->flag_ = false;
                 projectile.flag_ = false;
-                actor->owner_.lock()->Destroy();
                 projectile.owner_.lock()->Destroy();
                 if (projectile.tag_ == "PLAYER-SHURIKEN")
                 {
+                    actor->IsHitBy(ATTACK::SHURIKEN);
                     bool flip = projectile.owner_.lock()->GetProjectileVelocity().X > 0 ? true : false;
                     gs_.effectMng_->EmitBloodEffect(actor->collider_.Center().X, projectile.collider_.pos.Y, flip);
                 }
@@ -208,7 +208,7 @@ void CollisionManager::ProjectileCollision()
                 {
                     float X = projectile.collider_.pos.X;
                     float Y = projectile.collider_.pos.Y;
-
+                    actor->IsHitBy(ATTACK::BOMB);
                     gs_.effectMng_->BombExplosionEffect(X,Y);
                 }
             }

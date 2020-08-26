@@ -28,6 +28,7 @@ namespace
 
 	constexpr float rigidbody_width_scale = 1.2f;
 	constexpr float rigidbody_height_scale = 2.0f;
+	constexpr float rigidbody_jump_scale = 1.5f;
 
 	float jumpTimeCnt;
 	constexpr float jump_time = 0.35f;
@@ -195,6 +196,8 @@ void Player::UpdateState()
 
 	if (rigidBody_->isGrounded_ && (rigidBody_->velocity_.X == 0)) moveState_ = MOVE::IDLE;
 
+	rigidBody_->collider_.h = player_height * rigidbody_height_scale;
+
 	switch (moveState_)
 	{
 	case MOVE::LEFT:
@@ -205,6 +208,7 @@ void Player::UpdateState()
 		break;
 	case MOVE::JUMP:
 		sprite->Play("jump");
+		rigidBody_->collider_.h = player_height*rigidbody_jump_scale;
 		break;
 	case MOVE::FALL:
 		sprite->Play("fall");

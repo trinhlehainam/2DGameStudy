@@ -23,6 +23,8 @@ namespace
 
 	constexpr unsigned int run_animation_speed = 100;
 	constexpr unsigned int slash_animation_speed = 100;
+	constexpr unsigned int hurt_animation_speed = 100;
+	constexpr unsigned int death_animation_speed = 200;
 
 	constexpr int side_move_velocity = 100;
 	constexpr unsigned int slash_distancce = 50;
@@ -40,6 +42,7 @@ Slasher::~Slasher()
 
 void Slasher::Initialize()
 {
+	health_ = 10;
 	self_ = gs_.entityMng_->AddEntity("slasher");
 	self_->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
 	auto body = gs_.collisionMng_->AddRigidBody2D(
@@ -53,6 +56,8 @@ void Slasher::Initialize()
 	auto anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", src_rect, run_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", src_rect, slash_animation_speed);
+	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-hurt"), "hurt", src_rect, hurt_animation_speed);
+	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-death"), "death", src_rect, death_animation_speed);
 	anim->Play("run");
 	actionUpdate = &Slasher::AimPlayer;
 }
@@ -70,6 +75,7 @@ void Slasher::SetPosition(const Vector2& pos)
 
 void Slasher::Update(const float& deltaTime)
 {
+	CheckHit();
 	(this->*actionUpdate)(deltaTime);
 }
 
@@ -102,4 +108,49 @@ void Slasher::SlashUpdate(const float& deltaTime)
 			sprite->Play("run");
 		}
 	}
+}
+
+void Slasher::HurtUpdate(const float& deltaTime)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+	sprite->Play("hurt");
+	rigidBody_->velocity_.X = 0;
+	if (sprite->IsFinished())
+	{
+		actionUpdate = &Slasher::AimPlayer;
+		sprite->Play("run");
+	}
+}
+
+void Slasher::DeathUpdate(const float& deltaTime)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+	sprite->Play("death");
+	rigidBody_->velocity_.X = 0;
+	if (sprite->IsFinished())
+		self_->Destroy();
+}
+
+void Slasher::CheckHit()
+{
+	if (health_ <= 0)
+	{
+		actionUpdate = &Slasher::DeathUpdate;
+		return;
+	}
+
+	switch (self_->attackID_)
+	{
+	case ATTACK::BOMB:
+		health_ -= 2;
+		break;
+	case ATTACK::SHURIKEN:
+		health_ -= 1;
+		break;
+	case ATTACK::NONE:
+		return;
+	}
+
+	self_->attackID_ = ATTACK::NONE;
+	actionUpdate = &Slasher::HurtUpdate;
 }

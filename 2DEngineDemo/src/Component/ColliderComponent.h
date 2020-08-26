@@ -11,6 +11,8 @@ class ColliderComponent
 {
 protected:
 	std::weak_ptr<Entity> owner_;
+	bool isActive_ = true;
+	bool isHit_ = false;
 public:
 	std::string tag_;
 	bool flag_ = false;

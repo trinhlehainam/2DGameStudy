@@ -5,7 +5,13 @@
 #include "../Geometry/Geometry.h"
 
 class Entity;
+enum class ATTACK;
 
+/// <param name="owner"></param>
+/// <param name="pos"></param>
+/// <param name="w"></param>
+/// <param name="h"></param>
+/// <returns></returns>
 class RigidBody2D
 {
 private:
@@ -22,6 +28,7 @@ public:
 	void Update(const float& deltaTime);
 	void Render();
 	bool IsOwnerExist();
+	void IsHitBy(ATTACK attackID);
 	
 	RigidBody2D(std::shared_ptr<Entity> owner, const Vector2& pos, const float&w, const float& h);
 

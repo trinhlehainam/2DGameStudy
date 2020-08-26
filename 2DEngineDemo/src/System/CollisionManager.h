@@ -58,6 +58,11 @@ public:
 		mapColliders_.emplace_back(std::forward<Args>(args)...);
 	}
 
+	/// <param name="owner"></param>
+	/// <param name="pos"></param>
+	/// <param name="w"></param>
+	/// <param name="h"></param>
+	/// <returns></returns>
 	template<typename...Args>
 	std::shared_ptr<RigidBody2D> AddRigidBody2D(Args&&...args)
 	{

@@ -13,6 +13,10 @@ private:
 
 	void AimPlayer(const float& deltaTime);
 	void SlashUpdate(const float& deltaTime);
+	void HurtUpdate(const float& deltaTime);
+	void DeathUpdate(const float& deltaTime);
+
+	void CheckHit();
 public:
 	Slasher(GameScene& gs, std::shared_ptr<TransformComponent> playerPos);
 

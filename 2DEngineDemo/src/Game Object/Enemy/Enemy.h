@@ -13,6 +13,7 @@ protected:
 	GameScene& gs_;
 	std::weak_ptr<TransformComponent> playerPos_;
 	std::shared_ptr<Entity> self_;
+	int health_;
 public:
 	Enemy(GameScene& gs, std::shared_ptr<TransformComponent> playerPos_);
 	virtual ~Enemy() = default;
