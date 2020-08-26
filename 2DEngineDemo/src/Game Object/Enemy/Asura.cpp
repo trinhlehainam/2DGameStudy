@@ -67,7 +67,7 @@ void Asura::Initialize()
 	self_->AddComponent<TransformComponent>(start_pos, asura_width, asura_height, size_scale);
 	self_->AddComponent<SpriteComponent>();
 	auto anim = self_->GetComponent<SpriteComponent>();
-	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1, 1);
+	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1);
 	anim->Play("idle");
 	colliders_ = &gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
 }

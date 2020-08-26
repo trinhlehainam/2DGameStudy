@@ -22,15 +22,16 @@ void SpriteComponent::Initialize()
 }
 
 void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& srcRect,
-	 const unsigned& animSpeed, const unsigned int& numCels, const float& rotateSpeed)
+	 const unsigned& animSpeed, const float& rotateSpeed)
 {
 	Animation anim;
 	anim.texture = texture;
 	anim.srcRect = srcRect;
-	anim.numCels = numCels;
 	anim.animSpeed = animSpeed;
 	anim.rotateSpeed = rotateSpeed;
 	DxLib::GetGraphSize(anim.texture, &anim.textureW, &anim.textureH);
+	anim.numCelX = anim.textureW / static_cast<int>(anim.srcRect.w);
+	anim.numCelY = anim.textureH / static_cast<int>(anim.srcRect.h);
 	anim.indexX = 0;
 	anim.indexY = 0;
 	animations_.emplace(animID, std::move(anim));
@@ -39,12 +40,14 @@ void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& 
 void SpriteComponent::Update(const float& deltaTime)
 {
 	auto& animation = animations_.at(currentAnimID);
-	auto celX = animation.textureW / static_cast<int>(animation.srcRect.w);
-	auto celY = animation.textureH / static_cast<int>(animation.srcRect.h);
+
 	speedTimer_ += deltaTime * 1000.0f;
-	animation.indexX = (speedTimer_ / animation.animSpeed) % celX;
-	if (animation.indexX == celX - 1 && celX > 1) animation.indexY = (animation.indexY + 1) % celY;
-	else animation.indexY = (speedTimer_ / animation.animSpeed) % celY;
+	animation.indexX = (speedTimer_ / animation.animSpeed) % animation.numCelX;
+	if (animation.indexX == animation.numCelX - 1 && animation.numCelX > 1) 
+		animation.indexY = (animation.indexY + 1) % animation.numCelY;
+	else 
+		animation.indexY = (speedTimer_ / animation.animSpeed) % animation.numCelY;
+
 	animation.srcRect.origin.X = animation.indexX * animation.srcRect.w;
 	animation.srcRect.origin.Y = animation.indexY * animation.srcRect.w;
 

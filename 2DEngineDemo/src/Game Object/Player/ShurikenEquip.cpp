@@ -15,6 +15,7 @@ namespace
 	constexpr unsigned int shuriken_width = 20;
 	constexpr unsigned int shuriken_height = 20;
 	constexpr float scale = 1.0f;
+	constexpr float shuriken_radius = shuriken_width * scale / 2.0f;
 	constexpr float move_speed = 700.0f;
 	constexpr float rotate_speed = 60.0f;
 	constexpr float move_range = 1000.0f;
@@ -36,10 +37,10 @@ void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 	auto anim = projectile->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("shuriken-equip"), "attack",
 		Rect(0, 0, shuriken_width, shuriken_height),
-		1, 1, rotate_speed);
+		1, rotate_speed);
 	anim->Play("attack");
 	gs_.collisionMng_->AddProjectileCollider(projectile,
-		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_width / 2);
+		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_radius);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
 	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range);

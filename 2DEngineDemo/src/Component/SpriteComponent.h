@@ -21,7 +21,8 @@ struct Animation
     unsigned int indexX;
     unsigned int indexY;
     unsigned int animSpeed;
-    unsigned int numCels;
+    unsigned int numCelX;
+    unsigned int numCelY;
     float rotateSpeed = 0.0f;
 };
 
@@ -57,7 +58,7 @@ public:
     void Render() override;
 
     void AddAnimation(int texture, std::string animID, const Rect& srcRect,
-        const unsigned& animSpeed, const unsigned int& numCels = 1, const float& rotateSpeed = 0.0f);
+        const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
 
     void Play(std::string animID);
     bool IsPlaying(std::string animID);
