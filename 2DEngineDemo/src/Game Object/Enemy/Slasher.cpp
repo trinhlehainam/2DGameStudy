@@ -19,7 +19,7 @@ namespace
 	constexpr float size_scale = 2.5f;
 
 	constexpr float body_width_scale = 1.3f;
-	constexpr float body_heigth_scale = 2.5f;
+	constexpr float body_heigth_scale = 1.6f;
 
 	constexpr unsigned int run_animation_speed = 100;
 	constexpr unsigned int slash_animation_speed = 100;

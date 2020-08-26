@@ -11,28 +11,6 @@ RigidBody2D::RigidBody2D(std::shared_ptr<Entity> owner,
 	desRect_ = collider_;
 }
 
-RigidBody2D::RigidBody2D(const RigidBody2D& other)
-{
-	auto owner = other.owner_.lock();
-	owner_ = owner;
-	collider_ = other.collider_;
-	desRect_ = other.desRect_;
-	velocity_ = other.velocity_;
-}
-
-void RigidBody2D::operator=(const RigidBody2D& other)
-{
-	auto owner = other.owner_.lock();
-	owner_ = owner;
-	collider_ = other.collider_;
-	desRect_ = other.desRect_;
-	velocity_ = other.velocity_;
-}
-
-void RigidBody2D::SetVelocity(const Vector2& velocity)
-{
-}
-
 void RigidBody2D::Update(const float& deltaTime)
 {
 	if (owner_.expired())
@@ -42,7 +20,7 @@ void RigidBody2D::Update(const float& deltaTime)
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
 	transform->pos += velocity_ * deltaTime;
 	collider_.origin.X = transform->pos.X + transform->w * transform->scale / 2.0f - collider_.w / 2;
-	collider_.origin.Y = transform->pos.Y;
+	collider_.origin.Y = transform->pos.Y + transform->h * transform->scale - collider_.h;
 }
 
 void RigidBody2D::Render()

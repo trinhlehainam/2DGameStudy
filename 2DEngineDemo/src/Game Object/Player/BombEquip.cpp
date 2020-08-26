@@ -12,10 +12,10 @@
 
 namespace
 {
-	constexpr unsigned int bomb_width = 50;
+	constexpr unsigned int bomb_width = 67;
 	constexpr unsigned int bomb_height = 35;
-	constexpr float bomb_radius = bomb_width / 2.0f;
 	constexpr float scale = 0.6f;
+	constexpr float bomb_radius = bomb_width * scale / 2.0f;
 	constexpr float move_speed = 400.0f;
 	constexpr int rotate_speed = 20;
 	constexpr float move_range = 700.0f;

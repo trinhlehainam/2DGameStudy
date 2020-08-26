@@ -6,6 +6,25 @@
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
 
+namespace
+{
+	// Infor for Emitting Blood effect
+	constexpr float blood_width = 64.0f;
+	constexpr float blood_height = 24.0f;
+	constexpr float blood_scale = 1.0f;
+	constexpr float blood_offset_x = blood_width * blood_scale / 2.0f;
+	constexpr float blood_offset_y = blood_height * blood_scale / 2.0f;
+	constexpr unsigned int blood_anim_speed = 200;
+
+	// Infor for Bomb Explosion effect
+	constexpr float bomb_exp_width = 48.0f;
+	constexpr float bomb_exp_height = 48.0f;
+	constexpr float bomb_exp_scale = 2.0f;
+	constexpr float bomb_exp_offset_x = bomb_exp_width * bomb_exp_scale / 2.0f;
+	constexpr float bomb_exp_offset_y = bomb_exp_height * bomb_exp_scale / 2.0f;
+	constexpr unsigned int bomb_exp_anim_speed = 100;
+}
+
 EffectManager::EffectManager(GameScene& gs):gs_(gs)
 {
 }
@@ -28,10 +47,10 @@ void EffectManager::Update(const float& deltaTime)
 void EffectManager::EmitBloodEffect(const float& posX, const float& posY, bool flipFlag)
 {
 	auto effect = gs_.entityMng_->AddEffect("emit-blood");
-	effect->AddComponent<TransformComponent>(Vector2(posX - 64.0f / 2, posY), 64.0f, 24.0f, 1.0f);
+	effect->AddComponent<TransformComponent>(Vector2(posX - blood_offset_x, posY - blood_offset_y), blood_width, blood_height, blood_scale);
 	effect->AddComponent<SpriteComponent>();
 	auto anim = effect->GetComponent<SpriteComponent>();
-	anim->AddAnimation(gs_.GetTexture("blood"), "emit-blood", Rect(0, 0, 64, 24), 200);
+	anim->AddAnimation(gs_.GetTexture("blood"), "emit-blood", Rect(0, 0, blood_width, blood_height), blood_anim_speed);
 	anim->isFlipped = flipFlag;
 	anim->Play("emit-blood");
 }
@@ -39,10 +58,10 @@ void EffectManager::EmitBloodEffect(const float& posX, const float& posY, bool f
 void EffectManager::BombExplosionEffect(const float& posX, const float& posY)
 {
 	auto effect = gs_.entityMng_->AddEffect("bomb-explosion");
-	effect->AddComponent<TransformComponent>(Vector2(posX - 48 / 2.0f, posY - 48 / 2.0f), 48, 48, 2.0f);
+	effect->AddComponent<TransformComponent>(Vector2(posX - bomb_exp_offset_x, posY - bomb_exp_offset_y), bomb_exp_width, bomb_exp_height, bomb_exp_scale);
 	effect->AddComponent<SpriteComponent>();
 	auto anim = effect->GetComponent<SpriteComponent>();
-	anim->AddAnimation(gs_.GetTexture("bomb-explosion"), "explosion", Rect(0, 0, 48, 48), 100);
+	anim->AddAnimation(gs_.GetTexture("bomb-explosion"), "explosion", Rect(0, 0, bomb_exp_width, bomb_exp_height), bomb_exp_anim_speed);
 	anim->Play("explosion");
 }
 
