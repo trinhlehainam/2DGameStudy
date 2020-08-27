@@ -16,7 +16,8 @@ enum class MOVE
 	LEFT,
 	RIGHT,
 	JUMP,
-	FALL
+	FALL,
+	THROW
 };
 
 class Player
@@ -29,7 +30,14 @@ private:
 	std::shared_ptr<Entity> self_;
 	MOVE moveState_ = MOVE::IDLE;
 
-	using UpdateStateFunc_t = void (Player::*)();
+	using Input_t = void (Player::*)(const float&);
+	Input_t processInput_;
+	void Default(const float&);
+	void Jump(const float&);
+	void RemainJump(const float&);
+	void Fall(const float&);
+	void ChangeEquip(const float&);
+	void Attack(const float&);
 
 	std::vector<std::unique_ptr<Equipment>> equipments_;
 	int currentEquip_ = 0;
@@ -41,6 +49,7 @@ public:
 	Player(GameScene& gs);
 	void Initialize();
 	void Input(const float& deltaTime);
+	void Move(const float& deltaTime);
 	std::shared_ptr<TransformComponent> GetPlayerTransform();
 	void RenderUI();
 	~Player();

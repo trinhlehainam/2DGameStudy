@@ -152,7 +152,7 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
             Vector2 cn;
             float ct;
             if (target.tag_ == "ASURA") continue;
-            if (actor->velocity_.Y != 0)  actor->isGrounded_ = false;
+            if (actor->velocity_.Y > 0)  actor->isGrounded_ = false;
             if (CheckSweptAABB(actor->collider_, actor->velocity_, target.collider_, cn,
                 ct, deltaTime))
             {

@@ -132,6 +132,8 @@ KeyConfigScene::KeyConfigScene(SceneManager& sceneMng, KeyboardInput& sceneInput
 	menuItems_.emplace_back(L"switch", Vector2(x, y));
 	y += menu_y_interval;
 	menuItems_.emplace_back(L"attack", Vector2(x, y));
+	y += menu_y_interval;
+	menuItems_.emplace_back(L"jump", Vector2(x, y));
 
 	y += 2*menu_y_interval;
 	menuItems_.emplace_back(apply_text, Vector2(x, y));

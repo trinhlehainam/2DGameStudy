@@ -76,6 +76,10 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("player-idle", L"assets/Image/Character/Player/adventurer-idle-00-sheet.png");
 	assetMng_->AddTexture("player-jump", L"assets/Image/Character/Player/adventurer-roll-sheet.png");
 	assetMng_->AddTexture("player-fall", L"assets/Image/Character/Player/adventurer-fall-sheet.png");
+	assetMng_->AddTexture("player-hurt", L"assets/Image/Character/Player/adventurer-hurt-sheet.png");
+	assetMng_->AddTexture("player-cast", L"assets/Image/Character/Player/adventurer-cast-sheet.png");
+	assetMng_->AddTexture("player-crouch", L"assets/Image/Character/Player/adventurer-crouch-sheet.png");
+	assetMng_->AddTexture("player-die", L"assets/Image/Character/Player/adventurer-die-sheet.png");
 
 	assetMng_->AddTexture("bomb-equip", L"assets/Image/Character/Player/Equipment/bombshot.png");
 	assetMng_->AddTexture("shuriken-equip", L"assets/Image/Character/Player/Equipment/shuriken.png");
@@ -207,7 +211,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	/*collisionMng_->Render();*/
+	collisionMng_->Render();
 	effectMng_->Render();
 	player_->RenderUI();
 }
