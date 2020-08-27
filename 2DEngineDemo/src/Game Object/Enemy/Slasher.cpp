@@ -49,13 +49,6 @@ void Slasher::Initialize()
 {
 	self_ = gs_.entityMng_->AddEntity("slasher");
 	self_->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
-	auto body = gs_.collisionMng_->AddRigidBody2D(
-		self_, start_pos, 
-		slasher_width * body_width_scale,
-		slasher_height * body_heigth_scale
-	);
-	rigidBody_ = body;
-	rigidBody_->tag_ = "SLASHER";
 	self_->AddComponent<SpriteComponent>();
 	auto anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", src_rect, run_animation_speed);
@@ -76,6 +69,15 @@ void Slasher::SetPosition(const Vector2& pos)
 {
 	auto transform = self_->GetComponent<TransformComponent>();
 	transform->pos = pos;
+	// Because RigidBody2D Constructor will Initialize its collider's position depend on owner's Transform
+	// Add RigidBody here after set position for owner's transform
+	auto body = gs_.collisionMng_->AddRigidBody2D(
+		self_, start_pos,
+		slasher_width * body_width_scale,
+		slasher_height * body_heigth_scale
+	);
+	rigidBody_ = body;
+	rigidBody_->tag_ = "SLASHER";
 }
 
 void Slasher::Update(const float& deltaTime)

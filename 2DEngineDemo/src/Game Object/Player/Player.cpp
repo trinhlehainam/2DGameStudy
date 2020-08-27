@@ -256,6 +256,7 @@ void Player::Throw(const float&)
 void Player::CrouchInput(const float&)
 {
 	rigidBody_->velocity_.X = 0.0f;
+	rigidBody_->velocity_.Y = 1.0f;
 	if (input_->IsReleased(L"down"))
 		processInput_ = &Player::GroundInput;
 }
@@ -298,8 +299,7 @@ void Player::UpdateState()
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	auto transform = self_->GetComponent<TransformComponent>();
 
-	rigidBody_->collider_.h = player_height * rigidbody_height_scale;
-	transform->h = player_height;
+	/*rigidBody_->collider_.h = player_height * rigidbody_height_scale;*/
 
 	switch (actionState_)
 	{
@@ -311,8 +311,7 @@ void Player::UpdateState()
 		break;
 	case ACTION::JUMP:
 		sprite->Play("jump");
-		rigidBody_->collider_.h = player_height * rigidbody_jump_scale;
-		transform->h = player_height * jump_hitbox_scale;
+		/*rigidBody_->collider_.h = player_height * rigidbody_jump_scale;*/
 		break;
 	case ACTION::FALL:
 		sprite->Play("fall");
@@ -324,7 +323,7 @@ void Player::UpdateState()
 		sprite->Play("cast");
 		break;
 	case ACTION::CROUCH:
-		rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;
+		/*rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;*/
 		sprite->Play("crouch");
 		break;
 	}

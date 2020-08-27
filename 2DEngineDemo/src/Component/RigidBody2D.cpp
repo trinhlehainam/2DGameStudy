@@ -8,6 +8,9 @@ RigidBody2D::RigidBody2D(std::shared_ptr<Entity> owner,
 	const Vector2& pos, const float& w, const float& h) :
 	owner_(owner), collider_(pos, w, h)
 {
+	auto transform = owner_.lock()->GetComponent<TransformComponent>();
+	collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - collider_.w / 2;
+	collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - collider_.h;
 	desRect_ = collider_;
 }
 
@@ -18,9 +21,9 @@ void RigidBody2D::Update(const float& deltaTime)
 		return;
 	}
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
-	transform->pos += velocity_ * deltaTime;
-	collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - collider_.w / 2;
-	collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - collider_.h;
+	collider_.pos += velocity_ * deltaTime;
+	transform->pos.X = collider_.pos.X + collider_.w / 2.0f - transform->w * transform->scale / 2.0f;
+	transform->pos.Y = collider_.pos.Y + collider_.h - transform->h * transform->scale;
 }
 
 void RigidBody2D::Render()
