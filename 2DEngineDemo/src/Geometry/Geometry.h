@@ -27,7 +27,7 @@ Vector2 operator / (const Vector2& lvec, const Vector2& rvec);
 
 struct Rect
 {
-	Vector2 origin;
+	Vector2 pos;
 	float w, h;
 	Rect();
 	Rect(const float& x, const float& y, const float& w, const float& h);

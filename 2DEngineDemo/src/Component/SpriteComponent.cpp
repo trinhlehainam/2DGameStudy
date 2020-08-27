@@ -16,7 +16,7 @@ void SpriteComponent::Initialize()
 {
 	transform_ = owner_->GetComponent<TransformComponent>();
 	auto transform = transform_.lock();
-	desRect.origin = transform->pos;
+	desRect.pos = transform->pos;
 	desRect.w = transform->w * transform->scale;
 	desRect.h = transform->h * transform->scale;
 }
@@ -48,8 +48,8 @@ void SpriteComponent::Update(const float& deltaTime)
 	else 
 		animation.indexY = (speedTimer_ / animation.animSpeed) % animation.numCelY;
 
-	animation.srcRect.origin.X = animation.indexX * animation.srcRect.w;
-	animation.srcRect.origin.Y = animation.indexY * animation.srcRect.w;
+	animation.srcRect.pos.X = animation.indexX * animation.srcRect.w;
+	animation.srcRect.pos.Y = animation.indexY * animation.srcRect.w;
 
 	angleRad_ += animation.rotateSpeed * deltaTime;
 	transform_ = owner_->GetComponent<TransformComponent>();
@@ -58,15 +58,15 @@ void SpriteComponent::Update(const float& deltaTime)
 void SpriteComponent::Render()
 {
 	auto transform = transform_.lock();
-	desRect.origin.X = transform->pos.X - !isFixed * Camera::Instance().viewport.origin.X;
-	desRect.origin.Y = transform->pos.Y - !isFixed * Camera::Instance().viewport.origin.Y;
+	desRect.pos.X = transform->pos.X - !isFixed * Camera::Instance().viewport.pos.X;
+	desRect.pos.Y = transform->pos.Y - !isFixed * Camera::Instance().viewport.pos.Y;
 	desRect.w = transform->w * transform->scale;
 	desRect.h = transform->h * transform->scale;
 
-	if (desRect.origin.X >= -desRect.w &&
-		desRect.origin.X <= Camera::Instance().viewport.w + desRect.w &&
-		desRect.origin.Y >= -desRect.h &&
-		desRect.origin.Y <= Camera::Instance().viewport.h + desRect.h)
+	if (desRect.pos.X >= -desRect.w &&
+		desRect.pos.X <= Camera::Instance().viewport.w + desRect.w &&
+		desRect.pos.Y >= -desRect.h &&
+		desRect.pos.Y <= Camera::Instance().viewport.h + desRect.h)
 	{
 		if (animations_.count(currentAnimID))
 		{

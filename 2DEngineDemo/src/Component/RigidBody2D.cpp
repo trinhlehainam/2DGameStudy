@@ -19,13 +19,13 @@ void RigidBody2D::Update(const float& deltaTime)
 	}
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
 	transform->pos += velocity_ * deltaTime;
-	collider_.origin.X = transform->pos.X + transform->w * transform->scale / 2.0f - collider_.w / 2;
-	collider_.origin.Y = transform->pos.Y + transform->h * transform->scale - collider_.h;
+	collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - collider_.w / 2;
+	collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - collider_.h;
 }
 
 void RigidBody2D::Render()
 {
-	desRect_.origin = collider_.origin - Camera::Instance().viewport.origin;
+	desRect_.pos = collider_.pos - Camera::Instance().viewport.pos;
 	desRect_.w = collider_.w;
 	desRect_.h = collider_.h;
 	TextureManager::DrawBox(desRect_, 0xffffff);

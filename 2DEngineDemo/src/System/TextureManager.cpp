@@ -13,14 +13,14 @@ void TextureManager::DrawRectRota(const int& texture, const Rect& srcRect, const
 	const float& angle, const int& flip)
 {
 	DxLib::DrawRectRotaGraph(desRect.Center().X, desRect.Center().Y,
-		srcRect.origin.X, srcRect.origin.Y, srcRect.w, srcRect.h,
+		srcRect.pos.X, srcRect.pos.Y, srcRect.w, srcRect.h,
 		scale, angle, texture, true, flip);
 }
 
 void TextureManager::DrawRect(const int& texture, const Rect& desRect, const Rect& srcRect)
 {
 	DxLib::DrawRectExtendGraph(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(),
-		srcRect.origin.X, srcRect.origin.Y, srcRect.w, srcRect.h, texture,true);
+		srcRect.pos.X, srcRect.pos.Y, srcRect.w, srcRect.h, texture,true);
 }
 
 void TextureManager::DrawCircle( const Circle& desCir, const int& color, const bool& fill)
@@ -57,7 +57,7 @@ void TextureManager::DrawDynamicInfiniteScrolling(const int& texture, const Rect
 	float ratio = cutPos.X / view_width;
 
 	DxLib::DrawRectExtendGraphF(0, offset.Y, cutPos.X, offset.Y + view_height,
-		srcRect.w * (1-ratio), srcRect.origin.Y, srcRect.w, srcRect.h, texture, true);
+		srcRect.w * (1-ratio), srcRect.pos.Y, srcRect.w, srcRect.h, texture, true);
 	
 	DxLib::DrawRectExtendGraphF(cutPos.X, offset.Y, view_width, offset.Y + view_height,
 		0, 0, srcRect.w * (1-ratio), srcRect.h, texture, true);

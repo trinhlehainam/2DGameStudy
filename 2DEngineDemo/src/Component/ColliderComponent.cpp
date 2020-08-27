@@ -14,6 +14,12 @@ std::string ColliderComponent::OwnerTag()
 	return ownerTag;
 }
 
+void ColliderComponent::SetDistance(const float& X, const float& Y)
+{
+	distance_.X = X;
+	distance_.Y = Y;
+}
+
 ColliderComponent::ColliderComponent(std::shared_ptr<Entity> owner, std::string tag):
 	owner_(owner),tag_(tag)
 {

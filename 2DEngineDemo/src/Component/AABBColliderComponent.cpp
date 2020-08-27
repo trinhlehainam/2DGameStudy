@@ -19,7 +19,7 @@ AABBColliderComponent::~AABBColliderComponent()
 void AABBColliderComponent::Initialize()
 {
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
-	collider_.origin = transform->pos;
+	collider_.pos = transform->pos;
 	destRect_ = collider_;
 }
 
@@ -30,13 +30,12 @@ void AABBColliderComponent::Update(const float& deltaTime)
 		return;
 	}
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
-	collider_.origin = transform->pos;
-	
+	collider_.pos = transform->pos + distance_;
 }
 
 void AABBColliderComponent::Render()
 {
-	destRect_.origin = collider_.origin - Camera::Instance().viewport.origin;
+	destRect_.pos = collider_.pos - Camera::Instance().viewport.pos;
 	int color = flag_ ? 0xffff00 : 0xff0000;
 	TextureManager::DrawBox(destRect_, color);
 }

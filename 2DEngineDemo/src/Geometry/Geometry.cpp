@@ -80,33 +80,33 @@ float clamp(const float& val, const float& minVal, const float& maxVal)
 
 Vector2 clamp_on_AABB(const Vector2& point, const Rect& rect)
 {
-	return Vector2(clamp(point.X, rect.origin.X, rect.origin.X + rect.w),
-		clamp(point.Y, rect.origin.Y, rect.origin.Y + rect.h));
+	return Vector2(clamp(point.X, rect.pos.X, rect.pos.X + rect.w),
+		clamp(point.Y, rect.pos.Y, rect.pos.Y + rect.h));
 }
 
 
 Rect::Rect():
-	origin(Vector2()),w(0.0f),h(0.0f)
+	pos(Vector2()),w(0.0f),h(0.0f)
 {
 }
 
 Rect::Rect(const float& x, const float& y, const float& w, const float& h):
-	origin(Vector2(x,y)),w(w),h(h)
+	pos(Vector2(x,y)),w(w),h(h)
 {
 }
 
-Rect::Rect(const Vector2& pos, const float& w, const float& h):origin(pos),w(w),h(h)
+Rect::Rect(const Vector2& pos, const float& w, const float& h):pos(pos),w(w),h(h)
 {
 }
 
 Rect::Rect(const Rect& rect):
-	origin(rect.origin),w(rect.w),h(rect.h)
+	pos(rect.pos),w(rect.w),h(rect.h)
 {
 }
 
 Rect& Rect::operator=(const Rect& rect)
 {
-	this->origin = rect.origin;
+	this->pos = rect.pos;
 	this->h = rect.h;
 	this->w = rect.w;
 	return *this;
@@ -114,25 +114,25 @@ Rect& Rect::operator=(const Rect& rect)
 
 Vector2 Rect::Center() const
 {
-	return Vector2(origin.X + w / 2.0f, origin.Y + h / 2.0f);
+	return Vector2(pos.X + w / 2.0f, pos.Y + h / 2.0f);
 }
 
 float Rect::Left() const
 {
-	return origin.X;
+	return pos.X;
 }
 
 float Rect::Top() const
 {
-	return origin.Y;
+	return pos.Y;
 }
 
 float Rect::Right() const
 {
-	return origin.X + w;
+	return pos.X + w;
 }
 
 float Rect::Bottom() const
 {
-	return origin.Y + h;
+	return pos.Y + h;
 }

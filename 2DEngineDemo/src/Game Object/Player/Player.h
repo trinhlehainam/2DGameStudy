@@ -35,14 +35,16 @@ private:
 	using Input_t = void (Player::*)(const float&);
 	Input_t processInput_;
 	Input_t oldInputState_;
-	void Ground(const float&);
-	void Jump(const float&);
+	void GroundInput(const float&);
+	void JumpInput(const float&);
 	void RemainJump(const float&);
-	void Fall(const float&);
+	void FallInput(const float&);
+	void ProcessCheckGround();
 	void ChangeEquip(const float&);
 	void Attack(const float&);
 	void Throw(const float&);
-	void Crouch(const float&);
+	void CrouchInput(const float&);
+	void SecondJumpInput(const float&);
 
 	std::vector<std::unique_ptr<Equipment>> equipments_;
 	int currentEquip_ = 0;

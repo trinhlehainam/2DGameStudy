@@ -30,7 +30,7 @@ void Environment::Initialize()
 	layers_[2].textureID = gs_.GetTexture("environment-2");
 
 	for (auto& layer : layers_) layer.pos_ = Vector2(0.0f, 0.0f);
-	oldCameraPos_ = Camera::Instance().viewport.origin;
+	oldCameraPos_ = Camera::Instance().viewport.pos;
 }
 
 void Environment::InfiniteScrollingProcess(Vector2& pos, const float& width, const float& height)
@@ -47,8 +47,8 @@ void Environment::SetLayerSpeed(const int& layer_no, const float& speedX, const 
 
 void Environment::Update(const float& deltaTime)
 {
-	cameraMove_ = Camera::Instance().viewport.origin - oldCameraPos_;
-	oldCameraPos_ = Camera::Instance().viewport.origin;
+	cameraMove_ = Camera::Instance().viewport.pos - oldCameraPos_;
+	oldCameraPos_ = Camera::Instance().viewport.pos;
 
 	layers_[0].velocity_.X = layer_1_speed;
 	layers_[1].velocity_.X = layer_2_speed;

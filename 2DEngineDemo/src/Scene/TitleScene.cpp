@@ -54,8 +54,8 @@ void TitleScene::Initialize()
 	waitTimer_ = 0.0f;
 	pressBox.w = button_width;
 	pressBox.h = button_height;
-	pressBox.origin.X = button_pos_x;
-	pressBox.origin.Y = button_pos_y;
+	pressBox.pos.X = button_pos_x;
+	pressBox.pos.Y = button_pos_y;
 
 	if (bgTexture_ == -1)
 	{

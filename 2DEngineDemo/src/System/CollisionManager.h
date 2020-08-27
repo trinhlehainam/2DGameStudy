@@ -73,7 +73,7 @@ public:
 	std::vector<CircleColliderComponent>& AddBossCollider(std::shared_ptr<Entity> owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
-	void AddProjectileCollider(std::shared_ptr<Entity> owner, std::string tag,
+	CircleColliderComponent& AddProjectileCollider(std::shared_ptr<Entity> owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
 	void ProjectileCollision();

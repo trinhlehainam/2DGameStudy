@@ -22,8 +22,8 @@ void Camera::Update()
 void Camera::TrackingUpdate()
 {
     auto transform = trackEntity_.lock();
-    viewport.origin = transform->pos - Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 2 / 3);
-    viewport.origin.X = clamp(viewport.origin.X, 0.0f, WORLD_MAP_X - WINDOW_WIDTH);
+    viewport.pos = transform->pos - Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 2 / 3);
+    viewport.pos.X = clamp(viewport.pos.X, 0.0f, WORLD_MAP_X - WINDOW_WIDTH);
 }
 
 void Camera::LockUpdate()

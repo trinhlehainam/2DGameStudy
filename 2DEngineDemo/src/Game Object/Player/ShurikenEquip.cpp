@@ -40,9 +40,9 @@ void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 		Rect(0, 0, shuriken_width, shuriken_height),
 		1, rotate_speed);
 	anim->Play("attack");
-	gs_.collisionMng_->AddProjectileCollider(projectile,
+	auto& collider = gs_.collisionMng_->AddProjectileCollider(projectile,
 		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_radius);
-
+	collider.SetDistance(shuriken_radius, shuriken_radius);
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
 	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range, shuriken_damage);
 }
