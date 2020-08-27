@@ -10,14 +10,15 @@ class Entity;
 class TransformComponent;
 class Equipment;
 
-enum class MOVE
+enum class ACTION
 {
 	IDLE,
 	LEFT,
 	RIGHT,
 	JUMP,
 	FALL,
-	THROW
+	THROW,
+	CROUCH
 };
 
 class Player
@@ -28,16 +29,20 @@ private:
 	std::shared_ptr<RigidBody2D> rigidBody_;
 	std::unique_ptr<KeyboardInput> input_;
 	std::shared_ptr<Entity> self_;
-	MOVE moveState_ = MOVE::IDLE;
 
+	ACTION actionState_ = ACTION::IDLE;
+	ACTION oldState_ = actionState_;
 	using Input_t = void (Player::*)(const float&);
 	Input_t processInput_;
-	void Default(const float&);
+	Input_t oldInputState_;
+	void Ground(const float&);
 	void Jump(const float&);
 	void RemainJump(const float&);
 	void Fall(const float&);
 	void ChangeEquip(const float&);
 	void Attack(const float&);
+	void Throw(const float&);
+	void Crouch(const float&);
 
 	std::vector<std::unique_ptr<Equipment>> equipments_;
 	int currentEquip_ = 0;

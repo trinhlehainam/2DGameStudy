@@ -44,7 +44,7 @@ namespace
 	constexpr unsigned int fall_animation_speed = 100;
 	constexpr unsigned int hurt_animation_speed = 100;
 	constexpr unsigned int die_animation_speed = 100;
-	constexpr unsigned int cast_animation_speed = 100;
+	constexpr unsigned int cast_animation_speed = 50;
 	constexpr unsigned int crouch_animation_speed = 100;
 
 	bool isJumping = false;
@@ -58,7 +58,8 @@ Player::Player(GameScene& gs):gs_(gs)
 void Player::Initialize()
 {
 	input_ = std::make_unique<KeyboardInput>();
-	processInput_ = &Player::Default;
+	processInput_ = &Player::Ground;
+	oldInputState_ = processInput_;
 
 	self_ = gs_.entityMng_->AddEntity("player");
 	self_->AddComponent<TransformComponent>(start_pos, player_width, player_height, player_scale);
@@ -94,6 +95,7 @@ void Player::Input(const float& deltaTime)
 {
 	Move(deltaTime);
 	SetAngleDirection();
+	ChangeEquip(deltaTime);
 	(this->*processInput_)(deltaTime);
 }
 
@@ -118,26 +120,36 @@ void Player::Move(const float& deltaTime)
 	}
 }
 
-void Player::Default(const float& deltaTime)
+void Player::Ground(const float& deltaTime)
 {
 	if (rigidBody_->isGrounded_)
 	{
 		if (rigidBody_->velocity_.X > 0)
 		{
-			moveState_ = MOVE::LEFT;
+			actionState_ = ACTION::LEFT;
 		}
 		else if (rigidBody_->velocity_.X < 0)
 		{
-			moveState_ = MOVE::RIGHT;
+			actionState_ = ACTION::RIGHT;
 		}
 		else
 		{
-			moveState_ = MOVE::IDLE;
+			actionState_ = ACTION::IDLE;
 		}
 	}
+	if (!rigidBody_->isGrounded_ && !isJumping)
+	{
+		processInput_ = &Player::Fall;
+		actionState_ = ACTION::FALL;
+	}
+
 	Jump(deltaTime);
-	ChangeEquip(deltaTime);
 	Attack(deltaTime);
+	if (input_->IsPressed(L"down"))
+	{
+		actionState_ = ACTION::CROUCH;
+		processInput_ = &Player::Crouch;
+	}	
 }
 
 void Player::Jump(const float& deltaTime)
@@ -148,13 +160,14 @@ void Player::Jump(const float& deltaTime)
 		rigidBody_->isGrounded_ = false;
 		jumpTimeCnt = jump_time;
 		isJumping = true;
-		moveState_ = MOVE::JUMP;
+		actionState_ = ACTION::JUMP;
 		processInput_ = &Player::RemainJump;
 	}
 }
 
 void Player::RemainJump(const float& deltaTime)
 {
+	Attack(deltaTime);
 	if (input_->IsPressed(L"jump") && isJumping)
 	{
 		if (jumpTimeCnt > 0)
@@ -165,7 +178,7 @@ void Player::RemainJump(const float& deltaTime)
 		else
 		{
 			isJumping = false;
-			moveState_ = MOVE::FALL;
+			actionState_ = ACTION::FALL;
 			processInput_ = &Player::Fall;
 		}
 
@@ -173,17 +186,19 @@ void Player::RemainJump(const float& deltaTime)
 	if (input_->IsReleased(L"jump"))
 	{
 		isJumping = false;
-		moveState_ = MOVE::FALL;
+		actionState_ = ACTION::FALL;
 		processInput_ = &Player::Fall;
 	}
 }
 
 void Player::Fall(const float& deltaTime)
 {
-	if (rigidBody_->isGrounded_ && (rigidBody_->velocity_.Y == 0))
+	Attack(deltaTime);
+
+	if (rigidBody_->isGrounded_)
 	{
-		processInput_ = &Player::Default;
-		moveState_ = MOVE::IDLE;
+		processInput_ = &Player::Ground;
+		actionState_ = ACTION::IDLE;
 	}
 }
 
@@ -197,12 +212,38 @@ void Player::ChangeEquip(const float& deltaTime)
 
 void Player::Attack(const float& deltaTime)
 {
-	if (input_->IsTriggered(L"attack"))
+	if (input_->IsTriggered(L"throw"))
 	{
 		auto transform = self_->GetComponent<TransformComponent>();
 		auto startPos = transform->pos + Vector2(transform->w / 2, transform->h / 2);
 		equipments_[currentEquip_]->Attack(startPos, attackAngle_);
+
+		oldState_ = actionState_;
+		actionState_ = ACTION::THROW;
+		oldInputState_ = processInput_;
+		processInput_ = &Player::Throw;
 	}
+}
+
+void Player::Throw(const float&)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+
+	if(rigidBody_->isGrounded_)
+		rigidBody_->velocity_.X = 0.0f;
+
+	if (sprite->IsFinished())
+	{
+		processInput_ = oldInputState_;
+		actionState_ = oldState_;
+	}
+}
+
+void Player::Crouch(const float&)
+{
+	rigidBody_->velocity_.X = 0.0f;
+	if (input_->IsReleased(L"down"))
+		processInput_ = &Player::Ground;
 }
 
 void Player::SetAngleDirection()
@@ -230,32 +271,33 @@ void Player::UpdateState()
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	auto transform = self_->GetComponent<TransformComponent>();
 
-	if (!rigidBody_->isGrounded_ && !isJumping) moveState_ = MOVE::FALL;
-
 	rigidBody_->collider_.h = player_height * rigidbody_height_scale;
 	transform->h = player_height;
 
-	switch (moveState_)
+	switch (actionState_)
 	{
-	case MOVE::LEFT:
+	case ACTION::LEFT:
 		sprite->Play("run");
 		break;
-	case MOVE::RIGHT:
+	case ACTION::RIGHT:
 		sprite->Play("run");
 		break;
-	case MOVE::JUMP:
+	case ACTION::JUMP:
 		sprite->Play("jump");
 		rigidBody_->collider_.h = player_height * rigidbody_jump_scale;
 		transform->h = player_height * transform_height_scale;
 		break;
-	case MOVE::FALL:
+	case ACTION::FALL:
 		sprite->Play("fall");
 		break;
-	case MOVE::IDLE:
+	case ACTION::IDLE:
 		sprite->Play("idle");
 		break;
-	case MOVE::THROW:
+	case ACTION::THROW:
 		sprite->Play("cast");
+		break;
+	case ACTION::CROUCH:
+		sprite->Play("crouch");
 		break;
 	}
 }
