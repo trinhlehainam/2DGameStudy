@@ -39,12 +39,13 @@ private:
 	void JumpInput(const float&);
 	void RemainJump(const float&);
 	void FallInput(const float&);
-	void ProcessCheckGround();
 	void ChangeEquip(const float&);
 	void Attack(const float&);
 	void Throw(const float&);
 	void CrouchInput(const float&);
 	void SecondJumpInput(const float&);
+	void ProcessCheckGround();
+	void ProcessFall();
 
 	std::vector<std::unique_ptr<Equipment>> equipments_;
 	int currentEquip_ = 0;

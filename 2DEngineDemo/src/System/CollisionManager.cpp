@@ -157,12 +157,16 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
             if (CheckSweptAABB(actor->collider_, actor->velocity_, target.collider_, cn,
                 ct, deltaTime))
             {
-                if (actor->collider_.Bottom() <= target.collider_.pos.Y)
+                if (actor->collider_.Bottom() <= target.collider_.pos.Y && !actor->isGrounded_)
                 {
                     actor->isGrounded_ = true;
+                    actor->collider_.pos.Y = target.collider_.pos.Y - actor->collider_.h;
                     actor->velocity_.Y = 0;
                 }
-                else  actor->velocity_.X = 0;
+                if (actor->collider_.Bottom() > target.collider_.pos.Y)
+                {
+                    actor->velocity_.X = 0.0f;
+                }
                 
             }
         }

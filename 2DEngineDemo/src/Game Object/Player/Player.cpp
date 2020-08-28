@@ -107,7 +107,6 @@ void Player::Move(const float& deltaTime)
 	{
 		rigidBody_->velocity_.X = -side_move_velocity;
 		sprite->isFlipped = true;
-
 	}
 	else if (input_->IsPressed(L"right"))
 	{
@@ -126,23 +125,19 @@ void Player::GroundInput(const float& deltaTime)
 	{
 		if (rigidBody_->velocity_.X > 0)
 		{
-			actionState_ = ACTION::LEFT;
+			actionState_ = ACTION::RIGHT;
 		}
 		else if (rigidBody_->velocity_.X < 0)
 		{
-			actionState_ = ACTION::RIGHT;
+			actionState_ = ACTION::LEFT;
 		}
 		else
 		{
 			actionState_ = ACTION::IDLE;
 		}
 	}
-	if (!rigidBody_->isGrounded_ && !isJumping)
-	{
-		processInput_ = &Player::FallInput;
-		actionState_ = ACTION::FALL;
-	}
 
+	ProcessFall();
 	JumpInput(deltaTime);
 	Attack(deltaTime);
 	if (input_->IsPressed(L"down"))
@@ -178,18 +173,13 @@ void Player::RemainJump(const float& deltaTime)
 		else
 		{
 			isJumping = false;
-			actionState_ = ACTION::FALL;
-			processInput_ = &Player::FallInput;
 		}
-
 	}
 	if (input_->IsReleased(L"jump"))
 	{
 		isJumping = false;
-		actionState_ = ACTION::FALL;
-		processInput_ = &Player::FallInput;
 	}
-
+	ProcessFall();
 }
 
 void Player::FallInput(const float& deltaTime)
@@ -212,6 +202,16 @@ void Player::ProcessCheckGround()
 	{
 		processInput_ = &Player::GroundInput;
 		actionState_ = ACTION::IDLE;
+	}
+}
+
+void Player::ProcessFall()
+{
+	if (rigidBody_->velocity_.Y > 0.0f && !isJumping)
+	{
+		rigidBody_->isGrounded_ = false;
+		actionState_ = ACTION::FALL;
+		processInput_ = &Player::FallInput;
 	}
 }
 
@@ -303,8 +303,6 @@ void Player::UpdateState()
 	switch (actionState_)
 	{
 	case ACTION::LEFT:
-		sprite->Play("run");
-		break;
 	case ACTION::RIGHT:
 		sprite->Play("run");
 		break;
