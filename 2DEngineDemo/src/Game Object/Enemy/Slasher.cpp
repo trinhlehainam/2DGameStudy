@@ -31,6 +31,7 @@ namespace
 
 	constexpr int side_move_velocity = 100;
 	constexpr unsigned int slash_distancce = 50;
+	constexpr float wait_destroy_time = 3;
 
 	constexpr int max_health = 5;
 }
@@ -55,9 +56,10 @@ void Slasher::Initialize()
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", src_rect, slash_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-hurt"), "hurt", src_rect, hurt_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-death"), "death", src_rect, death_animation_speed);
+	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-lying"), "lying", src_rect, 1);
 	anim->Play("run");
 	self_->AddComponent<HealthComponent>(max_health);
-	actionUpdate = &Slasher::AimPlayer;
+	actionUpdate_ = &Slasher::AimPlayer;
 }
 
 std::unique_ptr<Enemy> Slasher::MakeClone()
@@ -82,12 +84,13 @@ void Slasher::SetPosition(const Vector2& pos)
 
 void Slasher::Update(const float& deltaTime)
 {
-	CheckHit();
-	(this->*actionUpdate)(deltaTime);
+	(this->*actionUpdate_)(deltaTime);
 }
 
 void Slasher::AimPlayer(const float& deltaTime)
 {
+	CheckHit();
+
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
@@ -96,7 +99,7 @@ void Slasher::AimPlayer(const float& deltaTime)
 	sprite->isFlipped = rigidBody_->velocity_.X > 0 ? false : true;
 	if (std::abs(playerPos_.lock()->pos.X - transform->pos.X) < slash_distancce)
 	{
-		actionUpdate = &Slasher::SlashUpdate;
+		actionUpdate_ = &Slasher::SlashUpdate;
 		sprite->Play("slash");
 		rigidBody_->velocity_.X = 0.0f;
 	}
@@ -104,6 +107,8 @@ void Slasher::AimPlayer(const float& deltaTime)
 
 void Slasher::SlashUpdate(const float& deltaTime)
 {
+	CheckHit();
+
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	
@@ -111,7 +116,7 @@ void Slasher::SlashUpdate(const float& deltaTime)
 	{
 		if (sprite->IsFinished())
 		{
-			actionUpdate = &Slasher::AimPlayer;
+			actionUpdate_ = &Slasher::AimPlayer;
 			sprite->Play("run");
 		}
 	}
@@ -124,7 +129,7 @@ void Slasher::HurtUpdate(const float& deltaTime)
 	rigidBody_->velocity_.X = 0;
 	if (sprite->IsFinished())
 	{
-		actionUpdate = &Slasher::AimPlayer;
+		actionUpdate_ = &Slasher::AimPlayer;
 		sprite->Play("run");
 	}
 }
@@ -135,6 +140,18 @@ void Slasher::DeathUpdate(const float& deltaTime)
 	sprite->Play("death");
 	rigidBody_->velocity_.X = 0;
 	if (sprite->IsFinished())
+	{
+		timer_ = wait_destroy_time;
+		sprite->Play("lying");
+		rigidBody_->isActive_ = false;
+		actionUpdate_ = &Slasher::WaitDestroyUpdate;
+	}
+}
+
+void Slasher::WaitDestroyUpdate(const float& deltaTime)
+{
+	timer_ -= deltaTime;
+	if (timer_ <= 0)
 		self_->Destroy();
 }
 
@@ -143,13 +160,13 @@ void Slasher::CheckHit()
 	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
 	if (health <= 0)
 	{
-		actionUpdate = &Slasher::DeathUpdate;
+		actionUpdate_ = &Slasher::DeathUpdate;
 		return;
 	}
 
 	if (self_->IsHit())
 	{
 		self_->RecoverHit();
-		actionUpdate = &Slasher::HurtUpdate;
+		actionUpdate_ = &Slasher::HurtUpdate;
 	}
 }

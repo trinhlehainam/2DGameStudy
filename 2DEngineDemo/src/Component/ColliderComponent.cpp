@@ -23,5 +23,4 @@ void ColliderComponent::SetDistance(const float& X, const float& Y)
 ColliderComponent::ColliderComponent(std::shared_ptr<Entity> owner, std::string tag):
 	owner_(owner),tag_(tag)
 {
-	flag_ = true;
 }

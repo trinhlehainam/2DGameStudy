@@ -178,7 +178,7 @@ bool CollisionManager::IsEnterBossArea(const std::string& bossID, Vector2& bossP
             if (target.tag_ != bossID) continue;
             else
             {
-                target.flag_ = true;
+                target.isActive_ = true;
                 bossPos = target.collider_.pos;
                 return CheckCollision(actor->collider_, target.collider_);
             }
@@ -193,10 +193,8 @@ void CollisionManager::ProjectileCollision()
         if (actor->tag_ == "PLAYER") continue;
         for (auto& projectile : projectileColliders_)
         {
-            if (CheckCollision(projectile.collider_, actor->collider_) && !actor->flag_)
+            if (CheckCollision(projectile.collider_, actor->collider_) && actor->isActive_)
             {
-                actor->flag_ = false;
-                projectile.flag_ = false;
                 projectile.owner_.lock()->Destroy();
                 if (projectile.tag_ == "PLAYER-SHURIKEN")
                 {

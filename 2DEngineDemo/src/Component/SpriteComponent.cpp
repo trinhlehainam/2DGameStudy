@@ -70,8 +70,6 @@ void SpriteComponent::Render()
 	{
 		if (animations_.count(currentAnimID))
 		{
-			transform_ = owner_->GetComponent<TransformComponent>();
-			auto transform = transform_.lock();
 			TextureManager::DrawRectRota(animations_.at(currentAnimID).texture, animations_.at(currentAnimID).srcRect,
 				desRect, transform->scale, angleRad_, isFlipped);
 		}
@@ -96,9 +94,7 @@ bool SpriteComponent::IsPlaying(std::string animID)
 bool SpriteComponent::IsFinished()
 {
 	auto& animation = animations_.at(currentAnimID);
-	auto celX = animation.textureW / static_cast<int>(animation.srcRect.w);
-	auto celY = animation.textureH / static_cast<int>(animation.srcRect.h);
-	return animation.indexX == (celX - 1) && animation.indexY == (celY - 1);
+	return animation.indexX == (animation.numCelX - 1) && animation.indexY == (animation.numCelY - 1);
 }
 
 SpriteComponent::~SpriteComponent()

@@ -20,7 +20,7 @@ public:
 	Rect collider_;
 	Vector2 velocity_ = Vector2(0, 0);
 	Rect desRect_;
-	bool flag_ = false;
+	bool isActive_ = true;
 	bool isGrounded_ = false;
 	std::string tag_;
 
