@@ -25,13 +25,13 @@ namespace
 	constexpr float body_heigth_scale = 1.6f;
 
 	constexpr unsigned int run_animation_speed = 100;
-	constexpr unsigned int slash_animation_speed = 100;
+	constexpr unsigned int slash_animation_speed = 300;
 	constexpr unsigned int hurt_animation_speed = 100;
 	constexpr unsigned int death_animation_speed = 200;
 
 	constexpr int side_move_velocity = 100;
 	constexpr unsigned int slash_distancce = 50;
-	constexpr float wait_destroy_time = 3;
+	constexpr float wait_destroy_time = 10.0f;
 
 	constexpr int max_health = 5;
 }

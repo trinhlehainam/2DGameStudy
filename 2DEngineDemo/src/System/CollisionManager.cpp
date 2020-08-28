@@ -190,16 +190,17 @@ void CollisionManager::ProjectileCollision()
 {
     for (auto& actor : actorColliders_)
     {
-        if (actor->tag_ == "PLAYER") continue;
+        if (actor->tag_ == "PLAYER" || !actor->isActive_) continue;
         for (auto& projectile : projectileColliders_)
         {
-            if (CheckCollision(projectile.collider_, actor->collider_) && actor->isActive_)
+            if (CheckCollision(projectile.collider_, actor->collider_))
             {
                 projectile.owner_.lock()->Destroy();
                 if (projectile.tag_ == "PLAYER-SHURIKEN")
                 {
                     auto projectile_owner = projectile.owner_.lock();
                     auto actor_owner = actor->owner_.lock();
+
                     auto damage = projectile_owner->GetProjectileDamage();
                     actor_owner->TakeDamage(damage);
 
@@ -210,6 +211,7 @@ void CollisionManager::ProjectileCollision()
                 {
                     auto projectile_owner = projectile.owner_.lock();
                     auto actor_owner = actor->owner_.lock();
+
                     auto damage = projectile_owner->GetProjectileDamage();
                     actor_owner->TakeDamage(damage);
 
