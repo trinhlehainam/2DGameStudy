@@ -30,7 +30,6 @@ namespace
 	constexpr float rigidbody_width_scale = 1.2f;
 	constexpr float rigidbody_height_scale = 2.0f;
 	constexpr float rigidbody_jump_scale = 1.5f;
-	constexpr float jump_hitbox_scale = 0.8f;
 	constexpr float rigidbody_crouch_scale = 1.4f;
 
 	float jumpTimeCnt;
@@ -299,7 +298,7 @@ void Player::UpdateState()
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	auto transform = self_->GetComponent<TransformComponent>();
 
-	/*rigidBody_->collider_.h = player_height * rigidbody_height_scale;*/
+	rigidBody_->collider_.h = player_height * rigidbody_height_scale;
 
 	switch (actionState_)
 	{
@@ -311,7 +310,7 @@ void Player::UpdateState()
 		break;
 	case ACTION::JUMP:
 		sprite->Play("jump");
-		/*rigidBody_->collider_.h = player_height * rigidbody_jump_scale;*/
+		rigidBody_->collider_.h = player_height * rigidbody_jump_scale;
 		break;
 	case ACTION::FALL:
 		sprite->Play("fall");
@@ -323,10 +322,14 @@ void Player::UpdateState()
 		sprite->Play("cast");
 		break;
 	case ACTION::CROUCH:
-		/*rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;*/
+		rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;
 		sprite->Play("crouch");
 		break;
 	}
+
+	// Relocate rigid body's position after change it's size
+	rigidBody_->collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - rigidBody_->collider_.w / 2;
+	rigidBody_->collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - rigidBody_->collider_.h;
 }
 
 std::shared_ptr<TransformComponent> Player::GetPlayerTransform()
