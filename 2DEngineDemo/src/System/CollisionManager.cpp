@@ -162,8 +162,9 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
                     actor->isGrounded_ = true;
                     actor->collider_.pos.Y = target.collider_.pos.Y - actor->collider_.h;
                     actor->velocity_.Y = 0;
+                    continue;
                 }
-                if (actor->collider_.Bottom() > target.collider_.pos.Y)
+                if (actor->collider_.Bottom() > target.collider_.Top())
                 {
                     actor->velocity_.X = 0.0f;
                 }

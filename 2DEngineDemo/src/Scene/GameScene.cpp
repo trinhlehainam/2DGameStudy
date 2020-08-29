@@ -73,13 +73,19 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
 
 	assetMng_->AddTexture("player-run", L"assets/Image/Character/Player/adventurer-run-sheet.png");
-	assetMng_->AddTexture("player-idle", L"assets/Image/Character/Player/adventurer-idle-00-sheet.png");
+	assetMng_->AddTexture("player-sword-run", L"assets/Image/Character/Player/adventurer-swd-run-sheet.png");
+	assetMng_->AddTexture("player-fast-run", L"assets/Image/Character/Player/adventurer-fast-run-sheet.png");
+	assetMng_->AddTexture("player-idle", L"assets/Image/Character/Player/adventurer-idle-sheet.png");
+	assetMng_->AddTexture("player-sword-idle", L"assets/Image/Character/Player/adventurer-idle-sword-sheet.png");
 	assetMng_->AddTexture("player-jump", L"assets/Image/Character/Player/adventurer-roll-sheet.png");
 	assetMng_->AddTexture("player-fall", L"assets/Image/Character/Player/adventurer-fall-sheet.png");
 	assetMng_->AddTexture("player-hurt", L"assets/Image/Character/Player/adventurer-hurt-sheet.png");
 	assetMng_->AddTexture("player-cast", L"assets/Image/Character/Player/adventurer-cast-sheet.png");
 	assetMng_->AddTexture("player-crouch", L"assets/Image/Character/Player/adventurer-crouch-sheet.png");
+	assetMng_->AddTexture("player-crouch-walk", L"assets/Image/Character/Player/adventurer-crouch-walk-sheet.png");
 	assetMng_->AddTexture("player-die", L"assets/Image/Character/Player/adventurer-die-sheet.png");
+	assetMng_->AddTexture("player-draw-sword", L"assets/Image/Character/Player/adventurer-swd-drw-sheet.png");
+	assetMng_->AddTexture("player-withdraw-sword", L"assets/Image/Character/Player/adventurer-swd-wd-sheet.png");
 
 	assetMng_->AddTexture("bomb-equip", L"assets/Image/Character/Player/Equipment/bombshot.png");
 	assetMng_->AddTexture("shuriken-equip", L"assets/Image/Character/Player/Equipment/shuriken.png");
@@ -87,6 +93,7 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("shuriken-icon", L"assets/Image/UI/shuriken.png");
 	assetMng_->AddTexture("chain-icon", L"assets/Image/UI/chain.png");
 	assetMng_->AddTexture("bomb-icon", L"assets/Image/UI/bomb.png");
+	assetMng_->AddTexture("sword-icon", L"assets/Image/UI/sword.png");
 
 	assetMng_->AddTexture("slasher-run", L"assets/Image/Character/Enemy/slasher/slasher-run-Sheet.png");
 	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher/slasher-slash-Sheet.png");

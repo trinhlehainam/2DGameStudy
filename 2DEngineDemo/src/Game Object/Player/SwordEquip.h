@@ -1,14 +1,13 @@
 #pragma once
 #include "Equipment.h"
 
-class BombEquip :
+class SwordEquip :
     public Equipment
 {
-private:
-
 public:
-    BombEquip(GameScene& gs, const std::string& tag);
-    ~BombEquip() = default;
+    SwordEquip(GameScene&, const std::string&);
+    ~SwordEquip() = default;
+
     void Initialize() override;
     void Attack(const Vector2& startPos, const float& angle) override;
     void Render() override;

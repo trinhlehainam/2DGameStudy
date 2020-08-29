@@ -14,7 +14,7 @@ namespace
 	const Rect destination_rect = Rect(Vector2(box_pos_X, box_pos_Y), box_width, box_height);
 }
 
-Equipment::Equipment(GameScene& gs):gs_(gs)
+Equipment::Equipment(GameScene& gs, const std::string& tag):gs_(gs),tag_(tag)
 {
 
 }

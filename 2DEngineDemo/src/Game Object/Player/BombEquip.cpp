@@ -24,7 +24,7 @@ namespace
 	constexpr float collider_distance_y = bomb_height * scale / 2.0f;
 }
 
-BombEquip::BombEquip(GameScene& gs):Equipment(gs)
+BombEquip::BombEquip(GameScene& gs, const std::string& tag):Equipment(gs, tag)
 {
 }
 

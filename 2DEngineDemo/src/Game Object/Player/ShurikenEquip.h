@@ -5,7 +5,7 @@ class ShurikenEquip :
     public Equipment
 {
 public:
-    ShurikenEquip(GameScene&);
+    ShurikenEquip(GameScene&,const std::string&);
     ~ShurikenEquip();
 
     void Attack(const Vector2& startPos_, const float& angle) override;

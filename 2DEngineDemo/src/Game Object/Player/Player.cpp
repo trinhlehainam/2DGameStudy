@@ -1,23 +1,21 @@
 #include "Player.h"
 
+#include "../Entity.h"
+#include "../../Geometry/Geometry.h"
+#include "../../Input/KeyboardInput.h"
+#include "../Player/ShurikenEquip.h"
+#include "../Player/BombEquip.h"
+#include "../Player/SwordEquip.h"
+
 #include "../../Scene/GameScene.h"
 #include "../../System/AssetManager.h"
 #include "../../System/Camera.h"
 #include "../../System/CollisionManager.h"
-
-#include "../Entity.h"
 #include "../../System/EntityManager.h"
-#include "../Player/ShurikenEquip.h"
-#include "../Player/BombEquip.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/RigidBody2D.h"
 #include "../../Component/SpriteComponent.h"
-
-#include "../../Geometry/Geometry.h"
-
-#include "../../Input/KeyboardInput.h"
-
 
 namespace
 {
@@ -36,10 +34,12 @@ namespace
 	constexpr float jump_time = 0.35f;
 	constexpr float jump_velocity = 300.0f;
 	constexpr float remain_jump_velocity = 300.0f;
-	constexpr float side_move_velocity = 200.0f;
+	constexpr float normal_side_velocity = 200.0f;
+	constexpr float crouch_velocity = 50.0f;
 
 	constexpr unsigned int idle_animation_speed = 100;
 	constexpr unsigned int run_animation_speed = 100;
+	constexpr unsigned int fast_run_animation_speed = 50;
 	constexpr unsigned int jump_animation_speed = 100;
 	constexpr unsigned int fall_animation_speed = 100;
 	constexpr unsigned int hurt_animation_speed = 100;
@@ -47,7 +47,9 @@ namespace
 	constexpr unsigned int cast_animation_speed = 50;
 	constexpr unsigned int crouch_animation_speed = 100;
 
-	bool isJumping = false;
+	constexpr char sword_tag[] = "SWORD";
+	constexpr char shuriken_tag[] = "BOMB";
+	constexpr char bomb_tag[] = "SHURIKEN";
 }
 
 Player::Player(GameScene& gs):gs_(gs)
@@ -74,11 +76,14 @@ void Player::Initialize()
 	auto playerAnim = self_->GetComponent<SpriteComponent>();
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", src_rect, idle_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-run"), "run", src_rect, run_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-sword-run"), "sword-run", src_rect, run_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-fast-run"), "fast-run", src_rect, fast_run_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-jump"), "jump", src_rect, jump_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-fall"), "fall", src_rect, fall_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-hurt"), "hurt", src_rect, hurt_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-die"), "die", src_rect, die_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-crouch"), "crouch", src_rect, crouch_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-crouch-walk"), "crouch-walk", src_rect, crouch_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-cast"), "cast", src_rect, cast_animation_speed);
 	playerAnim->Play("idle");
 
@@ -86,65 +91,67 @@ void Player::Initialize()
 	Camera::Instance().TrackingOn(self_->GetComponent<TransformComponent>());
 
 	// Initialize Equipment list
-	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_)));
-	equipments_.emplace_back(std::move(std::make_unique<BombEquip>(gs_)));
+	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_, shuriken_tag)));
+	equipments_.emplace_back(std::move(std::make_unique<BombEquip>(gs_, bomb_tag)));
+	equipments_.emplace_back(std::move(std::make_unique<SwordEquip>(gs_, sword_tag)));
 	
 }
 
 void Player::Input(const float& deltaTime)
 {
-	Move(deltaTime);
+	input_->Update(deltaTime);
 	SetAngleDirection();
 	ChangeEquip(deltaTime);
 	(this->*processInput_)(deltaTime);
 }
 
-void Player::Move(const float& deltaTime)
-{
-	auto sprite = self_->GetComponent<SpriteComponent>();
-	input_->Update(deltaTime);
-	if (input_->IsPressed(L"left"))
-	{
-		rigidBody_->velocity_.X = -side_move_velocity;
-		sprite->isFlipped = true;
-	}
-	else if (input_->IsPressed(L"right"))
-	{
-		rigidBody_->velocity_.X = side_move_velocity;
-		sprite->isFlipped = false;
-	}
-	else
-	{
-		rigidBody_->velocity_.X = 0;
-	}
-}
-
 void Player::GroundInput(const float& deltaTime)
 {
-	if (rigidBody_->isGrounded_)
-	{
-		if (rigidBody_->velocity_.X > 0)
-		{
-			actionState_ = ACTION::RIGHT;
-		}
-		else if (rigidBody_->velocity_.X < 0)
-		{
-			actionState_ = ACTION::LEFT;
-		}
-		else
-		{
-			actionState_ = ACTION::IDLE;
-		}
-	}
+	SideMove(normal_side_velocity);
+	SetMoveAction(ACTION::IDLE,ACTION::NORMAL_RUN);
 
 	ProcessFall();
 	JumpInput(deltaTime);
 	Attack(deltaTime);
 	if (input_->IsPressed(L"down"))
 	{
+		isCrouch = true;
 		actionState_ = ACTION::CROUCH;
 		processInput_ = &Player::CrouchInput;
 	}	
+}
+
+void Player::Attack(const float& deltaTime)
+{
+	if (equipments_[currentEquip_]->GetTag() != sword_tag)
+	{
+		if (input_->IsTriggered(L"throw"))
+		{
+			auto transform = self_->GetComponent<TransformComponent>();
+			auto startPos = transform->pos + Vector2(transform->w / 2, transform->h / 2);
+			equipments_[currentEquip_]->Attack(startPos, attackAngle_);
+
+			oldState_ = actionState_;
+			actionState_ = ACTION::THROW;
+			oldInputState_ = processInput_;
+			processInput_ = &Player::Throw;
+		}
+	}
+
+}
+
+void Player::Throw(const float&)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+
+	if (rigidBody_->isGrounded_)
+		rigidBody_->velocity_.X = 0.0f;
+
+	if (sprite->IsFinished())
+	{
+		processInput_ = oldInputState_;
+		actionState_ = oldState_;
+	}
 }
 
 void Player::JumpInput(const float& deltaTime)
@@ -162,6 +169,7 @@ void Player::JumpInput(const float& deltaTime)
 
 void Player::RemainJump(const float& deltaTime)
 {
+	SideMove(normal_side_velocity);
 	Attack(deltaTime);
 	if (input_->IsPressed(L"jump") && isJumping)
 	{
@@ -184,6 +192,7 @@ void Player::RemainJump(const float& deltaTime)
 
 void Player::FallInput(const float& deltaTime)
 {
+	SideMove(normal_side_velocity);
 	Attack(deltaTime);
 	ProcessCheckGround();
 	// Second jump
@@ -194,6 +203,59 @@ void Player::FallInput(const float& deltaTime)
 		actionState_ = ACTION::JUMP;
 		processInput_ = &Player::SecondJumpInput;
 	}
+}
+
+void Player::CrouchInput(const float&)
+{
+	SideMove(crouch_velocity);
+	SetMoveAction(ACTION::CROUCH, ACTION::CROUCH_WALK);
+	if (input_->IsReleased(L"down"))
+	{
+		isCrouch = false;
+		processInput_ = &Player::GroundInput;
+	}
+
+}
+
+void Player::SecondJumpInput(const float& deltaTime)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+
+	SideMove(normal_side_velocity);
+	Attack(deltaTime);
+	if (isJumping && sprite->IsFinished())
+	{
+		isJumping = false;
+		actionState_ = ACTION::FALL;
+	}
+	ProcessCheckGround();
+}
+
+void Player::SideMove(const float& velX)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+	if (input_->IsPressed(L"left"))
+	{
+		rigidBody_->velocity_.X = -velX;
+		sprite->isFlipped = true;
+	}
+	else if (input_->IsPressed(L"right"))
+	{
+		rigidBody_->velocity_.X = velX;
+		sprite->isFlipped = false;
+	}
+	else
+	{
+		rigidBody_->velocity_.X = 0;
+	}
+}
+
+void Player::SetMoveAction(const ACTION& idle, const ACTION& moveType)
+{
+	if (rigidBody_->velocity_.X != 0.0f)
+		actionState_ = moveType;
+	else
+		actionState_ = idle;
 }
 
 void Player::ProcessCheckGround()
@@ -221,56 +283,6 @@ void Player::ChangeEquip(const float& deltaTime)
 	{
 		currentEquip_ = (currentEquip_ + 1) % equipments_.size();
 	}
-}
-
-void Player::Attack(const float& deltaTime)
-{
-	if (input_->IsTriggered(L"throw"))
-	{
-		auto transform = self_->GetComponent<TransformComponent>();
-		auto startPos = transform->pos + Vector2(transform->w / 2, transform->h / 2);
-		equipments_[currentEquip_]->Attack(startPos, attackAngle_);
-
-		oldState_ = actionState_;
-		actionState_ = ACTION::THROW;
-		oldInputState_ = processInput_;
-		processInput_ = &Player::Throw;
-	}
-}
-
-void Player::Throw(const float&)
-{
-	auto sprite = self_->GetComponent<SpriteComponent>();
-
-	if(rigidBody_->isGrounded_)
-		rigidBody_->velocity_.X = 0.0f;
-
-	if (sprite->IsFinished())
-	{
-		processInput_ = oldInputState_;
-		actionState_ = oldState_;
-	}
-}
-
-void Player::CrouchInput(const float&)
-{
-	rigidBody_->velocity_.X = 0.0f;
-	rigidBody_->velocity_.Y = 1.0f;
-	if (input_->IsReleased(L"down"))
-		processInput_ = &Player::GroundInput;
-}
-
-void Player::SecondJumpInput(const float& deltaTime)
-{
-	auto sprite = self_->GetComponent<SpriteComponent>();
-
-	Attack(deltaTime);
-	if (isJumping && sprite->IsFinished())
-	{
-		isJumping = false;
-		actionState_ = ACTION::FALL;
-	}
-	ProcessCheckGround();
 }
 
 void Player::SetAngleDirection()
@@ -302,8 +314,7 @@ void Player::UpdateState()
 
 	switch (actionState_)
 	{
-	case ACTION::LEFT:
-	case ACTION::RIGHT:
+	case ACTION::NORMAL_RUN:
 		sprite->Play("run");
 		break;
 	case ACTION::JUMP:
@@ -322,6 +333,10 @@ void Player::UpdateState()
 	case ACTION::CROUCH:
 		rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;
 		sprite->Play("crouch");
+		break;
+	case ACTION::CROUCH_WALK:
+		rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;
+		sprite->Play("crouch-walk");
 		break;
 	}
 

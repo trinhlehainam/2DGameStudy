@@ -186,6 +186,7 @@
     <ClCompile Include="src\System\TextureManager.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Component\TileComponent.cpp" />
+    <ClCompile Include="src\Game Object\Player\SwordEquip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Component\HealthComponent.h" />
@@ -229,6 +230,7 @@
     <ClInclude Include="src\System\TextureManager.h" />
     <ClInclude Include="src\Component\TransformComponent.h" />
     <ClInclude Include="src\Component\TileComponent.h" />
+    <ClInclude Include="src\Game Object\Player\SwordEquip.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

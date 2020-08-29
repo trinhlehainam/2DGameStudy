@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 
 class Player;
 class Vector2;
@@ -10,9 +10,12 @@ class Equipment
 protected:
 	float angle_ = 0.0f;
 	GameScene& gs_;
+	std::string tag_;
 
 public:
-	Equipment(GameScene&);
+	Equipment(GameScene&,const std::string&);
+
+	inline std::string GetTag() const { return tag_; }
 
 	virtual ~Equipment() = default;
 

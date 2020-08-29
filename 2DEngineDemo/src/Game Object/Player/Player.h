@@ -13,12 +13,13 @@ class Equipment;
 enum class ACTION
 {
 	IDLE,
-	LEFT,
-	RIGHT,
+	NORMAL_RUN,
+	SWORD_RUN,
 	JUMP,
 	FALL,
 	THROW,
-	CROUCH
+	CROUCH,
+	CROUCH_WALK
 };
 
 class Player
@@ -29,6 +30,13 @@ private:
 	std::shared_ptr<RigidBody2D> rigidBody_;
 	std::unique_ptr<KeyboardInput> input_;
 	std::shared_ptr<Entity> self_;
+
+	std::vector<std::unique_ptr<Equipment>> equipments_;
+	int currentEquip_ = 0;
+	float attackAngle_ = 0.0f;
+	bool isDrawn = false;
+	bool isJumping = false;
+	bool isCrouch = false;
 
 	ACTION actionState_ = ACTION::IDLE;
 	ACTION oldState_ = actionState_;
@@ -44,20 +52,17 @@ private:
 	void Throw(const float&);
 	void CrouchInput(const float&);
 	void SecondJumpInput(const float&);
+
+	void SideMove(const float& velX);
+	void SetMoveAction(const ACTION& idle, const ACTION& moveType);
 	void ProcessCheckGround();
 	void ProcessFall();
-
-	std::vector<std::unique_ptr<Equipment>> equipments_;
-	int currentEquip_ = 0;
-	float attackAngle_ = 0.0f;
-	
 	void SetAngleDirection();
 public:
 	void UpdateState();
 	Player(GameScene& gs);
 	void Initialize();
 	void Input(const float& deltaTime);
-	void Move(const float& deltaTime);
 	std::shared_ptr<TransformComponent> GetPlayerTransform();
 	void RenderUI();
 	~Player();

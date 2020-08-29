@@ -29,7 +29,7 @@ namespace
 	constexpr unsigned int hurt_animation_speed = 100;
 	constexpr unsigned int death_animation_speed = 200;
 
-	constexpr int side_move_velocity = 100;
+	constexpr int normal_side_velocity = 100;
 	constexpr unsigned int slash_distancce = 50;
 	constexpr float wait_destroy_time = 10.0f;
 
@@ -94,7 +94,7 @@ void Slasher::AimPlayer(const float& deltaTime)
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
-	rigidBody_->velocity_.X = (playerPos_.lock()->pos.X - transform->pos.X) > 0 ? side_move_velocity : -side_move_velocity;
+	rigidBody_->velocity_.X = (playerPos_.lock()->pos.X - transform->pos.X) > 0 ? normal_side_velocity : -normal_side_velocity;
 
 	sprite->isFlipped = rigidBody_->velocity_.X > 0 ? false : true;
 	if (std::abs(playerPos_.lock()->pos.X - transform->pos.X) < slash_distancce)

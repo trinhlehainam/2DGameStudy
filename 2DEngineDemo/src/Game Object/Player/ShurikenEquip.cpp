@@ -1,13 +1,15 @@
 #include "ShurikenEquip.h"
 
-#include "../../Scene/GameScene.h"
 #include "../Entity.h"
-#include "../../System/EntityManager.h"
 #include "../../Geometry/Geometry.h"
+#include "../../Scene/GameScene.h"
+
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/ProjectileEmitterComponent.h"
 #include "../../Component/CircleColliderComponent.h"
+
+#include "../../System/EntityManager.h"
 #include "../../System/CollisionManager.h"
 
 namespace
@@ -22,7 +24,7 @@ namespace
 	constexpr int shuriken_damage = 1;
 }
 
-ShurikenEquip::ShurikenEquip(GameScene& gs):Equipment(gs)
+ShurikenEquip::ShurikenEquip(GameScene& gs,const std::string& tag):Equipment(gs, tag)
 {
 }
 
