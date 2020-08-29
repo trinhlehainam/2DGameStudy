@@ -1,6 +1,6 @@
 #include "RigidBody2D.h"
 #include "TransformComponent.h"
-#include "../Game Object/Entity.h"
+#include "../GameObject/Entity.h"
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 

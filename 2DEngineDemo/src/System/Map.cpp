@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "../Game Object/Entity.h"
+#include "../GameObject/Entity.h"
 #include "../System/EntityManager.h"
 #include "TextureManager.h"
 #include "CollisionManager.h"

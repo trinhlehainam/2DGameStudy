@@ -1,7 +1,7 @@
 #include "ProjectileEmitterComponent.h"
 
 #include "../Constant.h"
-#include "../Game Object/Entity.h"
+#include "../GameObject/Entity.h"
 #include "../Component/TransformComponent.h"
 
 namespace

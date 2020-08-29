@@ -1,5 +1,5 @@
 #include "EnemyManager.h"
-#include "../Game Object/Enemy/Enemy.h"
+#include "../GameObject/Enemy/Enemy.h"
 #include <algorithm>
 
 EnemyManager::EnemyManager(std::shared_ptr<TransformComponent> playerPos, GameScene& gs):playerPos_(playerPos), gs_(gs)

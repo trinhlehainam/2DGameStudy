@@ -4,7 +4,9 @@
 
 #include "../Scene/GameScene.h"
 #include "../System/EffectManager.h"
-#include "../Game Object/Entity.h"
+
+#include "../GameObject/Entity.h"
+
 #include "../Component/CircleColliderComponent.h"
 #include "../Component/AABBColliderComponent.h"
 #include "../Component/TransformComponent.h"

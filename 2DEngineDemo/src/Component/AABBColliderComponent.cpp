@@ -1,6 +1,6 @@
 #include "AABBColliderComponent.h"
 
-#include "../Game Object/Entity.h"
+#include "../GameObject/Entity.h"
 #include "TransformComponent.h"
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"

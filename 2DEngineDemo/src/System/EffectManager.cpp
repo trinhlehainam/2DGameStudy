@@ -1,7 +1,7 @@
 #include "EffectManager.h"
 
 #include "../Scene/GameScene.h"
-#include "../Game Object/Entity.h"
+#include "../GameObject/Entity.h"
 #include "../System/EntityManager.h"
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
