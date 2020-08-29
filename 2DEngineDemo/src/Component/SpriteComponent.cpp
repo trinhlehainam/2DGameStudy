@@ -41,7 +41,7 @@ void SpriteComponent::Update(const float& deltaTime)
 {
 	auto& animation = animations_.at(currentAnimID);
 
-	speedTimer_ += deltaTime * 1000.0f;
+	speedTimer_ += !isStopped * deltaTime * 1000.0f;
 	animation.indexX = (speedTimer_ / animation.animSpeed) % animation.numCelX;
 	if (animation.indexX == animation.numCelX - 1 && animation.numCelX > 1) 
 		animation.indexY = (animation.indexY + 1) % animation.numCelY;
@@ -84,6 +84,22 @@ void SpriteComponent::Play(std::string animID)
 	animations_.at(animID).indexY = 0;
 	speedTimer_ = 0;
 	angleRad_ = 0.0f;
+}
+
+void SpriteComponent::Pause()
+{
+	isStopped = true;
+}
+
+void SpriteComponent::Resume()
+{
+	isStopped = false;
+}
+
+void SpriteComponent::SetSpeed(const unsigned int& animSpeed)
+{
+	auto& animation = animations_.at(currentAnimID);
+	animation.animSpeed = animSpeed;
 }
 
 bool SpriteComponent::IsPlaying(std::string animID)

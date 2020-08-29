@@ -102,12 +102,13 @@ void Player::Input(const float& deltaTime)
 	input_->Update(deltaTime);
 	SetAngleDirection();
 	ChangeEquip(deltaTime);
+	auto sprite = self_->GetComponent<SpriteComponent>();
 	(this->*processInput_)(deltaTime);
 }
 
 void Player::GroundInput(const float& deltaTime)
 {
-	SideMove(normal_side_velocity);
+	SetSideMoveVelocity(normal_side_velocity);
 	SetMoveAction(ACTION::IDLE,ACTION::NORMAL_RUN);
 
 	ProcessFall();
@@ -137,7 +138,6 @@ void Player::Attack(const float& deltaTime)
 			processInput_ = &Player::Throw;
 		}
 	}
-
 }
 
 void Player::Throw(const float&)
@@ -169,7 +169,7 @@ void Player::JumpInput(const float& deltaTime)
 
 void Player::RemainJump(const float& deltaTime)
 {
-	SideMove(normal_side_velocity);
+	SetSideMoveVelocity(normal_side_velocity);
 	Attack(deltaTime);
 	if (input_->IsPressed(L"jump") && isJumping)
 	{
@@ -192,7 +192,7 @@ void Player::RemainJump(const float& deltaTime)
 
 void Player::FallInput(const float& deltaTime)
 {
-	SideMove(normal_side_velocity);
+	SetSideMoveVelocity(normal_side_velocity);
 	Attack(deltaTime);
 	ProcessCheckGround();
 	// Second jump
@@ -207,21 +207,20 @@ void Player::FallInput(const float& deltaTime)
 
 void Player::CrouchInput(const float&)
 {
-	SideMove(crouch_velocity);
+	SetSideMoveVelocity(crouch_velocity);
 	SetMoveAction(ACTION::CROUCH, ACTION::CROUCH_WALK);
 	if (input_->IsReleased(L"down"))
 	{
 		isCrouch = false;
 		processInput_ = &Player::GroundInput;
 	}
-
 }
 
 void Player::SecondJumpInput(const float& deltaTime)
 {
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
-	SideMove(normal_side_velocity);
+	SetSideMoveVelocity(normal_side_velocity);
 	Attack(deltaTime);
 	if (isJumping && sprite->IsFinished())
 	{
@@ -231,7 +230,7 @@ void Player::SecondJumpInput(const float& deltaTime)
 	ProcessCheckGround();
 }
 
-void Player::SideMove(const float& velX)
+void Player::SetSideMoveVelocity(const float& velX)
 {
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	if (input_->IsPressed(L"left"))

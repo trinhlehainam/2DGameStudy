@@ -53,7 +53,7 @@ private:
 	void CrouchInput(const float&);
 	void SecondJumpInput(const float&);
 
-	void SideMove(const float& velX);
+	void SetSideMoveVelocity(const float& velX);
 	void SetMoveAction(const ACTION& idle, const ACTION& moveType);
 	void ProcessCheckGround();
 	void ProcessFall();

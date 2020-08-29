@@ -49,6 +49,9 @@ private:
     unsigned int speedTimer_ = 0;
     float angleRad_ = 0.0f;
     
+    // true: stop at current cel of animation, speedTimer_ is not counting
+    // false: animating normallly, speedTimer_ continue to count
+    bool isStopped = false;
 
 public:
     bool isFlipped = false;
@@ -61,6 +64,9 @@ public:
         const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
 
     void Play(std::string animID);
+    void Pause();
+    void Resume();
+    void SetSpeed(const unsigned int& animSpeed);
     bool IsPlaying(std::string animID);
     bool IsFinished();
 
