@@ -76,7 +76,7 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("player-sword-run", L"assets/Image/Character/Player/adventurer-swd-run-sheet.png");
 	assetMng_->AddTexture("player-fast-run", L"assets/Image/Character/Player/adventurer-fast-run-sheet.png");
 	assetMng_->AddTexture("player-idle", L"assets/Image/Character/Player/adventurer-idle-sheet.png");
-	assetMng_->AddTexture("player-sword-idle", L"assets/Image/Character/Player/adventurer-idle-sword-sheet.png");
+	assetMng_->AddTexture("player-sword-idle", L"assets/Image/Character/Player/adventurer-swd-idle-sheet.png");
 	assetMng_->AddTexture("player-jump", L"assets/Image/Character/Player/adventurer-roll-sheet.png");
 	assetMng_->AddTexture("player-fall", L"assets/Image/Character/Player/adventurer-fall-sheet.png");
 	assetMng_->AddTexture("player-hurt", L"assets/Image/Character/Player/adventurer-hurt-sheet.png");
@@ -86,6 +86,9 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("player-die", L"assets/Image/Character/Player/adventurer-die-sheet.png");
 	assetMng_->AddTexture("player-draw-sword", L"assets/Image/Character/Player/adventurer-swd-drw-sheet.png");
 	assetMng_->AddTexture("player-withdraw-sword", L"assets/Image/Character/Player/adventurer-swd-wd-sheet.png");
+	assetMng_->AddTexture("player-attack1", L"assets/Image/Character/Player/adventurer-attack1-sheet.png");
+	assetMng_->AddTexture("player-attack2", L"assets/Image/Character/Player/adventurer-attack2-sheet.png");
+	assetMng_->AddTexture("player-attack3", L"assets/Image/Character/Player/adventurer-attack3-sheet.png");
 
 	assetMng_->AddTexture("bomb-equip", L"assets/Image/Character/Player/Equipment/bombshot.png");
 	assetMng_->AddTexture("shuriken-equip", L"assets/Image/Character/Player/Equipment/shuriken.png");

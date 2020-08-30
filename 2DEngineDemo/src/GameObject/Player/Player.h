@@ -19,7 +19,12 @@ enum class ACTION
 	FALL,
 	THROW,
 	CROUCH,
-	CROUCH_WALK
+	CROUCH_WALK,
+	ATTACK_1,
+	ATTACK_2,
+	ATTACK_3,
+	DRAW_SWORD,
+	WITHDRAW_SWORD
 };
 
 class Player
@@ -39,25 +44,30 @@ private:
 	bool isCrouch = false;
 
 	ACTION actionState_ = ACTION::IDLE;
-	ACTION oldState_ = actionState_;
+	ACTION oldActionState_ = actionState_;
 	using Input_t = void (Player::*)(const float&);
-	Input_t processInput_;
+	Input_t inputState_;
 	Input_t oldInputState_;
-	void GroundInput(const float&);
-	void JumpInput(const float&);
-	void RemainJump(const float&);
-	void FallInput(const float&);
+	void GroundState(const float&);
+	void JumpState(const float&);
+	void FallState(const float&);
 	void ChangeEquip(const float&);
-	void Attack(const float&);
-	void Throw(const float&);
-	void CrouchInput(const float&);
-	void SecondJumpInput(const float&);
-
+	void ThrowState(const float&);
+	void CrouchState(const float&);
+	void SecondJumpState(const float&);
+	void DrawWithdrawSwordState(const float&);
+	void MeleeAttack(const float&);
+	
 	void SetSideMoveVelocity(const float& velX);
 	void SetMoveAction(const ACTION& idle, const ACTION& moveType);
+	void SetAngleDirection();
+	void ProcessAttack();
+	void ProcessJump();
 	void ProcessCheckGround();
 	void ProcessFall();
-	void SetAngleDirection();
+	void ProcessDrawWithdrawSword();
+	void TurnBackState();
+	
 public:
 	void UpdateState();
 	Player(GameScene& gs);

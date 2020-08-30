@@ -17,7 +17,7 @@ void SpriteComponent::Initialize()
 {
 	transform_ = owner_->GetComponent<TransformComponent>();
 	auto transform = transform_.lock();
-	desRect.pos = transform->pos;
+	desRect.pos = transform->pos - offset_;
 	desRect.w = transform->w * transform->scale;
 	desRect.h = transform->h * transform->scale;
 }
@@ -36,6 +36,13 @@ void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& 
 	anim.indexX = 0;
 	anim.indexY = 0;
 	animations_.emplace(animID, std::move(anim));
+}
+
+void SpriteComponent::SetOffset(const Vector2& offset)
+{
+	auto transform = transform_.lock();
+	offset_ = offset;
+	desRect.pos = transform->pos - offset_;
 }
 
 void SpriteComponent::Update(const float& deltaTime)
@@ -82,6 +89,8 @@ void SpriteComponent::Render()
 		{
 			TextureManager::DrawRectRota(animations_.at(currentAnimID).texture, animations_.at(currentAnimID).srcRect,
 				desRect, transform->scale, angleRad_, isFlipped);
+			// Debug
+			/*TextureManager::DrawBox(desRect, 0x00ff00);*/
 		}
 	}
 }
@@ -90,8 +99,7 @@ void SpriteComponent::NormalRender()
 {
 	auto transform = transform_.lock();
 
-	desRect.pos.X = transform->pos.X - Camera::Instance().viewport.pos.X;
-	desRect.pos.Y = transform->pos.Y - Camera::Instance().viewport.pos.Y;
+	desRect.pos = transform->pos - offset_ - Camera::Instance().viewport.pos;
 	desRect.w = transform->w * transform->scale;
 	desRect.h = transform->h * transform->scale;
 }
@@ -101,7 +109,7 @@ void SpriteComponent::FixedRender()
 	// Do nothing
 }
 
-void SpriteComponent::Play(std::string animID)
+void SpriteComponent::Play(const std::string& animID)
 {
 	if (IsPlaying(animID)) return;
 	currentAnimID = animID;
@@ -127,7 +135,7 @@ void SpriteComponent::SetSpeed(const unsigned int& animSpeed)
 	animation.animSpeed = animSpeed;
 }
 
-bool SpriteComponent::IsPlaying(std::string animID)
+bool SpriteComponent::IsPlaying(const std::string& animID)
 {
 	return currentAnimID.compare(animID) == 0;
 }
