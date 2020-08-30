@@ -37,5 +37,5 @@ void AABBColliderComponent::Render()
 {
 	destRect_.pos = collider_.pos - Camera::Instance().viewport.pos;
 	int color = isActive_ ? 0xffff00 : 0xff0000;
-	TextureManager::DrawBox(destRect_, color);
+	TextureManager::DrawDebugBox(destRect_, color);
 }

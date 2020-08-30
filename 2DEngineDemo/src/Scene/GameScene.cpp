@@ -210,6 +210,7 @@ void GameScene::FadeInRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
+	player_->RenderUI();
 	auto blendpara = 255 * waitTimer_ / wait_fade_time;
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, blendpara);
 	DxLib::DrawBox(windowBox_.Left(), windowBox_.Top(),

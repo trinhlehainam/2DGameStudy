@@ -51,21 +51,22 @@ private:
 	void GroundState(const float&);
 	void JumpState(const float&);
 	void FallState(const float&);
-	void ChangeEquip(const float&);
 	void ThrowState(const float&);
 	void CrouchState(const float&);
 	void SecondJumpState(const float&);
 	void DrawWithdrawSwordState(const float&);
-	void MeleeAttack(const float&);
+	void GroundAttackState(const float&);
 	
 	void SetSideMoveVelocity(const float& velX);
 	void SetMoveAction(const ACTION& idle, const ACTION& moveType);
 	void SetAngleDirection();
-	void ProcessAttack();
+	void ProcessThrow();
+	void ProcessGroundAttack();
 	void ProcessJump();
 	void ProcessCheckGround();
 	void ProcessFall();
 	void ProcessDrawWithdrawSword();
+	void ChangeEquip();
 	void TurnBackState();
 	
 public:

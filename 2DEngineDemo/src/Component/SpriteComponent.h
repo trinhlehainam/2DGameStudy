@@ -18,6 +18,7 @@ struct Animation
     int textureH;
 
     // Animation
+    Vector2 offset_ = Vector2(0.0f, 0.0f);  // Distance between Entity's Transform and Sprite Destination's position
     unsigned int indexX;
     unsigned int indexY;
     unsigned int animSpeed;
@@ -42,7 +43,6 @@ private:
     std::string currentAnimID;
     unsigned int speedTimer_ = 0;
     float angleRad_ = 0.0f;
-    Vector2 offset_ = Vector2(0.0f,0.0f);  // Distance between Entity's Transform and Sprite Destination's position
     
     using AnimateUpdate_t = void (SpriteComponent::*)(const float&);
     AnimateUpdate_t animateUpdate_;
@@ -64,12 +64,12 @@ public:
     void AddAnimation(int texture, std::string animID, const Rect& srcRect,
         const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
 
-    void SetOffset(const Vector2& offset);
+    void SetAnimationOffset(const std::string& animaID, const Vector2& offset);
 
     void Play(const std::string& animID);
     void Pause();
     void Resume();
-    void SetSpeed(const unsigned int& animSpeed);
+    void SetAnimationSpeed(const unsigned int& animSpeed);
     bool IsPlaying(const std::string& animID);
     bool IsFinished();
 
