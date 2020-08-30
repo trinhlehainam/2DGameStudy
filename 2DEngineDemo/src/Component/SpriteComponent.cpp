@@ -13,7 +13,7 @@ namespace
 SpriteComponent::SpriteComponent(Entity& owner, bool isFixed):Component(owner)
 {
 	animateUpdate_ = &SpriteComponent::PlayUpdate;
-	renderUpdate_ = isFixed ? &SpriteComponent::FixedRender : &SpriteComponent::NormalRender;
+	renderUpdate_ = isFixed ? &SpriteComponent::ScreenFixedRender : &SpriteComponent::NormalRender;
 }
 
 void SpriteComponent::Initialize()
@@ -105,9 +105,20 @@ void SpriteComponent::NormalRender()
 	desRect.pos = transform->pos - animation.offset_ - Camera::Instance().viewport.pos;
 }
 
-void SpriteComponent::FixedRender()
+void SpriteComponent::ScreenFixedRender()
 {
 	// Do nothing
+}
+
+void SpriteComponent::HaveOffsetRender()
+{
+	const auto& transform = transform_.lock();
+	auto& animation = animations_.at(currentAnimID);
+
+	desRect.pos.X = transform->pos.X - (!isFlipped ? animation.offset_.X :
+									desRect.w - transform->w * transform->scale - animation.offset_.X);
+	desRect.pos.Y = transform->pos.Y - animation.offset_.Y;
+	desRect.pos -= Camera::Instance().viewport.pos;
 }
 
 void SpriteComponent::Play(const std::string& animID)
@@ -122,6 +133,10 @@ void SpriteComponent::Play(const std::string& animID)
 	auto& animation = animations_.at(currentAnimID);
 	desRect.w = animation.srcRect.w * transform->scale;
 	desRect.h = animation.srcRect.h * transform->scale;
+	if (animation.offset_.X != 0.0f || animation.offset_.Y != 0.0f)
+		renderUpdate_ = &SpriteComponent::HaveOffsetRender;
+	else
+		renderUpdate_ = &SpriteComponent::NormalRender;
 }
 
 void SpriteComponent::Pause()

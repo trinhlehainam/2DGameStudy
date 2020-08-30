@@ -135,10 +135,10 @@ void GameScene::LoadLevel(const int& level)
 	enemyMng_ = std::make_unique<EnemyManager>(player_->GetPlayerTransform(), *this);
 
 	// Create spawn enemy
-	auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
+	/*auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
-	spawners_.emplace_back(std::move(sideSpawner));
+	spawners_.emplace_back(std::move(sideSpawner));*/
 	
 	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
 }

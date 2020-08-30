@@ -52,7 +52,8 @@ private:
     void PlayUpdate(const float& deltaTime);
     void StopUpdate(const float& deltaTime);
     void NormalRender();    // Entity is drawn on the world map
-    void FixedRender();     // Entity is fixed on screen
+    void ScreenFixedRender();     // Entity is fixed on screen
+    void HaveOffsetRender();    // When animation offset is set to difference from zero
 
 public:
     bool isFlipped = false;
@@ -65,7 +66,6 @@ public:
         const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
 
     void SetAnimationOffset(const std::string& animaID, const Vector2& offset);
-
     void Play(const std::string& animID);
     void Pause();
     void Resume();

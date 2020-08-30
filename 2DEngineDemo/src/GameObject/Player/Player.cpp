@@ -29,8 +29,8 @@ namespace
 	constexpr float player_scale = 2.0f;
 
 	const Vector2 attack1_offset = Vector2(0, (attack1_src_rect.h - player_height) * player_scale);
-	const Vector2 attack2_offset = Vector2(0, (attack2_src_rect.h - player_height) * player_scale);
-	const Vector2 attack3_offset = Vector2(0, (attack3_src_rect.h - player_height) * player_scale);
+	const Vector2 attack2_offset = Vector2(10, (attack2_src_rect.h - player_height) * player_scale);
+	const Vector2 attack3_offset = Vector2(10, (attack3_src_rect.h - player_height) * player_scale);
 
 	constexpr float rigidbody_width_scale = 1.2f;
 	constexpr float rigidbody_height_scale = 2.0f;
