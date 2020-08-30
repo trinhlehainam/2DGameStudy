@@ -31,7 +31,7 @@ void RigidBody2D::Render()
 	desRect_.pos = collider_.pos - Camera::Instance().viewport.pos;
 	desRect_.w = collider_.w;
 	desRect_.h = collider_.h;
-	TextureManager::DrawBox(desRect_, 0xffffff);
+	TextureManager::DrawDebugBox(desRect_, 0xffffff);
 }
 
 bool RigidBody2D::IsOwnerExist()

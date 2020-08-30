@@ -23,10 +23,14 @@ namespace
 	const Rect attack1_src_rect = Rect(0, 0, 42, 36);
 	const Rect attack2_src_rect = Rect(0, 0, 45, 29);
 	const Rect attack3_src_rect = Rect(0, 0, 50, 26);
-	const Vector2 start_pos = Vector2(30.0f, 500.0f);
+	const Vector2 start_pos = Vector2(30.0f, 512.0f);
 	constexpr float player_width = 32.0f;
 	constexpr float player_height = 32.0f;
 	constexpr float player_scale = 2.0f;
+
+	const Vector2 attack1_offset = Vector2(0, (attack1_src_rect.h - player_height) * player_scale);
+	const Vector2 attack2_offset = Vector2(0, (attack2_src_rect.h - player_height) * player_scale);
+	const Vector2 attack3_offset = Vector2(0, (attack3_src_rect.h - player_height) * player_scale);
 
 	constexpr float rigidbody_width_scale = 1.2f;
 	constexpr float rigidbody_height_scale = 2.0f;
@@ -93,12 +97,17 @@ void Player::Initialize()
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-crouch"), "crouch", src_rect, crouch_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-crouch-walk"), "crouch-walk", src_rect, crouch_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-cast"), "cast", src_rect, cast_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-draw-sword"), "draw", src_rect, draw_withdraw_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-withdraw-sword"), "withdraw", src_rect, draw_withdraw_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack1"), "attack-1", attack1_src_rect, attack1_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack2"), "attack-2", attack2_src_rect, attack2_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack3"), "attack-3", attack3_src_rect, attack3_animation_speed);
-	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-draw-sword"), "draw", src_rect, draw_withdraw_animation_speed);
-	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-withdraw-sword"), "withdraw", src_rect, draw_withdraw_animation_speed);
 	playerAnim->Play("idle");
+
+	// Set animation offset
+	playerAnim->SetAnimationOffset("attack-1", attack1_offset);
+	playerAnim->SetAnimationOffset("attack-2", attack2_offset);
+	playerAnim->SetAnimationOffset("attack-3", attack3_offset);
 
 	// Set camera track to player
 	Camera::Instance().TrackingOn(self_->GetComponent<TransformComponent>());
@@ -112,7 +121,7 @@ void Player::Input(const float& deltaTime)
 {
 	input_->Update(deltaTime);
 	SetAngleDirection();
-	ChangeEquip(deltaTime);
+	ChangeEquip();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	(this->*inputState_)(deltaTime);
 }
@@ -124,8 +133,9 @@ void Player::GroundState(const float& deltaTime)
 
 	ProcessFall();
 	ProcessJump();
-	ProcessAttack();
+	ProcessThrow();
 	ProcessDrawWithdrawSword();
+	ProcessGroundAttack();
 	if (input_->IsPressed(L"down"))
 	{
 		isCrouch = true;
@@ -134,7 +144,7 @@ void Player::GroundState(const float& deltaTime)
 	}	
 }
 
-void Player::ProcessAttack()
+void Player::ProcessThrow()
 {
 	if (input_->IsTriggered(L"throw") && !isDrawn)
 	{
@@ -156,10 +166,14 @@ void Player::ProcessAttack()
 		inputState_ = &Player::ThrowState;
 		actionState_ = ACTION::THROW;
 	}
+}
 
+void Player::ProcessGroundAttack()
+{
 	if (input_->IsTriggered(L"attack") && isDrawn)
 	{
-		
+		actionState_ = ACTION::ATTACK_1;
+		inputState_ = &Player::GroundAttackState;
 	}
 }
 
@@ -192,7 +206,7 @@ void Player::ProcessJump()
 void Player::JumpState(const float& deltaTime)
 {
 	SetSideMoveVelocity(normal_side_velocity);
-	ProcessAttack();
+	ProcessThrow();
 	if (input_->IsPressed(L"jump") && isJumping)
 	{
 		if (jumpTimeCnt > 0)
@@ -215,7 +229,7 @@ void Player::JumpState(const float& deltaTime)
 void Player::FallState(const float& deltaTime)
 {
 	SetSideMoveVelocity(normal_side_velocity);
-	ProcessAttack();
+	ProcessThrow();
 	ProcessCheckGround();
 	// Second jump
 	if (input_->IsTriggered(L"jump"))
@@ -243,7 +257,7 @@ void Player::SecondJumpState(const float& deltaTime)
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
 	SetSideMoveVelocity(normal_side_velocity);
-	ProcessAttack();
+	ProcessThrow();
 	if (isJumping && sprite->IsFinished())
 	{
 		isJumping = false;
@@ -252,9 +266,24 @@ void Player::SecondJumpState(const float& deltaTime)
 	ProcessCheckGround();
 }
 
-void Player::MeleeAttack(const float&)
+void Player::GroundAttackState(const float&)
 {
-
+	auto sprite = self_->GetComponent<SpriteComponent>();
+	if (sprite->IsFinished())
+	{
+		switch (actionState_)
+		{
+		case ACTION::ATTACK_1:
+			actionState_ = ACTION::ATTACK_2;
+			break;
+		case ACTION::ATTACK_2:
+			actionState_ = ACTION::ATTACK_3;
+			break;
+		case ACTION::ATTACK_3:
+			inputState_ = &Player::GroundState;
+			break;
+		}
+	}
 }
 
 void Player::DrawWithdrawSwordState(const float&)
@@ -323,7 +352,7 @@ void Player::ProcessDrawWithdrawSword()
 	}
 }
 
-void Player::ChangeEquip(const float& deltaTime)
+void Player::ChangeEquip()
 {
 	if (input_->IsTriggered(L"switch"))
 	{

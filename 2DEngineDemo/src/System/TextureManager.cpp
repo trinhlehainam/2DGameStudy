@@ -30,7 +30,7 @@ void TextureManager::DrawCircle( const Circle& desCir, const int& color, const b
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void TextureManager::DrawBox(const Rect& desRect, const int& color, const bool& fill)
+void TextureManager::DrawDebugBox(const Rect& desRect, const int& color, const bool& fill)
 {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DxLib::DrawBox(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), color, fill);
@@ -71,4 +71,14 @@ void TextureManager::SetBlendAlpha(int alpha)
 void TextureManager::SetNormalBlend()
 {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void TextureManager::GetImageSize(const int& imageID, int& sizeX, int& sizeY)
+{
+	DxLib::GetGraphSize(imageID ,&sizeX, &sizeY);
+}
+
+void TextureManager::GetImageSizeF(const int& imageID, float& sizeX, float& sizeY)
+{
+	DxLib::GetGraphSizeF(imageID, &sizeX, &sizeY);
 }
