@@ -18,7 +18,7 @@ AABBColliderComponent::~AABBColliderComponent()
 
 void AABBColliderComponent::Initialize()
 {
-	auto transform = owner_.lock()->GetComponent<TransformComponent>();
+	const auto& transform = owner_.lock()->GetComponent<TransformComponent>();
 	collider_.pos = transform->pos;
 	destRect_ = collider_;
 }
@@ -29,7 +29,7 @@ void AABBColliderComponent::Update(const float& deltaTime)
 	{
 		return;
 	}
-	auto transform = owner_.lock()->GetComponent<TransformComponent>();
+	const auto& transform = owner_.lock()->GetComponent<TransformComponent>();
 	collider_.pos = transform->pos + distance_;
 }
 

@@ -52,7 +52,7 @@ void EffectManager::EmitBloodEffect(const float& posX, const float& posY, bool f
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("blood"), "emit-blood", Rect(0, 0, blood_width, blood_height), blood_anim_speed);
 	anim->isFlipped = flipFlag;
-	anim->Play("emit-blood");
+	anim->PlayOnce("emit-blood");
 }
 
 void EffectManager::BombExplosionEffect(const float& posX, const float& posY)
@@ -62,7 +62,7 @@ void EffectManager::BombExplosionEffect(const float& posX, const float& posY)
 	effect->AddComponent<SpriteComponent>();
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("bomb-explosion"), "explosion", Rect(0, 0, bomb_exp_width, bomb_exp_height), bomb_exp_anim_speed);
-	anim->Play("explosion");
+	anim->PlayOnce("explosion");
 }
 
 void EffectManager::Render()

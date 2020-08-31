@@ -31,7 +31,7 @@ void CircleColliderComponent::Update(const float& deltaTime)
 		return;
 	}
 
-	auto transform = owner_.lock()->GetComponent<TransformComponent>();
+	const auto& transform = owner_.lock()->GetComponent<TransformComponent>();
 	/*---------------------------NEED-TO-BE-CAUTIOUS-------------------------------*/
 	// Because the position of circle's center is different from the Entity postition
 	// So it's necessary to move position of circle to center of Entity

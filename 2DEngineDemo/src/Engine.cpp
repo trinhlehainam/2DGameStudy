@@ -47,7 +47,7 @@ void Engine::Run()
         int timeToWait = MILLISECONDS_PER_FRAME - (DxLib::GetNowCount() - lastTickFrame);
         if (timeToWait > 0 && timeToWait <= MILLISECONDS_PER_FRAME) DxLib::WaitTimer(timeToWait);
 
-        float deltaTime = (DxLib::GetNowCount() - lastTickFrame) / 1000.0f;
+        float deltaTime = static_cast<float>(DxLib::GetNowCount() - lastTickFrame) / (millisecond_to_second);
         lastTickFrame = DxLib::GetNowCount();
 
         sceneInput_->Update(deltaTime);

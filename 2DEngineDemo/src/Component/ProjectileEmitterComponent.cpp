@@ -11,13 +11,13 @@ namespace
 
 bool ProjectileEmitterComponent::IsOutOfWorld()
 {
-	auto transform = owner_->GetComponent<TransformComponent>();
+	const auto& transform = owner_->GetComponent<TransformComponent>();
 	return transform->pos.X < 0.0f || (transform->pos.X + transform->w) > WORLD_MAP_X ||
 		transform->pos.Y < 0.0f || (transform->pos.Y + transform->h) > WORLD_MAP_Y;
 }
 
-ProjectileEmitterComponent::ProjectileEmitterComponent(Entity& owner, Vector2 startPos,
-	Vector2 velocity, const float& range, const int& damage):
+ProjectileEmitterComponent::ProjectileEmitterComponent(Entity& owner, const Vector2& startPos, 
+	const Vector2& velocity, const float& range, const int& damage):
 	Component(owner)
 {
 	start_ = startPos;
@@ -32,7 +32,7 @@ void ProjectileEmitterComponent::Initialize()
 
 void ProjectileEmitterComponent::Update(const float& deltaTime)
 {
-	auto transform = owner_->GetComponent<TransformComponent>();
+	const auto& transform = owner_->GetComponent<TransformComponent>();
 	transform->pos += velocity_ * deltaTime;
 	auto travel_range = transform->pos - start_;
 	if (travel_range * travel_range >= range_ * range_  || IsOutOfWorld())

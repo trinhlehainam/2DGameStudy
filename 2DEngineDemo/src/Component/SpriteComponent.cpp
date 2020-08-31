@@ -1,19 +1,15 @@
 #include "SpriteComponent.h"
 
+#include "../Constant.h"
 #include "../GameObject/Entity.h"
 #include "TransformComponent.h"
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-namespace
-{
-	constexpr int millisecond_to_second = 1000;
-}
-
 SpriteComponent::SpriteComponent(Entity& owner, bool isFixed):Component(owner)
 {
-	animateUpdate_ = &SpriteComponent::PlayUpdate;
-	renderUpdate_ = isFixed ? &SpriteComponent::ScreenFixedRender : &SpriteComponent::NormalRender;
+	animateUpdate_ = &SpriteComponent::PlayLoopUpdate;
+	renderUpdate_ = isFixed ? &SpriteComponent::FixedOnScreenRender : &SpriteComponent::NormalRender;
 }
 
 void SpriteComponent::Initialize()
@@ -49,26 +45,37 @@ void SpriteComponent::SetAnimationOffset(const std::string& animaID, const Vecto
 
 void SpriteComponent::Update(const float& deltaTime)
 {
+	playTimer_ += deltaTime * millisecond_to_second;
 	(this->*animateUpdate_)(deltaTime);
-
-	transform_ = owner_->GetComponent<TransformComponent>();
 }
 
-void SpriteComponent::PlayUpdate(const float& deltaTime)
+void SpriteComponent::PlayLoopUpdate(const float& deltaTime)
 {
 	auto& animation = animations_.at(currentAnimID);
 
-	speedTimer_ += deltaTime * millisecond_to_second;
-	animation.indexX = (speedTimer_ / animation.animSpeed) % animation.numCelX;
+	animation.indexX = (playTimer_ / animation.animSpeed) % animation.numCelX;
+	// Check if the sprite sheet is vertically arranged
+	// Condition that sprite sheet is arranged in vertical : sprite sheet has ONLY ONE cell in HORIZON
 	if (animation.indexX == animation.numCelX - 1 && animation.numCelX > 1)
 		animation.indexY = (animation.indexY + 1) % animation.numCelY;
 	else
-		animation.indexY = (speedTimer_ / animation.animSpeed) % animation.numCelY;
+		animation.indexY = (playTimer_ / animation.animSpeed) % animation.numCelY;
 
 	animation.srcRect.pos.X = animation.indexX * animation.srcRect.w;
 	animation.srcRect.pos.Y = animation.indexY * animation.srcRect.w;
 
 	angleRad_ += animation.rotateSpeed * deltaTime;
+}
+
+void SpriteComponent::PlayOnceUpdate(const float& deltaTime)
+{
+	if (IsFinished())
+	{
+		SetFinish();
+		return;
+	}
+
+	PlayLoopUpdate(deltaTime);
 }
 
 void SpriteComponent::StopUpdate(const float& deltaTime)
@@ -105,7 +112,7 @@ void SpriteComponent::NormalRender()
 	desRect.pos = transform->pos - animation.offset_ - Camera::Instance().viewport.pos;
 }
 
-void SpriteComponent::ScreenFixedRender()
+void SpriteComponent::FixedOnScreenRender()
 {
 	// Do nothing
 }
@@ -121,13 +128,13 @@ void SpriteComponent::HaveOffsetRender()
 	desRect.pos -= Camera::Instance().viewport.pos;
 }
 
-void SpriteComponent::Play(const std::string& animID)
+void SpriteComponent::PlayAnimation(const std::string& animID)
 {
 	if (IsPlaying(animID)) return;
 	currentAnimID = animID;
 	animations_.at(animID).indexX = 0;
 	animations_.at(animID).indexY = 0;
-	speedTimer_ = 0;
+	playTimer_ = 0;
 	angleRad_ = 0.0f;
 	const auto& transform = transform_.lock();
 	auto& animation = animations_.at(currentAnimID);
@@ -139,6 +146,31 @@ void SpriteComponent::Play(const std::string& animID)
 		renderUpdate_ = &SpriteComponent::NormalRender;
 }
 
+void SpriteComponent::PlayLoop(const std::string& animID)
+{
+	PlayAnimation(animID);
+	animateUpdate_ = &SpriteComponent::PlayLoopUpdate;
+	playState_ = PLAY::LOOP;
+}
+
+
+void SpriteComponent::PlayOnce(const std::string& animID)
+{
+	PlayAnimation(animID);
+	animateUpdate_ = &SpriteComponent::PlayOnceUpdate;
+	playState_ = PLAY::ONCE;
+}
+
+void SpriteComponent::SetFinish()
+{
+	auto& animation = animations_.at(currentAnimID);
+	animation.indexX = (animation.numCelX - 1);
+	animation.indexY = (animation.numCelY - 1);
+	animation.srcRect.pos.X = animation.indexX * animation.srcRect.w;
+	animation.srcRect.pos.Y = animation.indexY * animation.srcRect.w;
+	animateUpdate_ = &SpriteComponent::StopUpdate;
+}
+
 void SpriteComponent::Pause()
 {
 	animateUpdate_ = &SpriteComponent::StopUpdate;
@@ -146,7 +178,15 @@ void SpriteComponent::Pause()
 
 void SpriteComponent::Resume()
 {
-	animateUpdate_ = &SpriteComponent::PlayUpdate;
+	switch (playState_)
+	{
+		case PLAY::LOOP:
+			animateUpdate_ = &SpriteComponent::PlayLoopUpdate;
+			break;
+		case PLAY::ONCE:
+			animateUpdate_ = &SpriteComponent::PlayOnceUpdate;
+			break;
+	}
 }
 
 void SpriteComponent::SetAnimationSpeed(const unsigned int& animSpeed)
@@ -163,7 +203,9 @@ bool SpriteComponent::IsPlaying(const std::string& animID)
 bool SpriteComponent::IsFinished()
 {
 	auto& animation = animations_.at(currentAnimID);
-	return animation.indexX == (animation.numCelX - 1) && animation.indexY == (animation.numCelY - 1);
+	return playTimer_ >= animation.animSpeed * (animation.numCelX * animation.numCelY);
+	/*return (animation.indexX == (animation.numCelX - 1)) && 
+			(animation.indexY == (animation.numCelY - 1));*/
 }
 
 SpriteComponent::~SpriteComponent()

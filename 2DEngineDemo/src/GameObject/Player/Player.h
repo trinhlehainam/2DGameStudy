@@ -39,6 +39,7 @@ private:
 	std::vector<std::unique_ptr<Equipment>> equipments_;
 	int currentEquip_ = 0;
 	float attackAngle_ = 0.0f;
+	float timer_;
 	bool isDrawn = false;
 	bool isJumping = false;
 	bool isCrouch = false;

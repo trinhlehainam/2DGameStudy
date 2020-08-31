@@ -41,7 +41,7 @@ void BombEquip::Attack(const Vector2& startPos, const float& angle)
 	anim->AddAnimation(gs_.GetTexture("bomb-equip"), "attack",
 		Rect(0, 0, bomb_width, bomb_height),
 		1, rotate_speed);
-	anim->Play("attack");
+	anim->PlayLoop("attack");
 	auto& collider = gs_.collisionMng_->AddProjectileCollider(projectile,
 		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_radius);
 	collider.SetDistance(collider_distance_x, collider_distance_y);

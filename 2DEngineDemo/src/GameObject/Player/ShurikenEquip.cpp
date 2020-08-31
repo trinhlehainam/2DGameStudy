@@ -41,7 +41,7 @@ void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 	anim->AddAnimation(gs_.GetTexture("shuriken-equip"), "attack",
 		Rect(0, 0, shuriken_width, shuriken_height),
 		1, rotate_speed);
-	anim->Play("attack");
+	anim->PlayLoop("attack");
 	auto& collider = gs_.collisionMng_->AddProjectileCollider(projectile,
 		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_radius);
 	collider.SetDistance(shuriken_radius, shuriken_radius);

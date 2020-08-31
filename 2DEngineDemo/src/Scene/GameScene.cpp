@@ -135,10 +135,10 @@ void GameScene::LoadLevel(const int& level)
 	enemyMng_ = std::make_unique<EnemyManager>(player_->GetPlayerTransform(), *this);
 
 	// Create spawn enemy
-	/*auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
+	auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
-	spawners_.emplace_back(std::move(sideSpawner));*/
+	spawners_.emplace_back(std::move(sideSpawner));
 	
 	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
 }
@@ -176,10 +176,14 @@ void GameScene::GameUpdate(const float& deltaTime)
 		spawner->Update(deltaTime);
 	}
 	collisionMng_->ApplyForce(deltaTime);
+	/*----------------------------------------------------------------------------*/
+	// Update player's STATE right after received player's INPUT
+	// Purpose : update player's state before updating player's animation to AVOID BLINKING animation ( late animation )
+	player_->UpdateState();
+	/*----------------------------------------------------------------------------*/
 	enemyMng_->Update(deltaTime);
 	entityMng_->Update(deltaTime);
 	Camera::Instance().Update();
-	player_->UpdateState();
 	environment_->Update(deltaTime);
 	ProcessEnterBossArea();
 	collisionMng_->PlatformResolution(deltaTime);
