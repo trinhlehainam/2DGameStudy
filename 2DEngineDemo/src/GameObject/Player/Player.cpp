@@ -209,6 +209,11 @@ void Player::ProcessJump()
 		actionState_ = ACTION::JUMP;
 		inputState_ = &Player::JumpState;
 	}
+	if (isJumping)
+	{
+		actionState_ = ACTION::JUMP;
+		inputState_ = &Player::JumpState;
+	}
 }
 
 void Player::JumpState(const float& deltaTime)
@@ -227,11 +232,18 @@ void Player::JumpState(const float& deltaTime)
 			isJumping = false;
 		}
 	}
+
 	if (input_->IsReleased(L"jump"))
 	{
 		isJumping = false;
 	}
-	ProcessFall();
+
+	if (!isJumping)
+	{
+		rigidBody_->isGrounded_ = false;
+		actionState_ = ACTION::FALL;
+		inputState_ = &Player::FallState;
+	}
 }
 
 void Player::FallState(const float& deltaTime)

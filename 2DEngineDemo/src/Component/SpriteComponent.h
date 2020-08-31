@@ -40,7 +40,6 @@ private:
     Rect desRect;
     std::unordered_map<std::string, Animation> animations_;                                  
     std::string currentAnimID;
-    unsigned int playTimer_ = 0;
     float angleRad_ = 0.0f;
     
     // Animation update
@@ -50,6 +49,8 @@ private:
         ONCE
     };
     PLAY playState_;
+    unsigned int playTimer_ = 0;
+    bool isPlaying_;
     using AnimateUpdate_t = void (SpriteComponent::*)(const float&);
     AnimateUpdate_t animateUpdate_;
     using RenderUpdate_t = void (SpriteComponent::*)();

@@ -45,7 +45,7 @@ void SpriteComponent::SetAnimationOffset(const std::string& animaID, const Vecto
 
 void SpriteComponent::Update(const float& deltaTime)
 {
-	playTimer_ += deltaTime * millisecond_to_second;
+	playTimer_ += isPlaying_ * deltaTime * millisecond_to_second;
 	(this->*animateUpdate_)(deltaTime);
 }
 
@@ -71,6 +71,7 @@ void SpriteComponent::PlayOnceUpdate(const float& deltaTime)
 {
 	if (IsFinished())
 	{
+		isPlaying_ = false;
 		SetFinish();
 		return;
 	}
@@ -144,6 +145,7 @@ void SpriteComponent::PlayAnimation(const std::string& animID)
 		renderUpdate_ = &SpriteComponent::HaveOffsetRender;
 	else
 		renderUpdate_ = &SpriteComponent::NormalRender;
+	isPlaying_ = true;
 }
 
 void SpriteComponent::PlayLoop(const std::string& animID)
@@ -152,7 +154,6 @@ void SpriteComponent::PlayLoop(const std::string& animID)
 	animateUpdate_ = &SpriteComponent::PlayLoopUpdate;
 	playState_ = PLAY::LOOP;
 }
-
 
 void SpriteComponent::PlayOnce(const std::string& animID)
 {
@@ -174,6 +175,7 @@ void SpriteComponent::SetFinish()
 void SpriteComponent::Pause()
 {
 	animateUpdate_ = &SpriteComponent::StopUpdate;
+	isPlaying_ = false;
 }
 
 void SpriteComponent::Resume()
