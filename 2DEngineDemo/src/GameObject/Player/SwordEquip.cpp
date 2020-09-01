@@ -6,8 +6,6 @@
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
-#include "../../Component/ProjectileEmitterComponent.h"
-#include "../../Component/CircleColliderComponent.h"
 
 #include "../../System/EntityManager.h"
 #include "../../System/CollisionManager.h"

@@ -26,7 +26,7 @@ public:
 	void Update(const float& deltaTime) override;
 	void Render() override;
 	
-	RigidBody2D(std::shared_ptr<Entity> owner, const Vector2& pos, const float&w, const float& h);
+	RigidBody2D(const std::shared_ptr<Entity>& owner, const Vector2& pos, const float&w, const float& h);
 
 	~RigidBody2D() = default;
 };

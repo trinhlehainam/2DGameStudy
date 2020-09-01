@@ -49,8 +49,8 @@ Slasher::~Slasher()
 void Slasher::Initialize()
 {
 	self_ = gs_.entityMng_->AddEntity("slasher");
-	self_->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
-	self_->AddComponent<SpriteComponent>();
+	self_->AddComponent<TransformComponent>(self_, start_pos, slasher_width, slasher_height, size_scale);
+	self_->AddComponent<SpriteComponent>(self_);
 	const auto& anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", src_rect, run_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", src_rect, slash_animation_speed);
@@ -58,7 +58,7 @@ void Slasher::Initialize()
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-death"), "death", src_rect, death_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-lying"), "lying", src_rect, 1);
 	anim->PlayLoop("run");
-	self_->AddComponent<HealthComponent>(max_health);
+	self_->AddComponent<HealthComponent>(self_, max_health);
 	actionUpdate_ = &Slasher::AimPlayer;
 }
 

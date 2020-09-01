@@ -24,6 +24,27 @@ namespace {
 	
 }
 
+Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_) :Enemy(gs, playerPos_)
+{
+	updater_ = &Asura::EnteringUpdate;
+}
+
+Asura::~Asura()
+{
+}
+
+void Asura::Initialize()
+{
+	self_ = gs_.entityMng_->AddEntity("asura");
+	self_->AddComponent<TransformComponent>(self_, start_pos, asura_width, asura_height, size_scale);
+	self_->AddComponent<SpriteComponent>(self_);
+	const auto& anim = self_->GetComponent<SpriteComponent>();
+	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1);
+	anim->PlayLoop("idle");
+	auto& collider = gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
+	colliders_.push_back(collider);
+}
+
 void Asura::EnteringUpdate(const float& deltaTime)
 {
 	auto transform = self_->GetComponent<TransformComponent>();
@@ -50,27 +71,6 @@ void Asura::ExitingUpdate(const float& deltaTime)
 
 void Asura::DeadUpdate(const float& deltaTime)
 {
-}
-
-Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_):Enemy(gs,playerPos_)
-{
-	updater_ = &Asura::EnteringUpdate;
-}
-
-Asura::~Asura()
-{
-}
-
-void Asura::Initialize()
-{
-	self_ = gs_.entityMng_->AddEntity("asura");
-	self_->AddComponent<TransformComponent>(start_pos, asura_width, asura_height, size_scale);
-	self_->AddComponent<SpriteComponent>();
-	const auto& anim = self_->GetComponent<SpriteComponent>();
-	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1);
-	anim->PlayLoop("idle");
-	auto& collider = gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
-	colliders_.push_back(collider);
 }
 
 void Asura::Update(const float& deltaTime)

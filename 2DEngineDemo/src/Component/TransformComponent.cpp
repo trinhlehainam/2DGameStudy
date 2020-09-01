@@ -5,7 +5,8 @@
 #include "../Geometry/Geometry.h"
 #include "../System/Camera.h"
 
-TransformComponent::TransformComponent(Entity& owner, const Vector2& pos, const float& w, const float& h, const float& scale) :Component(owner)
+TransformComponent::TransformComponent(const std::shared_ptr<Entity>& owner, const Vector2& pos, const float& w,
+	const float& h, const float& scale):Component(owner)
 {
 	this->pos = pos;
 	this->w = w;

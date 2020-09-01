@@ -4,10 +4,10 @@
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-AttackColliderComponent::AttackColliderComponent(std::shared_ptr<Entity> owner, const Vector2& pos, const float& w, const float& h) :
+AttackColliderComponent::AttackColliderComponent(const std::shared_ptr<Entity>& owner, const Vector2& pos, const float& w, const float& h) :
 	ColliderComponent(owner), collider_(pos, w, h)
 {
-	auto transform = owner_.lock()->GetComponent<TransformComponent>();
+	const auto& transform = owner_.lock()->GetComponent<TransformComponent>();
 	collider_.pos = transform->pos;
 	destRect_ = collider_;
 }
@@ -23,7 +23,7 @@ void AttackColliderComponent::Update(const float& deltaTime)
 		return;
 	}
 	const auto& transform = owner_.lock()->GetComponent<TransformComponent>();
-	collider_.pos = transform->pos + distance_;
+	collider_.pos = transform->pos + offset_;
 }
 
 void AttackColliderComponent::Render()

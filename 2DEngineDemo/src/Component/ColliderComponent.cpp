@@ -1,30 +1,17 @@
 #include "ColliderComponent.h"
 
-#include "../GameObject/Entity.h"
-
-
-bool ColliderComponent::IsOwnerExist()
-{
-	return !owner_.expired();
-}
-
-std::string ColliderComponent::OwnerTag()
-{
-	auto ownerTag = owner_.lock()->GetName();
-	return ownerTag;
-}
-
-void ColliderComponent::SetDistance(const float& X, const float& Y)
-{
-	distance_.X = X;
-	distance_.Y = Y;
-}
-
-ColliderComponent::ColliderComponent(std::shared_ptr<Entity> owner, std::string tag):
-	owner_(owner),tag_(tag)
+ColliderComponent::ColliderComponent(const std::shared_ptr<Entity>& owner, std::string tag) :
+	owner_(owner), tag_(tag), Component(owner)
 {
 }
 
-ColliderComponent::ColliderComponent(std::shared_ptr<Entity> owner):owner_(owner)
+ColliderComponent::ColliderComponent(const std::shared_ptr<Entity>& owner) : owner_(owner), Component(owner)
 {
 }
+
+void ColliderComponent::SetOffset(const float& X, const float& Y)
+{
+	offset_.X = X;
+	offset_.Y = Y;
+}
+

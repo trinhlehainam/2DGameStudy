@@ -5,7 +5,7 @@
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-CircleColliderComponent::CircleColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
+CircleColliderComponent::CircleColliderComponent(const std::shared_ptr<Entity>& owner, std::string tag,
 	const float& posX, const float& posY, const float& radius):
 	ColliderComponent(owner, tag)
 {
@@ -36,7 +36,7 @@ void CircleColliderComponent::Update(const float& deltaTime)
 	// Because the position of circle's center is different from the Entity postition
 	// So it's necessary to move position of circle to center of Entity
 	/*------------------------------------------------------------------------------*/
-	collider_.pos = transform->pos + distance_;
+	collider_.pos = transform->pos + offset_;
 }
 
 void CircleColliderComponent::Render()

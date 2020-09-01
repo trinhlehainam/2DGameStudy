@@ -42,8 +42,8 @@ namespace
 
 	// Time counter ( millisecond )
 	constexpr float jump_time = 0.35f;
-	constexpr float change_attack_time = 0.1f;
-	constexpr float cooldown_attack_time = 0.2;
+	constexpr float change_attack_time = 0.07f;
+	constexpr float cooldown_attack_time = 0.2f;
 
 	// Movement's velocity
 	constexpr float jump_velocity = 300.0f;
@@ -83,7 +83,7 @@ void Player::Initialize()
 	oldInputState_ = inputState_;
 
 	self_ = gs_.entityMng_->AddEntity("player");
-	self_->AddComponent<TransformComponent>(start_pos, player_width, player_height, player_scale);
+	self_->AddComponent<TransformComponent>(self_, start_pos, player_width, player_height, player_scale);
 	const auto& rigidBody = gs_.collisionMng_->AddRigidBody2D(
 		self_, 
 		start_pos,
@@ -91,7 +91,7 @@ void Player::Initialize()
 		player_height * rigidbody_height_scale);
 	rigidBody_ = rigidBody;
 	rigidBody->tag_ = "PLAYER";
-	self_->AddComponent<SpriteComponent>();
+	self_->AddComponent<SpriteComponent>(self_);
 	const auto& playerAnim = self_->GetComponent<SpriteComponent>();
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", src_rect, idle_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-sword-idle"), "sword-idle", src_rect, idle_animation_speed);

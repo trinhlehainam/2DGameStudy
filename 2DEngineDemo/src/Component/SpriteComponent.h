@@ -84,7 +84,7 @@ public:
     bool IsPlaying(const std::string& animID);
     bool IsFinished();
 
-    SpriteComponent(Entity& owner, bool isFixed = false);
+    SpriteComponent(const std::shared_ptr<Entity>& owner, bool isFixed = false);
     ~SpriteComponent();
 };
 

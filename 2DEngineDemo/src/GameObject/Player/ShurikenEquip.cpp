@@ -35,8 +35,8 @@ ShurikenEquip::~ShurikenEquip()
 void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 {
 	auto projectile = gs_.entityMng_->AddProjectTile("shuriken");
-	projectile->AddComponent<TransformComponent>(startPos, shuriken_width, shuriken_height, scale);
-	projectile->AddComponent<SpriteComponent>();
+	projectile->AddComponent<TransformComponent>(projectile, startPos, shuriken_width, shuriken_height, scale);
+	projectile->AddComponent<SpriteComponent>(projectile);
 	auto anim = projectile->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("shuriken-equip"), "attack",
 		Rect(0, 0, shuriken_width, shuriken_height),
@@ -44,9 +44,9 @@ void ShurikenEquip::Attack(const Vector2& startPos, const float& angle)
 	anim->PlayLoop("attack");
 	auto& collider = gs_.collisionMng_->AddProjectileCollider(projectile,
 		"PLAYER-SHURIKEN", startPos.X , startPos.Y , shuriken_radius);
-	collider.SetDistance(shuriken_radius, shuriken_radius);
+	collider.SetOffset(shuriken_radius, shuriken_radius);
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
-	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range, shuriken_damage);
+	projectile->AddComponent<ProjectileEmitterComponent>(projectile, startPos, std::move(velocity), move_range, shuriken_damage);
 }
 
 void ShurikenEquip::Initialize()

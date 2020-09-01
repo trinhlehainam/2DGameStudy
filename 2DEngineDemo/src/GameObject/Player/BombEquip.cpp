@@ -35,8 +35,8 @@ void BombEquip::Initialize()
 void BombEquip::Attack(const Vector2& startPos, const float& angle)
 {
 	auto projectile = gs_.entityMng_->AddProjectTile("bomb");
-	projectile->AddComponent<TransformComponent>(startPos, bomb_width, bomb_height, scale);
-	projectile->AddComponent<SpriteComponent>();
+	projectile->AddComponent<TransformComponent>(projectile, startPos, bomb_width, bomb_height, scale);
+	projectile->AddComponent<SpriteComponent>(projectile);
 	auto anim = projectile->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("bomb-equip"), "attack",
 		Rect(0, 0, bomb_width, bomb_height),
@@ -44,10 +44,10 @@ void BombEquip::Attack(const Vector2& startPos, const float& angle)
 	anim->PlayLoop("attack");
 	auto& collider = gs_.collisionMng_->AddProjectileCollider(projectile,
 		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_radius);
-	collider.SetDistance(collider_distance_x, collider_distance_y);
+	collider.SetOffset(collider_distance_x, collider_distance_y);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
-	projectile->AddComponent<ProjectileEmitterComponent>(startPos, std::move(velocity), move_range, bomb_damage);
+	projectile->AddComponent<ProjectileEmitterComponent>(projectile, startPos, std::move(velocity), move_range, bomb_damage);
 }
 
 void BombEquip::Render()

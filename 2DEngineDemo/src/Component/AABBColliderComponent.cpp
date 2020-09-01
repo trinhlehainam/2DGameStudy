@@ -5,7 +5,7 @@
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-AABBColliderComponent::AABBColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
+AABBColliderComponent::AABBColliderComponent(const std::shared_ptr<Entity>& owner, std::string tag,
 	const Vector2& pos, const float& w, const float& h):ColliderComponent(owner, tag)
 {
 	collider_ = Rect(pos, w, h);
@@ -30,7 +30,7 @@ void AABBColliderComponent::Update(const float& deltaTime)
 		return;
 	}
 	const auto& transform = owner_.lock()->GetComponent<TransformComponent>();
-	collider_.pos = transform->pos + distance_;
+	collider_.pos = transform->pos + offset_;
 }
 
 void AABBColliderComponent::Render()

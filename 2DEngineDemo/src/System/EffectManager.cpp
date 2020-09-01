@@ -47,8 +47,8 @@ void EffectManager::Update(const float& deltaTime)
 void EffectManager::EmitBloodEffect(const float& posX, const float& posY, bool flipFlag)
 {
 	auto effect = gs_.entityMng_->AddEffect("emit-blood");
-	effect->AddComponent<TransformComponent>(Vector2(posX - blood_offset_x, posY - blood_offset_y), blood_width, blood_height, blood_scale);
-	effect->AddComponent<SpriteComponent>();
+	effect->AddComponent<TransformComponent>(effect, Vector2(posX - blood_offset_x, posY - blood_offset_y), blood_width, blood_height, blood_scale);
+	effect->AddComponent<SpriteComponent>(effect);
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("blood"), "emit-blood", Rect(0, 0, blood_width, blood_height), blood_anim_speed);
 	anim->isFlipped = flipFlag;
@@ -58,8 +58,8 @@ void EffectManager::EmitBloodEffect(const float& posX, const float& posY, bool f
 void EffectManager::BombExplosionEffect(const float& posX, const float& posY)
 {
 	auto effect = gs_.entityMng_->AddEffect("bomb-explosion");
-	effect->AddComponent<TransformComponent>(Vector2(posX - bomb_exp_offset_x, posY - bomb_exp_offset_y), bomb_exp_width, bomb_exp_height, bomb_exp_scale);
-	effect->AddComponent<SpriteComponent>();
+	effect->AddComponent<TransformComponent>(effect, Vector2(posX - bomb_exp_offset_x, posY - bomb_exp_offset_y), bomb_exp_width, bomb_exp_height, bomb_exp_scale);
+	effect->AddComponent<SpriteComponent>(effect);
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("bomb-explosion"), "explosion", Rect(0, 0, bomb_exp_width, bomb_exp_height), bomb_exp_anim_speed);
 	anim->PlayOnce("explosion");

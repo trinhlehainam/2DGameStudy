@@ -6,7 +6,7 @@
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-SpriteComponent::SpriteComponent(Entity& owner, bool isFixed):Component(owner)
+SpriteComponent::SpriteComponent(const std::shared_ptr<Entity>& owner, bool isFixed):Component(owner)
 {
 	animateUpdate_ = &SpriteComponent::PlayLoopUpdate;
 	renderUpdate_ = isFixed ? &SpriteComponent::FixedOnScreenRender : &SpriteComponent::NormalRender;
@@ -14,7 +14,8 @@ SpriteComponent::SpriteComponent(Entity& owner, bool isFixed):Component(owner)
 
 void SpriteComponent::Initialize()
 {
-	transform_ = owner_->GetComponent<TransformComponent>();
+	const auto& owner = owner_.lock();
+	transform_ = owner->GetComponent<TransformComponent>();
 	const auto& transform = transform_.lock();
 	desRect.pos = transform->pos;
 }

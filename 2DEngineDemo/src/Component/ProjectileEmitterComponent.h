@@ -16,8 +16,8 @@ private:
 
     bool IsOutOfWorld();
 public:
-    ProjectileEmitterComponent(Entity& owner,const Vector2& startPos, const Vector2& velocity,
-        const float& range, const int& damage);
+    ProjectileEmitterComponent(const std::shared_ptr<Entity>& owner, const Vector2& startPos, 
+        const Vector2& velocity, const float& range, const int& damage);
     ~ProjectileEmitterComponent() = default;
     inline int GetDamage() const { return damage_; }
     void Initialize() override;

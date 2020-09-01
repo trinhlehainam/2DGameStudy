@@ -1,8 +1,8 @@
 #include "HealthComponent.h"
 
 
-HealthComponent::HealthComponent(Entity& owner, const int& maxHealth):
-	Component(owner),health_(maxHealth),maxHealth_(maxHealth)
+HealthComponent::HealthComponent(const std::shared_ptr<Entity>& owner, const int& maxHealth):
+	health_(maxHealth),maxHealth_(maxHealth),Component(owner)
 {
 }
 

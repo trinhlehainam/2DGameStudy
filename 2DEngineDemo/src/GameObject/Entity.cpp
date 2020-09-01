@@ -47,3 +47,11 @@ Vector2 Entity::GetProjectileVelocity()
 	if (HasComponent<ProjectileEmitterComponent>())
 		return GetComponent<ProjectileEmitterComponent>()->velocity_;
 }
+
+void Entity::SetOwnerForAllComponent(const std::shared_ptr<Entity>& owner)
+{
+	for (auto& component : components_)
+	{
+		component->SetOwner(owner);
+	}
+}

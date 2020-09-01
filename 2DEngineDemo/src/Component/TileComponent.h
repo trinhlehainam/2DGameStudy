@@ -37,7 +37,7 @@ public:
 	/// <param name="tileSize:">size of tile</param>
 	/// <param name="scale:"></param>
 	/// <returns></returns>
-	TileComponent(Entity& owner, int texture, const float& srcX, const float& srcY, const float& posX,
+	TileComponent(const std::shared_ptr<Entity>& owner, int texture, const float& srcX, const float& srcY, const float& posX,
 		const float& posY, const int& tileSize, const float& scale);
 
 	void Initialize() override;

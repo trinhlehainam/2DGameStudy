@@ -10,7 +10,7 @@ private:
     int maxHealth_;
 public:
 
-    HealthComponent(Entity& owner, const int& maxHealth);
+    HealthComponent(const std::shared_ptr<Entity>& owner, const int& maxHealth);
     ~HealthComponent() = default;
 
     void Initialize() override;

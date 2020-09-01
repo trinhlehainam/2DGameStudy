@@ -14,7 +14,7 @@ public:
 	Rect collider_;
 	Rect destRect_;
 
-	AABBColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
+	AABBColliderComponent(const std::shared_ptr<Entity>& owner, std::string tag,
 		const Vector2& pos, const float& w, const float& h);
 	~AABBColliderComponent();
 

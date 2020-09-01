@@ -4,7 +4,7 @@
 #include "../System/TextureManager.h"
 #include "../System/Camera.h"
 
-RigidBody2D::RigidBody2D(std::shared_ptr<Entity> owner,
+RigidBody2D::RigidBody2D(const std::shared_ptr<Entity>& owner,
 	const Vector2& pos, const float& w, const float& h) :
 	ColliderComponent(owner),collider_(pos, w, h)
 {

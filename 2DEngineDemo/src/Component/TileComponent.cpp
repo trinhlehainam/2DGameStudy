@@ -6,9 +6,9 @@
 
 #include "../System/Camera.h"
 
-TileComponent::TileComponent(Entity& owner, int texture, const float& srcX, 
-	const float& srcY, const float& x,const float& y, const int& tileSize, const float& scale):
-	Component(owner)
+TileComponent::TileComponent(const std::shared_ptr<Entity>& owner, int texture, const float& srcX,
+	const float& srcY, const float& x,const float& y, const int& tileSize, const float& scale)
+	:Component(owner)
 {
 	this->texture = texture;
 
