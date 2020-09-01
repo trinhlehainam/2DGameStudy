@@ -24,3 +24,7 @@ ColliderComponent::ColliderComponent(std::shared_ptr<Entity> owner, std::string 
 	owner_(owner),tag_(tag)
 {
 }
+
+ColliderComponent::ColliderComponent(std::shared_ptr<Entity> owner):owner_(owner)
+{
+}

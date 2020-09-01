@@ -42,7 +42,8 @@ namespace
 
 	// Time counter ( millisecond )
 	constexpr float jump_time = 0.35f;
-	constexpr float change_attack_time = 0.3f;
+	constexpr float change_attack_time = 0.1f;
+	constexpr float cooldown_attack_time = 0.2;
 
 	// Movement's velocity
 	constexpr float jump_velocity = 300.0f;
@@ -60,9 +61,9 @@ namespace
 	constexpr unsigned int die_animation_speed = 100;
 	constexpr unsigned int cast_animation_speed = 50;
 	constexpr unsigned int crouch_animation_speed = 100;
-	constexpr unsigned int attack1_animation_speed = 100;
-	constexpr unsigned int attack2_animation_speed = 100;
-	constexpr unsigned int attack3_animation_speed = 100;
+	constexpr unsigned int attack1_animation_speed = 70;
+	constexpr unsigned int attack2_animation_speed = 70;
+	constexpr unsigned int attack3_animation_speed = 70;
 	constexpr unsigned int draw_withdraw_animation_speed = 100;
 
 	constexpr char sword_tag[] = "SWORD";
@@ -177,11 +178,27 @@ void Player::ProcessThrow()
 
 void Player::ProcessGroundAttack()
 {
-	if (input_->IsTriggered(L"attack") && isDrawn)
+	if (input_->IsPressed(L"attack") && isDrawn)
 	{
-		actionState_ = ACTION::ATTACK_1;
+		switch (actionState_)
+		{
+		case ACTION::ATTACK_1:
+			timer_ = change_attack_time;
+			actionState_ = ACTION::ATTACK_2;
+			break;
+		case ACTION::ATTACK_2:
+			timer_ = change_attack_time;
+			actionState_ = ACTION::ATTACK_3;
+			break;
+		case ACTION::ATTACK_3:
+			timer_ = change_attack_time;
+			actionState_ = ACTION::ATTACK_1;
+		default:
+			actionState_ = ACTION::ATTACK_1;
+			timer_ = change_attack_time;
+			break;
+		}
 		inputState_ = &Player::GroundAttackState;
-		timer_ = 0.0f;
 	}
 }
 
@@ -290,28 +307,21 @@ void Player::GroundAttackState(const float& deltaTime)
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
 	rigidBody_->velocity_.X = 0;
-	/*if (timer_ > 0)
-	{
-		timer_ -= deltaTime;
-		return;
-	}*/
+	
 	if (sprite->IsFinished())
 	{
-		switch (actionState_)
+		if (timer_ > 0)
 		{
-		case ACTION::ATTACK_1:
-			timer_ = change_attack_time;
-			actionState_ = ACTION::ATTACK_2;
-			break;
-		case ACTION::ATTACK_2:
-			timer_ = change_attack_time;
-			actionState_ = ACTION::ATTACK_3;
-			break;
-		case ACTION::ATTACK_3:
+			timer_ -= deltaTime;
+			ProcessGroundAttack();
+		}
+		else
+		{
 			inputState_ = &Player::GroundState;
-			break;
+			timer_ = 0.0f;
 		}
 	}
+	
 }
 
 void Player::DrawWithdrawSwordState(const float&)
@@ -373,7 +383,7 @@ void Player::ProcessDrawWithdrawSword()
 {
 	if (input_->IsTriggered(L"draw"))
 	{
-		isDrawn = isDrawn ? false : true;
+		isDrawn = !isDrawn;
 		actionState_ = isDrawn ? ACTION::DRAW_SWORD : ACTION::WITHDRAW_SWORD;
 		oldInputState_ = inputState_;
 		inputState_ = &Player::DrawWithdrawSwordState;
@@ -443,7 +453,7 @@ void Player::UpdateState()
 			sprite->PlayLoop("idle");
 		break;
 	case ACTION::THROW:
-		sprite->PlayLoop("cast");
+		sprite->PlayOnce("cast");
 		break;
 	case ACTION::CROUCH:
 		rigidBody_->collider_.h = player_height * rigidbody_crouch_scale;

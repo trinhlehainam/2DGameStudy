@@ -36,7 +36,7 @@ namespace
 	constexpr int max_health = 5;
 }
 
-Slasher::Slasher(GameScene& gs, std::shared_ptr<TransformComponent> playerPos):Enemy(gs, playerPos)
+Slasher::Slasher(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos):Enemy(gs, playerPos)
 {
 	
 }
@@ -51,7 +51,7 @@ void Slasher::Initialize()
 	self_ = gs_.entityMng_->AddEntity("slasher");
 	self_->AddComponent<TransformComponent>(start_pos, slasher_width, slasher_height, size_scale);
 	self_->AddComponent<SpriteComponent>();
-	auto anim = self_->GetComponent<SpriteComponent>();
+	const auto& anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-run"), "run", src_rect, run_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-slash"), "slash", src_rect, slash_animation_speed);
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-hurt"), "hurt", src_rect, hurt_animation_speed);
@@ -69,11 +69,11 @@ std::unique_ptr<Enemy> Slasher::MakeClone()
 
 void Slasher::SetPosition(const Vector2& pos)
 {
-	auto transform = self_->GetComponent<TransformComponent>();
+	const auto& transform = self_->GetComponent<TransformComponent>();
 	transform->pos = pos;
 	// Because RigidBody2D Constructor will Initialize its collider's position depend on owner's Transform
 	// Add RigidBody here after set position for owner's transform
-	auto body = gs_.collisionMng_->AddRigidBody2D(
+	const auto& body = gs_.collisionMng_->AddRigidBody2D(
 		self_, start_pos,
 		slasher_width * body_width_scale,
 		slasher_height * body_heigth_scale
@@ -143,7 +143,7 @@ void Slasher::DeathUpdate(const float& deltaTime)
 	{
 		timer_ = wait_destroy_time;
 		sprite->Pause();
-		rigidBody_->isActive_ = false;
+		rigidBody_->Deactivate();
 		actionUpdate_ = &Slasher::WaitDestroyUpdate;
 	}
 }

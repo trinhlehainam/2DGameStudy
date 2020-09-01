@@ -1,8 +1,6 @@
 #pragma once
 #include "ColliderComponent.h"
 
-
-
 class CircleColliderComponent :
     public ColliderComponent
 {
@@ -15,8 +13,8 @@ public:
     CircleColliderComponent(std::shared_ptr<Entity> owner, std::string tag,
         const float& posX, const float& posY, const float& radius);
     ~CircleColliderComponent();
-    void Initialize();
-    void Update(const float& deltaTime);
-    void Render();
+    void Initialize() override;
+    void Update(const float& deltaTime) override;
+    void Render() override;
 };
 

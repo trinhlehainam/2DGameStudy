@@ -52,7 +52,7 @@ void Asura::DeadUpdate(const float& deltaTime)
 {
 }
 
-Asura::Asura(GameScene& gs, std::shared_ptr<TransformComponent> playerPos_):Enemy(gs,playerPos_)
+Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_):Enemy(gs,playerPos_)
 {
 	updater_ = &Asura::EnteringUpdate;
 }
@@ -66,10 +66,11 @@ void Asura::Initialize()
 	self_ = gs_.entityMng_->AddEntity("asura");
 	self_->AddComponent<TransformComponent>(start_pos, asura_width, asura_height, size_scale);
 	self_->AddComponent<SpriteComponent>();
-	auto anim = self_->GetComponent<SpriteComponent>();
+	const auto& anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1);
 	anim->PlayLoop("idle");
-	colliders_ = &gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
+	auto& collider = gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
+	colliders_.push_back(collider);
 }
 
 void Asura::Update(const float& deltaTime)
@@ -84,7 +85,7 @@ std::unique_ptr<Enemy> Asura::MakeClone()
 
 void Asura::SetPosition(const Vector2& pos)
 {
-	auto transform = self_->GetComponent<TransformComponent>();
+	const auto& transform = self_->GetComponent<TransformComponent>();
 	transform->pos.X = pos.X - asura_width / 2.0f;
 	transform->pos.Y = pos.Y;
 }

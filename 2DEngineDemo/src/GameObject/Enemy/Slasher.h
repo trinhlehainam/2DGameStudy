@@ -21,7 +21,7 @@ private:
 
 	void CheckHit();
 public:
-	Slasher(GameScene& gs, std::shared_ptr<TransformComponent> playerPos);
+	Slasher(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos);
 
 	~Slasher();
 

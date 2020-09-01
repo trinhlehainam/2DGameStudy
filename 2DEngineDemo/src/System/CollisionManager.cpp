@@ -10,6 +10,7 @@
 #include "../Component/CircleColliderComponent.h"
 #include "../Component/AABBColliderComponent.h"
 #include "../Component/TransformComponent.h"
+#include "../Component/RigidBody2D.h"
 
 namespace
 {
@@ -23,17 +24,25 @@ CollisionManager::CollisionManager(GameScene& gs):gs_(gs)
     actorColliders_.reserve(actor_size);
 }
 
-CircleColliderComponent& CollisionManager::AddProjectileCollider(std::shared_ptr<Entity> owner,
+CircleColliderComponent& CollisionManager::AddProjectileCollider(std::shared_ptr<Entity>& owner,
     std::string tag, const float& posX, const float& posY, const float& radius)
 {
     projectileColliders_.emplace_back(owner, tag, posX, posY, radius);
     return (*projectileColliders_.rbegin());
 }
 
-std::vector<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity> owner, std::string tag, const float& posX, const float& posY, const float& radius)
+AttackColliderComponent& CollisionManager::AddAttackCollider(std::shared_ptr<Entity>& owner, const Vector2& pos, 
+    const float& w, const float& h)
 {
-    bossColliders_.emplace_back(owner, tag, posX, posY, radius);
-    return bossColliders_;
+    attackCoillders_.emplace_back(owner, pos, w, h);
+    return (*attackCoillders_.rbegin());
+}
+
+std::shared_ptr<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag, const float& posX, const float& posY, const float& radius)
+{
+    auto collider = std::make_shared<CircleColliderComponent>(owner, tag, posX, posY, radius);
+    bossColliders_.emplace_back(std::move(collider));
+    return (*bossColliders_.rbegin());
 }
 
 bool CollisionManager::CheckCollision(const Rect& rectA, const Rect& rectB)
@@ -202,13 +211,12 @@ void CollisionManager::ProjectileCollision()
         {
             if (CheckCollision(projectile.collider_, actor->collider_))
             {
-                projectile.owner_.lock()->Destroy();
+                const auto& projectile_owner = projectile.owner_.lock();
+                const auto& actor_owner = actor->owner_.lock();
+                projectile_owner->Destroy();
                 if (projectile.tag_ == "PLAYER-SHURIKEN")
                 {
-                    auto projectile_owner = projectile.owner_.lock();
-                    auto actor_owner = actor->owner_.lock();
-
-                    auto damage = projectile_owner->GetProjectileDamage();
+                    const auto& damage = projectile_owner->GetProjectileDamage();
                     actor_owner->TakeDamage(damage);
 
                     bool flip = projectile_owner->GetProjectileVelocity().X > 0 ? true : false;
@@ -216,14 +224,11 @@ void CollisionManager::ProjectileCollision()
                 }
                 if (projectile.tag_ == "PLAYER-BOMB")
                 {
-                    auto projectile_owner = projectile.owner_.lock();
-                    auto actor_owner = actor->owner_.lock();
-
-                    auto damage = projectile_owner->GetProjectileDamage();
+                    const auto& damage = projectile_owner->GetProjectileDamage();
                     actor_owner->TakeDamage(damage);
 
-                    float X = projectile.collider_.pos.X;
-                    float Y = projectile.collider_.pos.Y;
+                    const float& X = projectile.collider_.pos.X;
+                    const float& Y = projectile.collider_.pos.Y;
                     gs_.effectMng_->BombExplosionEffect(X,Y);
                 }
             }

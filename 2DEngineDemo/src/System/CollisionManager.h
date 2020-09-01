@@ -6,13 +6,16 @@
 #include <memory>
 
 #include "../Geometry/Geometry.h"
-#include "../Component/RigidBody2D.h"
+#include "../Component/AttackColliderComponent.h"
 
 class AABBColliderComponent;
 class CircleColliderComponent;
 class TransformComponent;
+class AABBColliderComponent;
+class AttackColliderComponent;
 class Entity;
 class GameScene;
+class RigidBody2D;
 
 // Class managing all objects' collider and resolve them
 // This class also manage physic of the game
@@ -23,10 +26,16 @@ private:
 	friend class Map;
 
 	std::vector<AABBColliderComponent> mapColliders_;
-	// Use pointer for RigidBody2D to its owner could track on it
+	/*----------------------------------------------------------------------*/
+	// Container for body of entity
+	// Use pointer for owner can keep track on its body
 	std::vector<std::shared_ptr<RigidBody2D>> actorColliders_;
+	std::vector<std::shared_ptr<CircleColliderComponent>> bossColliders_;
+	/*----------------------------------------------------------------------*/
+	// Container for entities that causing damage
 	std::vector<CircleColliderComponent> projectileColliders_;
-	std::vector<CircleColliderComponent> bossColliders_;
+	std::vector<AttackColliderComponent> attackCoillders_;
+	/*----------------------------------------------------------------------*/
 
 	Vector2 gravity_;
 	Vector2 friction_;
@@ -70,11 +79,14 @@ public:
 		return (*actorColliders_.rbegin());
 	}
 
-	std::vector<CircleColliderComponent>& AddBossCollider(std::shared_ptr<Entity> owner, std::string tag,
+	std::shared_ptr<CircleColliderComponent>& AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
-	CircleColliderComponent& AddProjectileCollider(std::shared_ptr<Entity> owner, std::string tag,
+	CircleColliderComponent& AddProjectileCollider(std::shared_ptr<Entity>& owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
+
+	AttackColliderComponent& AddAttackCollider(std::shared_ptr<Entity>& owner, const Vector2& pos,
+		const float& w, const float& h);
 
 	void ProjectileCollision();
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "ColliderComponent.h"
 
-
 /// <param name="tag:">tag name of this collider</param>
 /// <param name="pos:">Vector2 position</param>
 /// <param name="w:">width</param>
@@ -19,8 +18,8 @@ public:
 		const Vector2& pos, const float& w, const float& h);
 	~AABBColliderComponent();
 
-	void Initialize();
-	void Update(const float& deltaTime);
-	void Render();
+	void Initialize() override;
+	void Update(const float& deltaTime) override;
+	void Render() override;
 };
 

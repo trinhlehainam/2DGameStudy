@@ -23,6 +23,10 @@ public:
 	inline void Activate() { isActive_ = true; }
 	inline void Deactivate() { isActive_ = false; }
 	ColliderComponent(std::shared_ptr<Entity> owner, std::string tag);
-	~ColliderComponent() = default;
+	ColliderComponent(std::shared_ptr<Entity> owner);
+	virtual void Initialize() = 0;
+	virtual void Update(const float& deltaTime) = 0;
+	virtual void Render() = 0;
+	virtual ~ColliderComponent() = default;
 };
 

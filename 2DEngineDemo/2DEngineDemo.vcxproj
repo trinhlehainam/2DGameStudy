@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Component\AttackColliderComponent.cpp" />
     <ClCompile Include="src\Component\HealthComponent.cpp" />
     <ClCompile Include="src\System\EffectManager.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Asura.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="src\GameObject\Player\SwordEquip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Component\AttackColliderComponent.h" />
     <ClInclude Include="src\Component\HealthComponent.h" />
     <ClInclude Include="src\System\EffectManager.h" />
     <ClInclude Include="src\GameObject\Enemy\Asura.h" />

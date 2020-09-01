@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include <vector>
+#include <memory>
 
 class CircleColliderComponent;
 
@@ -8,7 +9,7 @@ class Asura :
     public Enemy
 {
 private:
-    std::vector<CircleColliderComponent>* colliders_ = nullptr;
+    std::vector<std::shared_ptr<CircleColliderComponent>> colliders_;
 
     using Updater_t = void (Asura::*)(const float&);
     Updater_t updater_;
@@ -19,7 +20,7 @@ private:
     void ExitingUpdate(const float& deltaTime);
     void DeadUpdate(const float& deltaTime);
 public:
-    Asura(GameScene& gs, std::shared_ptr<TransformComponent> playerPos_);
+    Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_);
     ~Asura();
 
     void Initialize() override;
