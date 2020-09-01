@@ -1,9 +1,9 @@
 #include "CircleColliderComponent.h"
 
-#include "../GameObject/Entity.h"
-#include "TransformComponent.h"
-#include "../System/TextureManager.h"
-#include "../System/Camera.h"
+#include "../../GameObject/Entity.h"
+#include "../TransformComponent.h"
+#include "../../System/TextureManager.h"
+#include "../../System/Camera.h"
 
 CircleColliderComponent::CircleColliderComponent(const std::shared_ptr<Entity>& owner, std::string tag,
 	const float& posX, const float& posY, const float& radius):

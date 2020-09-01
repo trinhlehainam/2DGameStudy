@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "../Geometry/Geometry.h"
-#include "../Component/AttackColliderComponent.h"
 
 class AABBColliderComponent;
 class CircleColliderComponent;
@@ -16,6 +15,7 @@ class AttackColliderComponent;
 class Entity;
 class GameScene;
 class RigidBody2D;
+class Attack;
 
 // Class managing all objects' collider and resolve them
 // This class also manage physic of the game
@@ -34,7 +34,7 @@ private:
 	/*----------------------------------------------------------------------*/
 	// Container for entities that causing damage
 	std::vector<CircleColliderComponent> projectileColliders_;
-	std::vector<AttackColliderComponent> attackCoillders_;
+	std::vector<AABBColliderComponent> attackColliders_;
 	/*----------------------------------------------------------------------*/
 
 	Vector2 gravity_;
@@ -73,11 +73,14 @@ public:
 	/// <param name="h"></param>
 	/// <returns></returns>
 	template<typename...Args>
-	std::shared_ptr<RigidBody2D> AddRigidBody2D(Args&&...args)
+	std::shared_ptr<RigidBody2D>& AddRigidBody2D(Args&&...args)
 	{
 		actorColliders_.emplace_back(std::make_shared<RigidBody2D>(std::forward<Args>(args)...));
 		return (*actorColliders_.rbegin());
 	}
+
+	/*template<typename T, typename...Args>
+	void AddAttack()*/
 
 	std::shared_ptr<CircleColliderComponent>& AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
@@ -85,8 +88,7 @@ public:
 	CircleColliderComponent& AddProjectileCollider(std::shared_ptr<Entity>& owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
-	AttackColliderComponent& AddAttackCollider(std::shared_ptr<Entity>& owner, const Vector2& pos,
-		const float& w, const float& h);
+	
 
 	void ProjectileCollision();
 

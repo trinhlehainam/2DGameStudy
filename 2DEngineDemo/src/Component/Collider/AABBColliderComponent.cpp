@@ -1,9 +1,9 @@
 #include "AABBColliderComponent.h"
 
-#include "../GameObject/Entity.h"
-#include "TransformComponent.h"
-#include "../System/TextureManager.h"
-#include "../System/Camera.h"
+#include "../../GameObject/Entity.h"
+#include "../TransformComponent.h"
+#include "../../System/TextureManager.h"
+#include "../../System/Camera.h"
 
 AABBColliderComponent::AABBColliderComponent(const std::shared_ptr<Entity>& owner, std::string tag,
 	const Vector2& pos, const float& w, const float& h):ColliderComponent(owner, tag)

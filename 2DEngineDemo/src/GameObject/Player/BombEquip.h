@@ -4,8 +4,6 @@
 class BombEquip :
     public Equipment
 {
-private:
-
 public:
     BombEquip(GameScene& gs, const std::string& tag);
     ~BombEquip() = default;

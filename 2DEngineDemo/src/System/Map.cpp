@@ -8,7 +8,7 @@
 #include "CollisionManager.h"
 #include "../Component/TileComponent.h"
 #include "../Component/TransformComponent.h"
-#include "../Component/AABBColliderComponent.h"
+#include "../Component/Collider/AABBColliderComponent.h"
 
 Map::Map(EntityManager& entityMng, CollisionManager& collisionMng, const int& tileSize, const int& scale):
 	entityMng_(entityMng), collisionMng_(collisionMng)

@@ -5,7 +5,7 @@
 #include "../../Scene/GameScene.h"
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
-#include "../../Component/CircleColliderComponent.h"
+#include "../../Component/Collider/CircleColliderComponent.h"
 
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"

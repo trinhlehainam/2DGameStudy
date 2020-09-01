@@ -7,10 +7,11 @@
 
 #include "../GameObject/Entity.h"
 
-#include "../Component/CircleColliderComponent.h"
-#include "../Component/AABBColliderComponent.h"
+
+#include "../Component/Collider/CircleColliderComponent.h"
+#include "../Component/Collider/AABBColliderComponent.h"
 #include "../Component/TransformComponent.h"
-#include "../Component/RigidBody2D.h"
+#include "../Component/Collider/RigidBody2D.h"
 
 namespace
 {
@@ -29,13 +30,6 @@ CircleColliderComponent& CollisionManager::AddProjectileCollider(std::shared_ptr
 {
     projectileColliders_.emplace_back(owner, tag, posX, posY, radius);
     return (*projectileColliders_.rbegin());
-}
-
-AttackColliderComponent& CollisionManager::AddAttackCollider(std::shared_ptr<Entity>& owner, const Vector2& pos, 
-    const float& w, const float& h)
-{
-    attackCoillders_.emplace_back(owner, pos, w, h);
-    return (*attackCoillders_.rbegin());
 }
 
 std::shared_ptr<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag, const float& posX, const float& posY, const float& radius)

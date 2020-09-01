@@ -28,6 +28,7 @@ public:
 	void Update(const float& deltaTime);
 	void Render();
 
+	Vector2 GetProjectileVelocity();
 	int GetProjectileDamage() const;
 	void TakeDamage(const int& damage);
 	inline bool IsActive() const { return isActive_; }
@@ -39,7 +40,6 @@ public:
 		entityMng_->TurnOnRemove();
 	}
 	
-	Vector2 GetProjectileVelocity();
 	inline std::string GetName() const { return name_; }
 
 	template<typename T, typename...Args>

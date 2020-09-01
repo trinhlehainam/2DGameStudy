@@ -14,6 +14,7 @@
 #include "../System/Map.h"
 #include "../System/Camera.h"
 #include "../System/EffectManager.h"
+#include "../System/CombatManager.h"
 
 #include "../GameObject/Entity.h"
 #include "../GameObject/Player/Player.h"
@@ -25,9 +26,9 @@
 
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
-#include "../Component/AABBColliderComponent.h"
-#include "../Component/CircleColliderComponent.h"
-#include "../Component/RigidBody2D.h"
+#include "../Component/Collider/AABBColliderComponent.h"
+#include "../Component/Collider/CircleColliderComponent.h"
+#include "../Component/Collider/RigidBody2D.h"
 
 #include "../Input/KeyboardInput.h"
 
@@ -60,6 +61,7 @@ GameScene::GameScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScen
 	entityMng_ = std::make_unique<EntityManager>();
 	collisionMng_ = std::make_unique<CollisionManager>(*this);
 	effectMng_ = std::make_unique<EffectManager>(*this);
+	combatMng_ = std::make_unique<CombatManager>();
 	
 	LoadLevel(1);
 
@@ -189,6 +191,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	collisionMng_->ProjectileCollision();
+	combatMng_->Update(deltaTime);
 	effectMng_->Update(deltaTime);
 }
 

@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-#include "../Component/ProjectileEmitterComponent.h"
+#include "../Component/Attack/ProjectileEmitterComponent.h"
 #include "../Component/HealthComponent.h"
 
 

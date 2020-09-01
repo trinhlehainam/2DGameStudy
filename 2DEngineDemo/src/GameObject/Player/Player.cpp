@@ -14,7 +14,7 @@
 #include "../../System/EntityManager.h"
 
 #include "../../Component/TransformComponent.h"
-#include "../../Component/RigidBody2D.h"
+#include "../../Component/Collider/RigidBody2D.h"
 #include "../../Component/SpriteComponent.h"
 
 namespace
@@ -90,7 +90,7 @@ void Player::Initialize()
 		player_width * rigidbody_width_scale,
 		player_height * rigidbody_height_scale);
 	rigidBody_ = rigidBody;
-	rigidBody->tag_ = "PLAYER";
+	rigidBody->SetTag("PLAYER");
 	self_->AddComponent<SpriteComponent>(self_);
 	const auto& playerAnim = self_->GetComponent<SpriteComponent>();
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", src_rect, idle_animation_speed);

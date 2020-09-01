@@ -15,6 +15,7 @@ class EnemyManager;
 class Spawner;
 class Environment;
 class EffectManager;
+class CombatManager;
 
 class GameScene :
     public BaseScene
@@ -27,6 +28,8 @@ class GameScene :
     friend class Asura;
     friend EffectManager;
     friend CollisionManager;
+    friend class BombShot;
+    friend class ShurikenShot;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;
@@ -37,6 +40,7 @@ private:
     std::vector<std::unique_ptr<Spawner>> spawners_;
     std::unique_ptr<Environment> environment_;
     std::unique_ptr<EffectManager> effectMng_;
+    std::unique_ptr<CombatManager> combatMng_;
 
     bool isBossAdded = false;
 
@@ -58,6 +62,7 @@ private:
 
     void LoadLevel(const int& level);
 public:
+
     int GetTexture(std::string textureID);
     GameScene(SceneManager&, KeyboardInput&);
     ~GameScene();

@@ -33,7 +33,6 @@ void EffectManager::Update(const float& deltaTime)
 {
 	for (auto& effect : gs_.entityMng_->effects_)
 	{
-		
 		auto anim = effect->GetComponent<SpriteComponent>();
 		if (anim->IsFinished())
 		{

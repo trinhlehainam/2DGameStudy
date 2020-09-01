@@ -6,7 +6,7 @@
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
-#include "../../Component/RigidBody2D.h"
+#include "../../Component/Collider/RigidBody2D.h"
 #include "../../Component/HealthComponent.h"
 
 #include "../../System/AssetManager.h"
@@ -79,7 +79,7 @@ void Slasher::SetPosition(const Vector2& pos)
 		slasher_height * body_heigth_scale
 	);
 	rigidBody_ = body;
-	rigidBody_->tag_ = "SLASHER";
+	rigidBody_->SetTag("SLASHER");
 }
 
 void Slasher::Update(const float& deltaTime)

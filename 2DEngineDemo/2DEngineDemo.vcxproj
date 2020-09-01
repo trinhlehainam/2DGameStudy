@@ -145,7 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Component\AttackColliderComponent.cpp" />
+    <ClCompile Include="src\GameObject\Attack\ShurikenShot.cpp" />
+    <ClCompile Include="src\System\CombatManager.cpp" />
+    <ClCompile Include="src\GameObject\Attack\BombShot.cpp" />
+    <ClCompile Include="src\GameObject\Attack\Attack.cpp" />
+    <ClCompile Include="src\Component\Attack\AttackComponent.cpp" />
+    <ClCompile Include="src\Component\Attack\MeleeAttackComponent.cpp" />
     <ClCompile Include="src\Component\HealthComponent.cpp" />
     <ClCompile Include="src\System\EffectManager.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Asura.cpp" />
@@ -155,18 +160,18 @@
     <ClCompile Include="src\GameObject\Player\BombEquip.cpp" />
     <ClCompile Include="src\GameObject\Player\ShurikenEquip.cpp" />
     <ClCompile Include="src\GameObject\Player\Equipment.cpp" />
-    <ClCompile Include="src\Component\ProjectileEmitterComponent.cpp" />
+    <ClCompile Include="src\Component\Attack\ProjectileEmitterComponent.cpp" />
     <ClCompile Include="src\GameObject\Enemy\SideSpawner.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Spawner.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="src\System\EnemyManager.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Slasher.cpp" />
     <ClCompile Include="src\GameObject\Player\Player.cpp" />
-    <ClCompile Include="src\Component\RigidBody2D.cpp" />
-    <ClCompile Include="src\Component\ColliderComponent.cpp" />
+    <ClCompile Include="src\Component\Collider\RigidBody2D.cpp" />
+    <ClCompile Include="src\Component\Collider\ColliderComponent.cpp" />
     <ClCompile Include="src\System\CollisionManager.cpp" />
-    <ClCompile Include="src\Component\AABBColliderComponent.cpp" />
-    <ClCompile Include="src\Component\CircleColliderComponent.cpp" />
+    <ClCompile Include="src\Component\Collider\AABBColliderComponent.cpp" />
+    <ClCompile Include="src\Component\Collider\CircleColliderComponent.cpp" />
     <ClCompile Include="src\System\Camera.cpp" />
     <ClCompile Include="src\Input\KeyboardInput.cpp" />
     <ClCompile Include="src\System\Map.cpp" />
@@ -190,7 +195,12 @@
     <ClCompile Include="src\GameObject\Player\SwordEquip.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Component\AttackColliderComponent.h" />
+    <ClInclude Include="src\GameObject\Attack\ShurikenShot.h" />
+    <ClInclude Include="src\System\CombatManager.h" />
+    <ClInclude Include="src\GameObject\Attack\BombShot.h" />
+    <ClInclude Include="src\GameObject\Attack\Attack.h" />
+    <ClInclude Include="src\Component\Attack\AttackComponent.h" />
+    <ClInclude Include="src\Component\Attack\MeleeAttackComponent.h" />
     <ClInclude Include="src\Component\HealthComponent.h" />
     <ClInclude Include="src\System\EffectManager.h" />
     <ClInclude Include="src\GameObject\Enemy\Asura.h" />
@@ -200,18 +210,18 @@
     <ClInclude Include="src\GameObject\Player\BombEquip.h" />
     <ClInclude Include="src\GameObject\Player\ShurikenEquip.h" />
     <ClInclude Include="src\GameObject\Player\Equipment.h" />
-    <ClInclude Include="src\Component\ProjectileEmitterComponent.h" />
+    <ClInclude Include="src\Component\Attack\ProjectileEmitterComponent.h" />
     <ClInclude Include="src\GameObject\Enemy\SideSpawner.h" />
     <ClInclude Include="src\GameObject\Enemy\Spawner.h" />
     <ClInclude Include="src\GameObject\Enemy\Enemy.h" />
     <ClInclude Include="src\System\EnemyManager.h" />
     <ClInclude Include="src\GameObject\Enemy\Slasher.h" />
     <ClInclude Include="src\GameObject\Player\Player.h" />
-    <ClInclude Include="src\Component\RigidBody2D.h" />
-    <ClInclude Include="src\Component\ColliderComponent.h" />
+    <ClInclude Include="src\Component\Collider\RigidBody2D.h" />
+    <ClInclude Include="src\Component\Collider\ColliderComponent.h" />
     <ClInclude Include="src\System\CollisionManager.h" />
-    <ClInclude Include="src\Component\AABBColliderComponent.h" />
-    <ClInclude Include="src\Component\CircleColliderComponent.h" />
+    <ClInclude Include="src\Component\Collider\AABBColliderComponent.h" />
+    <ClInclude Include="src\Component\Collider\CircleColliderComponent.h" />
     <ClInclude Include="src\System\Camera.h" />
     <ClInclude Include="src\Input\KeyboardInput.h" />
     <ClInclude Include="src\System\Map.h" />

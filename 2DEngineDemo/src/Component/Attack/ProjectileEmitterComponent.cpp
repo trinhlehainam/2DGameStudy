@@ -1,13 +1,8 @@
 #include "ProjectileEmitterComponent.h"
 
-#include "../Constant.h"
-#include "../GameObject/Entity.h"
-#include "../Component/TransformComponent.h"
-
-namespace
-{
-	constexpr float PI = 3.14159f;
-}
+#include "../../Constant.h"
+#include "../../GameObject/Entity.h"
+#include "../../Component/TransformComponent.h"
 
 bool ProjectileEmitterComponent::IsOutOfWorld()
 {
@@ -18,7 +13,7 @@ bool ProjectileEmitterComponent::IsOutOfWorld()
 }
 
 ProjectileEmitterComponent::ProjectileEmitterComponent(const std::shared_ptr<Entity>& owner, const Vector2& startPos,
-	const Vector2& velocity, const float& range, const int& damage):Component(owner)
+	const Vector2& velocity, const float& range, const int& damage):AttackComponent(owner)
 {
 	start_ = startPos;
 	velocity_ = velocity;

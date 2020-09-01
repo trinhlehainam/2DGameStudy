@@ -1,8 +1,8 @@
 #include "RigidBody2D.h"
-#include "TransformComponent.h"
-#include "../GameObject/Entity.h"
-#include "../System/TextureManager.h"
-#include "../System/Camera.h"
+#include "../TransformComponent.h"
+#include "../../GameObject/Entity.h"
+#include "../../System/TextureManager.h"
+#include "../../System/Camera.h"
 
 RigidBody2D::RigidBody2D(const std::shared_ptr<Entity>& owner,
 	const Vector2& pos, const float& w, const float& h) :
