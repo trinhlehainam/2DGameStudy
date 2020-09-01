@@ -143,7 +143,7 @@ void Slasher::DeathUpdate(const float& deltaTime)
 	{
 		timer_ = wait_destroy_time;
 		sprite->Pause();
-		rigidBody_->Deactivate();
+		rigidBody_->DeActivate();
 		actionUpdate_ = &Slasher::WaitDestroyUpdate;
 	}
 }

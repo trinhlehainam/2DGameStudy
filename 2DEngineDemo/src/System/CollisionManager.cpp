@@ -220,10 +220,6 @@ void CollisionManager::ProjectileCollision()
                 {
                     const auto& damage = projectile_owner->GetProjectileDamage();
                     actor_owner->TakeDamage(damage);
-
-                    const float& X = projectile.collider_.pos.X;
-                    const float& Y = projectile.collider_.pos.Y;
-                    gs_.effectMng_->BombExplosionEffect(X,Y);
                 }
             }
         }

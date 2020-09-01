@@ -57,5 +57,11 @@ int ShurikenShot::GetDamage() const
 
 void ShurikenShot::Update(const float& deltaTime)
 {
-
+	auto projectile = self_->GetComponent<ProjectileEmitterComponent>();
+	if (projectile->IsOutOfRange())
+	{
+		Vector2 vel = projectile->GetVelocity();
+		vel = Vector2(-vel.X, -vel.Y);
+		projectile->SetVelocity(vel);
+	}
 }

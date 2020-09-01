@@ -1,13 +1,11 @@
 #include "Enemy.h"
 #include "../Entity.h"
-#include "../../Scene/GameScene.h"
-#include "../../Component/TransformComponent.h"
 
 Enemy::Enemy(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos):gs_(gs), playerPos_(playerPos)
 {
 }
 
-bool Enemy::IsOwnerExist()
+bool Enemy::IsOwnerExist() const
 {
     return self_->IsActive();
 }

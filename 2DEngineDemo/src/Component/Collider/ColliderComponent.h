@@ -30,6 +30,6 @@ public:
 	inline bool IsCollide() const { return isCollide_; }
 	inline bool IsActive() const { return isActive_; }
 	inline void Activate() { isActive_ = true; }
-	inline void Deactivate() { isActive_ = false; }
+	inline void DeActivate() { isActive_ = false; }
 };
 

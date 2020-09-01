@@ -185,13 +185,13 @@ void GameScene::GameUpdate(const float& deltaTime)
 	/*----------------------------------------------------------------------------*/
 	enemyMng_->Update(deltaTime);
 	entityMng_->Update(deltaTime);
+	combatMng_->Update(deltaTime);
 	Camera::Instance().Update();
 	environment_->Update(deltaTime);
 	ProcessEnterBossArea();
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	collisionMng_->ProjectileCollision();
-	combatMng_->Update(deltaTime);
 	effectMng_->Update(deltaTime);
 }
 
