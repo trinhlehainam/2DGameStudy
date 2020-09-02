@@ -1,7 +1,7 @@
 #include "Equipment.h"
 
-#include "../../Scene/GameScene.h"
 #include "../../Geometry/Geometry.h"
+#include "../../Scene/GameScene.h"
 #include "../../System/TextureManager.h"
 
 
@@ -14,7 +14,8 @@ namespace
 	const Rect destination_rect = Rect(Vector2(box_pos_X, box_pos_Y), box_width, box_height);
 }
 
-Equipment::Equipment(GameScene& gs, const std::string& tag):gs_(gs),tag_(tag)
+Equipment::Equipment(GameScene& gs, const std::string& tag, const std::shared_ptr<Entity>& owner, const int& damage):
+	gs_(gs),tag_(tag),owner_(owner),damage_(damage)
 {
 
 }

@@ -22,12 +22,13 @@ namespace
 	constexpr float move_speed = 400.0f;
 	constexpr int rotate_speed = 20;
 	constexpr float move_range = 700.0f;
-	constexpr int bomb_damage = 5;
 	constexpr float collider_offset_x = bomb_width * scale / 2.0f;
 	constexpr float collider_offset_y = bomb_height * scale / 2.0f;
 }
 
-BombShot::BombShot(GameScene& gs, const Vector2& startPos, const float& angle):Attack(gs)
+BombShot::BombShot(GameScene& gs, const std::shared_ptr<Entity>& owner, const Vector2& startPos, 
+	const float& angle, const int& damage):
+	Attack(gs, owner)
 {
 	self_ = gs_->entityMng_->AddProjectTile("bomb");
 	self_->AddComponent<TransformComponent>(self_, startPos, bomb_width, bomb_height, scale);
@@ -42,7 +43,7 @@ BombShot::BombShot(GameScene& gs, const Vector2& startPos, const float& angle):A
 	collider.SetOffset(collider_offset_x, collider_offset_y);
 
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
-	self_->AddComponent<ProjectileEmitterComponent>(self_, startPos, std::move(velocity), move_range, bomb_damage);
+	self_->AddComponent<ProjectileEmitterComponent>(self_, startPos, std::move(velocity), move_range, damage);
 }
 
 void BombShot::Initialize()
@@ -64,7 +65,9 @@ void BombShot::Update(const float& deltaTime)
 {
 	if (!IsOwnerActive())
 	{
-		const Vector2& pos = self_->GetComponent<TransformComponent>()->pos;
-		gs_->effectMng_->BombExplosionEffect(pos.X, pos.Y);
+		auto transform = self_->GetComponent<TransformComponent>();
+		Vector2 pos = Vector2(transform->pos.X + transform->w / 2 * transform->scale,
+							transform->pos.Y + transform->h / 2 * transform->scale);
+		gs_->effectMng_->BombExplosionEffect(pos.X , pos.Y);
 	}
 }

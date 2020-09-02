@@ -72,6 +72,7 @@ public:
 
     void AddAnimation(int texture, std::string animID, const Rect& srcRect,
         const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
+    int GetCurrentCelNO() const;
 
     void SetAnimationOffset(const std::string& animaID, const Vector2& offset);
     void PlayLoop(const std::string& animID);

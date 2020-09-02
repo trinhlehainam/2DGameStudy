@@ -1,7 +1,7 @@
 #include "Attack.h"
 #include "../Entity.h"
 
-Attack::Attack(GameScene& gs):gs_(&gs)
+Attack::Attack(GameScene& gs, const std::shared_ptr<Entity>& owner):gs_(&gs),owner_(owner)
 {
 }
 

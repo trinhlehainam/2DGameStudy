@@ -5,11 +5,11 @@ class SwordEquip :
     public Equipment
 {
 public:
-    SwordEquip(GameScene&, const std::string&);
+    SwordEquip(GameScene&, const std::string&, const std::shared_ptr<Entity>& owner, const int& damage = 0);
     ~SwordEquip() = default;
 
     void Initialize() override;
-    void Attack(const Vector2& startPos, const float& angle) override;
+    void Attack(const Vector2& startPos, const float& angle, const float& w, const float& h) override;
     void Render() override;
 };
 

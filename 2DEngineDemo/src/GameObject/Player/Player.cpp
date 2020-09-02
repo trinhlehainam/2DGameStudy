@@ -52,19 +52,30 @@ namespace
 	constexpr float crouch_velocity = 50.0f;
 
 	// Animation's speed
-	constexpr unsigned int idle_animation_speed = 100;
-	constexpr unsigned int run_animation_speed = 100;
-	constexpr unsigned int fast_run_animation_speed = 50;
-	constexpr unsigned int jump_animation_speed = 100;
-	constexpr unsigned int fall_animation_speed = 100;
-	constexpr unsigned int hurt_animation_speed = 100;
-	constexpr unsigned int die_animation_speed = 100;
-	constexpr unsigned int cast_animation_speed = 50;
-	constexpr unsigned int crouch_animation_speed = 100;
-	constexpr unsigned int attack1_animation_speed = 70;
-	constexpr unsigned int attack2_animation_speed = 70;
-	constexpr unsigned int attack3_animation_speed = 70;
-	constexpr unsigned int draw_withdraw_animation_speed = 100;
+	constexpr unsigned short int idle_animation_speed = 100;
+	constexpr unsigned short int run_animation_speed = 100;
+	constexpr unsigned short int fast_run_animation_speed = 50;
+	constexpr unsigned short int jump_animation_speed = 100;
+	constexpr unsigned short int fall_animation_speed = 100;
+	constexpr unsigned short int hurt_animation_speed = 100;
+	constexpr unsigned short int die_animation_speed = 100;
+	constexpr unsigned short int cast_animation_speed = 50;
+	constexpr unsigned short int crouch_animation_speed = 100;
+	constexpr unsigned short int attack1_animation_speed = 70;
+	constexpr unsigned short int attack2_animation_speed = 70;
+	constexpr unsigned short int attack3_animation_speed = 70;
+	constexpr unsigned short int draw_withdraw_animation_speed = 100;
+
+	// Attack frame
+	// Attack collider is created at this frame
+	constexpr unsigned short int attack1_frame = 3;
+	constexpr unsigned short int attack2_frame = 4;
+	constexpr unsigned short int attack3_frame = 3;
+
+	// Weapon's damage
+	constexpr int shuriken_damage = 1;
+	constexpr int bomb_damage = 5;
+	constexpr int attack1_damage = 1;
 
 	constexpr char sword_tag[] = "SWORD";
 	constexpr char shuriken_tag[] = "BOMB";
@@ -121,8 +132,9 @@ void Player::Initialize()
 	Camera::Instance().TrackingOn(self_->GetComponent<TransformComponent>());
 
 	// Initialize Equipment list
-	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_, shuriken_tag)));
-	equipments_.emplace_back(std::move(std::make_unique<BombEquip>(gs_, bomb_tag)));
+	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_, shuriken_tag, self_, shuriken_damage)));
+	equipments_.emplace_back(std::move(std::make_unique<BombEquip>(gs_, bomb_tag, self_,bomb_damage)));
+	equipments_.emplace_back(std::move(std::make_unique<SwordEquip>(gs_, sword_tag, self_)));
 }
 
 void Player::Input(const float& deltaTime)
@@ -154,7 +166,8 @@ void Player::GroundState(const float& deltaTime)
 
 void Player::ProcessThrow()
 {
-	if (input_->IsTriggered(L"throw") && !isDrawn)
+	if (equipments_[currentEquip_]->GetTag() == sword_tag) return;
+	if (input_->IsTriggered(L"attack") && !isDrawn)
 	{
 		const auto& transform = self_->GetComponent<TransformComponent>();
 		auto startPos = transform->pos + Vector2(transform->w / 2, transform->h / 2);
@@ -178,6 +191,7 @@ void Player::ProcessThrow()
 
 void Player::ProcessGroundAttack()
 {
+	if (equipments_[currentEquip_]->GetTag() != sword_tag) return;
 	if (input_->IsPressed(L"attack") && isDrawn)
 	{
 		switch (actionState_)
@@ -306,8 +320,25 @@ void Player::SecondJumpState(const float& deltaTime)
 void Player::GroundAttackState(const float& deltaTime)
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	const auto& transform = self_->GetComponent<TransformComponent>();
 	rigidBody_->velocity_.X = 0;
 	
+	switch (actionState_)
+	{
+	case ACTION::ATTACK_1:
+		if(sprite->GetCurrentCelNO() == attack1_frame)
+			equipments_[currentEquip_]->Attack(transform->pos);
+		break;
+	case ACTION::ATTACK_2:
+		if (sprite->GetCurrentCelNO() == attack2_frame)
+			equipments_[currentEquip_]->Attack(transform->pos);
+		break;
+	case ACTION::ATTACK_3:
+		if (sprite->GetCurrentCelNO() == attack3_frame)
+			equipments_[currentEquip_]->Attack(transform->pos);
+		break;
+	}
+
 	if (sprite->IsFinished())
 	{
 		if (timer_ > 0)
@@ -321,7 +352,6 @@ void Player::GroundAttackState(const float& deltaTime)
 			timer_ = 0.0f;
 		}
 	}
-	
 }
 
 void Player::DrawWithdrawSwordState(const float&)
@@ -381,12 +411,25 @@ void Player::ProcessFall()
 
 void Player::ProcessDrawWithdrawSword()
 {
-	if (input_->IsTriggered(L"draw"))
+	if (equipments_[currentEquip_]->GetTag() == sword_tag)
 	{
-		isDrawn = !isDrawn;
-		actionState_ = isDrawn ? ACTION::DRAW_SWORD : ACTION::WITHDRAW_SWORD;
-		oldInputState_ = inputState_;
-		inputState_ = &Player::DrawWithdrawSwordState;
+		if (!isDrawn)
+		{
+			actionState_ = ACTION::DRAW_SWORD;
+			oldInputState_ = inputState_;
+			inputState_ = &Player::DrawWithdrawSwordState;
+			isDrawn = true;
+		}
+	}
+	else
+	{
+		if (isDrawn)
+		{
+			actionState_ = ACTION::WITHDRAW_SWORD;
+			oldInputState_ = inputState_;
+			inputState_ = &Player::DrawWithdrawSwordState;
+			isDrawn = false;
+		}
 	}
 }
 

@@ -9,7 +9,8 @@ class ShurikenShot :
 private:
 
 public:
-    ShurikenShot(GameScene& gs, const Vector2& startPos, const float& angle);
+    ShurikenShot(GameScene& gs, const std::shared_ptr<Entity>& owner, const Vector2& startPos, 
+        const float& angle, const int& damage = 0);
     ~ShurikenShot() = default;
     void Initialize() override;
     void SetDamage(const int& damage) override;

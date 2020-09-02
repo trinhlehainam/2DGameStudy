@@ -36,6 +36,12 @@ void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& 
 	animations_.emplace(animID, std::move(anim));
 }
 
+int SpriteComponent::GetCurrentCelNO() const
+{
+	const auto& anim = animations_.at(currentAnimID);
+	return (anim.indexY * anim.numCelX + anim.indexX + 1);
+}
+
 void SpriteComponent::SetAnimationOffset(const std::string& animaID, const Vector2& offset)
 {
 	const auto& transform = transform_.lock();

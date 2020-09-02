@@ -22,12 +22,13 @@ class GameScene :
 {
     friend Player;
     friend Slasher;
-    friend class ShurikenEquip;
-    friend class BombEquip;
     friend Environment;
     friend class Asura;
     friend EffectManager;
     friend CollisionManager;
+    friend class ShurikenEquip;
+    friend class BombEquip;
+    friend class SwordEquip;
     friend class BombShot;
     friend class ShurikenShot;
 private:

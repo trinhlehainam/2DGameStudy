@@ -21,10 +21,11 @@ namespace
 	constexpr float move_speed = 700.0f;
 	constexpr float rotate_speed = 60.0f;
 	constexpr float move_range = 1000.0f;
-	constexpr int shuriken_damage = 1;
 }
 
-ShurikenShot::ShurikenShot(GameScene& gs, const Vector2& startPos, const float& angle):Attack(gs)
+ShurikenShot::ShurikenShot(GameScene& gs, const std::shared_ptr<Entity>& owner,const Vector2& startPos,
+	const float& angle, const int& damage):
+	Attack(gs,owner)
 {
 	self_ = gs_->entityMng_->AddProjectTile("shuriken");
 	self_->AddComponent<TransformComponent>(self_, startPos, shuriken_width, shuriken_height, scale);
@@ -38,7 +39,7 @@ ShurikenShot::ShurikenShot(GameScene& gs, const Vector2& startPos, const float& 
 		"PLAYER-SHURIKEN", startPos.X, startPos.Y, shuriken_radius);
 	collider.SetOffset(shuriken_radius, shuriken_radius);
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));
-	self_->AddComponent<ProjectileEmitterComponent>(self_, startPos, std::move(velocity), move_range, shuriken_damage);
+	self_->AddComponent<ProjectileEmitterComponent>(self_, startPos, std::move(velocity), move_range, damage);
 }
 
 void ShurikenShot::Initialize()
