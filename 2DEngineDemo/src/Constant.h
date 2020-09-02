@@ -3,7 +3,7 @@
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
 
-constexpr int FPS = 60;
+constexpr int FPS = 30;
 constexpr int MILLISECONDS_PER_FRAME = 1000 / FPS;
 
 constexpr int MAP_TEXTURE_SIZE_X = 224;

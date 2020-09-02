@@ -9,6 +9,7 @@
 #include "System/SceneManager.h"
 #include "System/Debugger.h"
 #include "Input/KeyboardInput.h"
+#include "System/Timer.h"
 
 Engine& Engine::Instance()
 {
@@ -35,6 +36,9 @@ void Engine::Start()
 
     sceneMng_.reset(new SceneManager(*sceneInput_));
 
+    auto& time = Time::Instance();
+    time.SetFrameRate(30);
+    time.SetFixedDeltaTimeF(MILLISECONDS_PER_FRAME / static_cast<float>(second_to_millisecond));
 }
 
 void Engine::Run()
@@ -44,12 +48,12 @@ void Engine::Run()
     {
         DxLib::ClearDrawScreen();
 
-        int timeToWait = MILLISECONDS_PER_FRAME - (DxLib::GetNowCount() - lastTickFrame);
-        if (timeToWait > 0 && timeToWait <= MILLISECONDS_PER_FRAME) DxLib::WaitTimer(timeToWait);
+        auto& time = Time::Instance();
 
-        float deltaTime = static_cast<float>(DxLib::GetNowCount() - lastTickFrame) / (second_to_millisecond);
-        lastTickFrame = DxLib::GetNowCount();
-
+        time.FixedFrameRate();
+        float deltaTime = time.DeltaTimeF();
+        time.UpdateTicks();
+        
         sceneInput_->Update(deltaTime);
         sceneMng_->ProcessInput();
         sceneMng_->Update(deltaTime);
