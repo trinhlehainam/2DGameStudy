@@ -230,7 +230,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	collisionMng_->Render();
+	/*collisionMng_->Render();*/
 	effectMng_->Render();
 	player_->RenderUI();
 }

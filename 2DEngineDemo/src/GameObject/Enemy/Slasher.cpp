@@ -96,7 +96,7 @@ void Slasher::AimPlayer(const float& deltaTime)
 
 	rigidBody_->velocity_.X = (playerPos_.lock()->pos.X - transform->pos.X) > 0 ? normal_side_velocity : -normal_side_velocity;
 
-	sprite->isFlipped = rigidBody_->velocity_.X > 0 ? false : true;
+	sprite->SetFlipState(!(rigidBody_->velocity_.X > 0));
 	if (std::abs(playerPos_.lock()->pos.X - transform->pos.X) < slash_distancce)
 	{
 		actionUpdate_ = &Slasher::SlashUpdate;

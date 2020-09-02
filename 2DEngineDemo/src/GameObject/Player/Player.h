@@ -10,6 +10,7 @@ class Entity;
 class TransformComponent;
 class Equipment;
 class Vector2;
+class Rect;
 
 enum class ACTION
 {
@@ -62,8 +63,8 @@ private:
 
 	void SetSideMoveVelocity(const float& velX);
 	void SetMoveAction(const ACTION& idle, const ACTION& moveType);
-	void SetMeleeAttack(const int& damage, const unsigned int& frame_no, const float& dirAngle, const Vector2& pos,
-		const float& w, const float& h);
+	void SetMeleeAttack(const int& damage, const unsigned int& frame_no, bool flipFlag,
+		const Vector2& offset, const Rect& srcRect);
 	void SetAngleDirection();
 	void ProcessThrow();
 	void ProcessGroundAttack();

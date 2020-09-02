@@ -41,6 +41,7 @@ private:
     std::unordered_map<std::string, Animation> animations_;                                  
     std::string currentAnimID;
     float angleRad_ = 0.0f;
+    bool isFlipped = false;
     
     // Animation update
     enum class PLAY
@@ -64,7 +65,6 @@ private:
     void HaveOffsetRender();                        // When animation offset is set to difference from zero
 
 public:
-    bool isFlipped = false;
 
     void Initialize() override;
     void Update(const float& deltaTime) override;
@@ -72,8 +72,11 @@ public:
 
     void AddAnimation(int texture, std::string animID, const Rect& srcRect,
         const unsigned& animSpeed, const float& rotateSpeed = 0.0f);
+    
+    inline bool IsFlipped() const { return isFlipped; }
+    inline void SetFlipState(bool flipFlag) { isFlipped = flipFlag; }
+    inline void Flip() { isFlipped = !isFlipped; }
     int GetCurrentCelNO() const;
-
     void SetAnimationOffset(const std::string& animaID, const Vector2& offset);
     void PlayLoop(const std::string& animID);
     void PlayAnimation(const std::string& animID);

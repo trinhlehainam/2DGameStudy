@@ -329,16 +329,13 @@ void Player::GroundAttackState(const float& deltaTime)
 		switch (actionState_)
 		{
 		case ACTION::ATTACK_1:
-			
-			SetMeleeAttack(1, attack1_frame, attackAngle_, transform->pos, transform->h, transform->w);
+			SetMeleeAttack(1, attack1_frame, sprite->IsFlipped(), attack1_offset, attack1_src_rect);
 			break;
 		case ACTION::ATTACK_2:
-			equipments_[currentEquip_]->SetDamage(1);
-			SetMeleeAttack(2, attack2_frame, attackAngle_, transform->pos, transform->h, transform->w);
+			SetMeleeAttack(2, attack2_frame, sprite->IsFlipped(), attack2_offset, attack2_src_rect);
 			break;
 		case ACTION::ATTACK_3:
-			equipments_[currentEquip_]->SetDamage(1);
-			SetMeleeAttack(2, attack3_frame, attackAngle_, transform->pos, transform->h, transform->w);
+			SetMeleeAttack(2, attack3_frame, sprite->IsFlipped(), attack3_offset, attack3_src_rect);
 			break;
 		}
 	}
@@ -374,12 +371,12 @@ void Player::SetSideMoveVelocity(const float& velX)
 	if (input_->IsPressed(L"left"))
 	{
 		rigidBody_->velocity_.X = -velX;
-		sprite->isFlipped = true;
+		sprite->SetFlipState(true);
 	}
 	else if (input_->IsPressed(L"right"))
 	{
 		rigidBody_->velocity_.X = velX;
-		sprite->isFlipped = false;
+		sprite->SetFlipState(false);
 	}
 	else
 	{
@@ -395,14 +392,21 @@ void Player::SetMoveAction(const ACTION& idle, const ACTION& moveType)
 		actionState_ = idle;
 }
 
-void Player::SetMeleeAttack(const int& damage, const unsigned int& frame_no, const float& dirAngle, const Vector2& pos,
-	const float& w, const float& h)
+void Player::SetMeleeAttack(const int& damage, const unsigned int& frame_no, bool flipFlag, 
+	const Vector2& offset, const Rect& srcRect)
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	const auto& transform = self_->GetComponent<TransformComponent>();
 	equipments_[currentEquip_]->SetDamage(damage);
+	Rect destRect = srcRect;
+	destRect.w *= transform->scale;
+	destRect.h *= transform->scale;
+	destRect.pos.X = transform->pos.X - (!sprite->IsFlipped() ? offset.X :
+		destRect.w - transform->w * transform->scale - offset.X);
+	destRect.pos.Y = transform->pos.Y - offset.Y;
 	if (sprite->GetCurrentCelNO() == frame_no)
 	{
-		equipments_[currentEquip_]->Attack(pos, dirAngle, w, h);
+		equipments_[currentEquip_]->Attack(destRect.pos, attackAngle_, destRect.w, destRect.h);
 		isMeleeActive = false;
 	}
 }
