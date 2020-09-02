@@ -17,7 +17,6 @@ private:
 	void operator = (Camera&&) = delete;
 
 	std::weak_ptr<TransformComponent> trackEntity_;
-
 	Vector2 offSet_;
 
 	using Updater_t = void (Camera::*)();
@@ -30,7 +29,7 @@ public:
 	static Camera& Instance();
 	void Update();
 	void TrackingOn(std::shared_ptr<TransformComponent> entity);
-	void LockCamera();
+	void LockCameraAt(const Vector2& pos);
 
 	Rect viewport;
 };

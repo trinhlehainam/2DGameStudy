@@ -79,18 +79,18 @@ public:
 		return (*actorColliders_.rbegin());
 	}
 
-	/*template<typename T, typename...Args>
-	void AddAttack()*/
-
 	std::shared_ptr<CircleColliderComponent>& AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
 	CircleColliderComponent& AddProjectileCollider(std::shared_ptr<Entity>& owner, std::string tag,
 		const float& posX, const float& posY, const float& radius);
 
-	
+	AABBColliderComponent& AddMeleeAttackCollider(const std::shared_ptr<Entity>& owner, std::string tag,
+		const Vector2& pos, const float& w, const float& h);
 
-	void ProjectileCollision();
+	void ActorVSProjectileCollision();
+	void ActorVSMeleeActtackCollision();
+	void CombatCollision();
 
 	inline void TurnOnRemoveFlag()
 	{

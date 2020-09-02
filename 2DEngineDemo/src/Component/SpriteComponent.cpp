@@ -52,7 +52,7 @@ void SpriteComponent::SetAnimationOffset(const std::string& animaID, const Vecto
 
 void SpriteComponent::Update(const float& deltaTime)
 {
-	playTimer_ += isPlaying_ * deltaTime * millisecond_to_second;
+	playTimer_ += isPlaying_ * deltaTime * second_to_millisecond;
 	(this->*animateUpdate_)(deltaTime);
 }
 

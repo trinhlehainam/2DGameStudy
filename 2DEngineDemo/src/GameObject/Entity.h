@@ -30,6 +30,7 @@ public:
 
 	Vector2 GetProjectileVelocity();
 	int GetProjectileDamage() const;
+	int GetMeleeAttackDamage() const;
 	void TakeDamage(const int& damage);
 	inline bool IsActive() const { return isActive_; }
 	inline bool IsHit() const{ return isHit_; }

@@ -191,7 +191,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	ProcessEnterBossArea();
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
-	collisionMng_->ProjectileCollision();
+	collisionMng_->CombatCollision();
 	effectMng_->Update(deltaTime);
 }
 
@@ -203,7 +203,7 @@ void GameScene::ProcessEnterBossArea()
 		auto asuraClone = std::make_unique<Asura>(*this, player_->GetPlayerTransform());
 		auto bossSpawner = std::make_unique<BossSpawner>(std::move(asuraClone), bossPos, *enemyMng_);
 		spawners_.emplace_back(std::move(bossSpawner));
-		Camera::Instance().LockCamera();
+		Camera::Instance().LockCameraAt(bossPos);
 		isBossAdded = true;
 	}
 }
@@ -230,7 +230,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	/*collisionMng_->Render();*/
+	collisionMng_->Render();
 	effectMng_->Render();
 	player_->RenderUI();
 }

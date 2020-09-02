@@ -4,7 +4,6 @@
 #include "../../Scene/GameScene.h"
 #include "../../System/TextureManager.h"
 
-
 namespace
 {
 	constexpr int box_pos_X = 0;

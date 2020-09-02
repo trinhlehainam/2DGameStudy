@@ -125,13 +125,21 @@ void Slasher::SlashUpdate(const float& deltaTime)
 void Slasher::HurtUpdate(const float& deltaTime)
 {
 	auto sprite = self_->GetComponent<SpriteComponent>();
+	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
 	sprite->PlayOnce("hurt");
 	rigidBody_->velocity_.X = 0;
 	if (sprite->IsFinished())
 	{
+		if (health <= 0)
+		{
+			actionUpdate_ = &Slasher::DeathUpdate;
+			return;
+		}
+			
 		actionUpdate_ = &Slasher::AimPlayer;
 		sprite->PlayLoop("run");
 	}
+
 }
 
 void Slasher::DeathUpdate(const float& deltaTime)
@@ -158,11 +166,6 @@ void Slasher::WaitDestroyUpdate(const float& deltaTime)
 void Slasher::CheckHit()
 {
 	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
-	if (health <= 0)
-	{
-		actionUpdate_ = &Slasher::DeathUpdate;
-		return;
-	}
 
 	if (self_->IsHit())
 	{

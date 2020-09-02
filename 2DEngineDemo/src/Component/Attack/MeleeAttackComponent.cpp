@@ -1,8 +1,8 @@
 #include "MeleeAttackComponent.h"
+
+#include "../../Constant.h"
 #include "../TransformComponent.h"
 #include "../../GameObject/Entity.h"
-#include "../../System/TextureManager.h"
-#include "../../System/Camera.h"
 
 MeleeAttackComponent::MeleeAttackComponent(const std::shared_ptr<Entity>& owner, const int& damage):
 	AttackComponent(owner)
@@ -16,7 +16,12 @@ void MeleeAttackComponent::Initialize()
 
 void MeleeAttackComponent::Update(const float& deltaTime)
 {
-	
+	if (lifeTime_ <= 0)
+	{
+		owner_.lock()->Destroy();
+		return;
+	}
+	lifeTime_ -= deltaTime * second_to_millisecond;
 }
 
 void MeleeAttackComponent::Render()

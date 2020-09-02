@@ -9,6 +9,7 @@ class KeyboardInput;
 class Entity;
 class TransformComponent;
 class Equipment;
+class Vector2;
 
 enum class ACTION
 {
@@ -43,6 +44,7 @@ private:
 	bool isDrawn = false;
 	bool isJumping = false;
 	bool isCrouch = false;
+	bool isMeleeActive = false;
 
 	ACTION actionState_ = ACTION::IDLE;
 	ACTION oldActionState_ = actionState_;
@@ -57,9 +59,11 @@ private:
 	void SecondJumpState(const float&);
 	void DrawWithdrawSwordState(const float&);
 	void GroundAttackState(const float&);
-	
+
 	void SetSideMoveVelocity(const float& velX);
 	void SetMoveAction(const ACTION& idle, const ACTION& moveType);
+	void SetMeleeAttack(const int& damage, const unsigned int& frame_no, const float& dirAngle, const Vector2& pos,
+		const float& w, const float& h);
 	void SetAngleDirection();
 	void ProcessThrow();
 	void ProcessGroundAttack();

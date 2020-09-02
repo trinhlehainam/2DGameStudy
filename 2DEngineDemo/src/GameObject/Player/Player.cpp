@@ -213,6 +213,7 @@ void Player::ProcessGroundAttack()
 			break;
 		}
 		inputState_ = &Player::GroundAttackState;
+		isMeleeActive = true;
 	}
 }
 
@@ -323,22 +324,25 @@ void Player::GroundAttackState(const float& deltaTime)
 	const auto& transform = self_->GetComponent<TransformComponent>();
 	rigidBody_->velocity_.X = 0;
 	
-	switch (actionState_)
+	if (isMeleeActive)
 	{
-	case ACTION::ATTACK_1:
-		if(sprite->GetCurrentCelNO() == attack1_frame)
-			equipments_[currentEquip_]->Attack(transform->pos);
-		break;
-	case ACTION::ATTACK_2:
-		if (sprite->GetCurrentCelNO() == attack2_frame)
-			equipments_[currentEquip_]->Attack(transform->pos);
-		break;
-	case ACTION::ATTACK_3:
-		if (sprite->GetCurrentCelNO() == attack3_frame)
-			equipments_[currentEquip_]->Attack(transform->pos);
-		break;
+		switch (actionState_)
+		{
+		case ACTION::ATTACK_1:
+			
+			SetMeleeAttack(1, attack1_frame, attackAngle_, transform->pos, transform->h, transform->w);
+			break;
+		case ACTION::ATTACK_2:
+			equipments_[currentEquip_]->SetDamage(1);
+			SetMeleeAttack(2, attack2_frame, attackAngle_, transform->pos, transform->h, transform->w);
+			break;
+		case ACTION::ATTACK_3:
+			equipments_[currentEquip_]->SetDamage(1);
+			SetMeleeAttack(2, attack3_frame, attackAngle_, transform->pos, transform->h, transform->w);
+			break;
+		}
 	}
-
+	
 	if (sprite->IsFinished())
 	{
 		if (timer_ > 0)
@@ -352,6 +356,7 @@ void Player::GroundAttackState(const float& deltaTime)
 			timer_ = 0.0f;
 		}
 	}
+
 }
 
 void Player::DrawWithdrawSwordState(const float&)
@@ -388,6 +393,18 @@ void Player::SetMoveAction(const ACTION& idle, const ACTION& moveType)
 		actionState_ = moveType;
 	else
 		actionState_ = idle;
+}
+
+void Player::SetMeleeAttack(const int& damage, const unsigned int& frame_no, const float& dirAngle, const Vector2& pos,
+	const float& w, const float& h)
+{
+	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	equipments_[currentEquip_]->SetDamage(damage);
+	if (sprite->GetCurrentCelNO() == frame_no)
+	{
+		equipments_[currentEquip_]->Attack(pos, dirAngle, w, h);
+		isMeleeActive = false;
+	}
 }
 
 void Player::ProcessCheckGround()

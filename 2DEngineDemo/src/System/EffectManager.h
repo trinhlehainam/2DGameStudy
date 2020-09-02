@@ -11,8 +11,8 @@ public:
 	EffectManager(GameScene& gs);
 	~EffectManager() = default;
 	void Update(const float& deltaTime);
-	void EmitBloodEffect(const float& posX, const float& posY, bool flipFlag);
-	void BombExplosionEffect(const float& posX, const float& posY);
+	void EmitBloodEffect(const float& posX, const float& posY, bool flipFlag, const float& scale = 1.0f);
+	void BombExplosionEffect(const float& posX, const float& posY, const float& scale = 1.0f);
 	void Render();
 };
 

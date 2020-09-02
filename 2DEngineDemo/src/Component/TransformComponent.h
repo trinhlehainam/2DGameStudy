@@ -38,7 +38,7 @@ public:
     /// <param name="scale"></param>
     /// <returns></returns>
     TransformComponent(const std:: shared_ptr<Entity>& owner, const Vector2& pos, const float& w,
-        const float& h, const float& scale);
+        const float& h, const float& scale = 1.0f);
     ~TransformComponent() = default;
 };
 

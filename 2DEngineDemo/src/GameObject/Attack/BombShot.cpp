@@ -24,6 +24,7 @@ namespace
 	constexpr float move_range = 700.0f;
 	constexpr float collider_offset_x = bomb_width * scale / 2.0f;
 	constexpr float collider_offset_y = bomb_height * scale / 2.0f;
+	constexpr float bomb_exp_scale = 2.0f;
 }
 
 BombShot::BombShot(GameScene& gs, const std::shared_ptr<Entity>& owner, const Vector2& startPos, 
@@ -68,6 +69,6 @@ void BombShot::Update(const float& deltaTime)
 		auto transform = self_->GetComponent<TransformComponent>();
 		Vector2 pos = Vector2(transform->pos.X + transform->w / 2 * transform->scale,
 							transform->pos.Y + transform->h / 2 * transform->scale);
-		gs_->effectMng_->BombExplosionEffect(pos.X , pos.Y);
+		gs_->effectMng_->BombExplosionEffect(pos.X , pos.Y, bomb_exp_scale);
 	}
 }

@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "../Component/Attack/ProjectileEmitterComponent.h"
+#include "../Component/Attack/MeleeAttackComponent.h"
 #include "../Component/HealthComponent.h"
 
 
@@ -29,10 +30,18 @@ int Entity::GetProjectileDamage() const
 {
 	if (HasComponent<ProjectileEmitterComponent>())
 	{
-		auto& damage = GetComponent<ProjectileEmitterComponent>()->damage_;
-		return damage;
+		return GetComponent<ProjectileEmitterComponent>()->GetDamage();;
 	}
 	return -1;
+}
+
+int Entity::GetMeleeAttackDamage() const
+{
+	if (HasComponent<MeleeAttackComponent>())
+	{
+		return GetComponent<MeleeAttackComponent>()->GetDamage();
+	}
+	return 0;
 }
 
 void Entity::TakeDamage(const int& damage)

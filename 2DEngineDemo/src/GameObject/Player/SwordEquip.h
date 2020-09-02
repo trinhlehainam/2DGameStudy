@@ -9,7 +9,7 @@ public:
     ~SwordEquip() = default;
 
     void Initialize() override;
-    void Attack(const Vector2& startPos, const float& angle, const float& w, const float& h) override;
+    void Attack(const Vector2& startPos, const float& dirAngle, const float& w, const float& h) override;
     void Render() override;
 };
 
