@@ -8,6 +8,7 @@
 #include "../../System/EntityManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EffectManager.h"
+#include "../../System/Time.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
@@ -25,7 +26,10 @@ MeleeAttack::MeleeAttack(GameScene& gs, const std::shared_ptr<Entity>& owner, co
 
 	self_->AddComponent<MeleeAttackComponent>(self_, damage);
 	auto attack = self_->GetComponent<MeleeAttackComponent>();
-	attack->SetLifeTime(MILLISECONDS_PER_FRAME);
+
+	// Limit life time of melee attack in just 1 game loop's frame
+	auto& time = Time::Instance();
+	attack->SetLifeTime(time.MillisecondsPerFrame(time.GetFrameRate()));
 }
 
 void MeleeAttack::Initialize()

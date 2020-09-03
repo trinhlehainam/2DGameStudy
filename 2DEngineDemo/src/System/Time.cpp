@@ -1,10 +1,15 @@
-#include "Timer.h"
+#include "Time.h"
 
 #include <DxLib.h>
 
 namespace
 {
     constexpr unsigned int second_to_millisecond = 1000;
+}
+
+float Time::ProcessDeltaTime()
+{
+    return DxLib::GetNowCount() - lastTicks_;
 }
 
 Time& Time::Instance()
@@ -15,8 +20,8 @@ Time& Time::Instance()
 
 void Time::UpdateTicks()
 {
-    lastTicks_ = currentTicks_;
-    currentTicks_ = DxLib::GetNowCount();
+    deltaTime_ = ProcessDeltaTime()/static_cast<float>(second_to_millisecond);
+    lastTicks_ = DxLib::GetNowCount();
 }
 
 unsigned int Time::MillisecondsPerFrame(const unsigned int& frameRate)
@@ -26,13 +31,15 @@ unsigned int Time::MillisecondsPerFrame(const unsigned int& frameRate)
 
 void Time::FixedFrameRate()
 {
-    int timeToWait = MillisecondsPerFrame(frameRate_) - DeltaTime();
+    int timeToWait = MillisecondsPerFrame(frameRate_) - ProcessDeltaTime();
     if (timeToWait > 0 && timeToWait <= MillisecondsPerFrame(frameRate_)) Delay(timeToWait);
+    UpdateTicks();
 }
 
 void Time::SetFrameRate(const unsigned int& frameRate)
 {
     frameRate_ = frameRate;
+    fixedDeltaTime_ = MillisecondsPerFrame(frameRate_) / static_cast<float>(second_to_millisecond);
 }
 
 unsigned int Time::GetFrameRate() const
@@ -40,29 +47,19 @@ unsigned int Time::GetFrameRate() const
     return frameRate_;
 }
 
-float Time::GetFrameRateF() const
+float Time::DeltaTime() const
 {
-    return frameRate_ / static_cast<float>(second_to_millisecond);
-}
-
-float Time::DeltaTimeF() const
-{
-    return static_cast<float>(currentTicks_ - lastTicks_) / (second_to_millisecond);
-}
-
-unsigned int Time::DeltaTime() const
-{
-    return currentTicks_ - lastTicks_;
+    return deltaTime_;
 }
 
 unsigned int Time::GetCurrentTicks() const
 {
-    return currentTicks_;
+    return DxLib::GetNowCount();
 }
 
 float Time::GetCurrentTicksF() const
 {
-    return currentTicks_ / static_cast<float>(second_to_millisecond);
+    return DxLib::GetNowCount() / static_cast<float>(second_to_millisecond);
 }
 
 void Time::SetFixedDeltaTimeF(const float& time)
@@ -70,7 +67,7 @@ void Time::SetFixedDeltaTimeF(const float& time)
     fixedDeltaTime_ = time;
 }
 
-float Time::FixedDeltaTimeF() const
+float Time::FixedDeltaTime() const
 {
     return fixedDeltaTime_;
 }
