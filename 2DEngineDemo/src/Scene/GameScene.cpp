@@ -112,6 +112,7 @@ void GameScene::LoadLevel(const int& level)
 
 	assetMng_->AddTexture("blood", L"assets/Image/Effect/blood.png");
 	assetMng_->AddTexture("bomb-explosion", L"assets/Image/Effect/bomb_exp.png");
+	assetMng_->AddTexture("energy-ball", L"assets/Image/Effect/chargeball.png");
 	
 	// Create Title Map
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);

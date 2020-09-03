@@ -9,6 +9,7 @@
 
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
+#include "../../System/EffectManager.h"
 
 namespace {
 	const Vector2 start_pos = Vector2(300.0f, 300.0f);
@@ -21,7 +22,9 @@ namespace {
 
 	constexpr float entering_speed = 100.0f;
 	constexpr float ground_line = 350.0f;
-	
+
+	constexpr float emit_ball_cooldown = 1.0f;
+	constexpr unsigned int emit_ball_play_time = 500;
 }
 
 Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_) :Enemy(gs, playerPos_)
@@ -59,6 +62,13 @@ void Asura::EnteringUpdate(const float& deltaTime)
 
 void Asura::NormalUpdate(const float& deltaTime)
 {
+	if (cooldown_ <= 0.0f)
+	{
+		auto transform = self_->GetComponent<TransformComponent>();
+		gs_.effectMng_->EnergyBall(emit_ball_play_time, transform->pos.X, transform->pos.Y);
+		cooldown_ = emit_ball_cooldown;
+	}
+	cooldown_ -= deltaTime;
 }
 
 void Asura::DamageUpdate(const float& deltaTime)

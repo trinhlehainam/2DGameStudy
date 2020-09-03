@@ -114,7 +114,7 @@ void Slasher::SlashUpdate(const float& deltaTime)
 	
 	if (std::abs(playerPos_.lock()->pos.X - transform->pos.X) > slash_distancce)
 	{
-		if (sprite->IsFinished())
+		if (sprite->IsAnimationFinished())
 		{
 			actionUpdate_ = &Slasher::AimPlayer;
 			sprite->PlayLoop("run");
@@ -128,7 +128,7 @@ void Slasher::HurtUpdate(const float& deltaTime)
 	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
 	sprite->PlayOnce("hurt");
 	rigidBody_->velocity_.X = 0;
-	if (sprite->IsFinished())
+	if (sprite->IsAnimationFinished())
 	{
 		if (health <= 0)
 		{
@@ -147,7 +147,7 @@ void Slasher::DeathUpdate(const float& deltaTime)
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	sprite->PlayOnce("death");
 	rigidBody_->velocity_.X = 0;
-	if (sprite->IsFinished())
+	if (sprite->IsAnimationFinished())
 	{
 		timer_ = wait_destroy_time;
 		sprite->Pause();

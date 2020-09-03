@@ -220,7 +220,7 @@ void Player::ThrowState(const float&)
 	if (rigidBody_->isGrounded_)
 		rigidBody_->velocity_.X = 0.0f;
 
-	if (sprite->IsFinished())
+	if (sprite->IsAnimationFinished())
 	{
 		TurnBackState();
 	}
@@ -306,7 +306,7 @@ void Player::SecondJumpState(const float& deltaTime)
 
 	SetSideMoveVelocity(normal_side_velocity);
 	ProcessThrow();
-	if (isJumping && sprite->IsFinished())
+	if (isJumping && sprite->IsAnimationFinished())
 	{
 		isJumping = false;
 		actionState_ = ACTION::FALL;
@@ -336,7 +336,7 @@ void Player::GroundAttackState(const float& deltaTime)
 		}
 	}
 	
-	if (sprite->IsFinished())
+	if (sprite->IsAnimationFinished())
 	{
 		if (timer_ > 0)
 		{
@@ -357,7 +357,7 @@ void Player::DrawWithdrawSwordState(const float&)
 	if (rigidBody_->isGrounded_)
 		rigidBody_->velocity_.X = 0.0f;
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
-	if (sprite->IsFinished())
+	if (sprite->IsAnimationFinished())
 		TurnBackState();
 }
 

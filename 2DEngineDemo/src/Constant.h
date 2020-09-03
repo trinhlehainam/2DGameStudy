@@ -19,4 +19,4 @@ constexpr unsigned int WORLD_MAP_Y = MAP_SIZE_Y * TILE_SIZE * TILE_SCALE;
 
 constexpr unsigned int second_to_millisecond = 1000;
 
-constexpr float PI = 3.14159f;
+constexpr float PI = 3.1415926535897932384626433832795f;

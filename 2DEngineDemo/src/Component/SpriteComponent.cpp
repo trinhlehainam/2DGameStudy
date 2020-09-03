@@ -76,7 +76,7 @@ void SpriteComponent::PlayLoopUpdate(const float& deltaTime)
 
 void SpriteComponent::PlayOnceUpdate(const float& deltaTime)
 {
-	if (IsFinished())
+	if (IsAnimationFinished())
 	{
 		isPlaying_ = false;
 		SetFinish();
@@ -107,7 +107,7 @@ void SpriteComponent::Render()
 			TextureManager::DrawRectRota(animations_.at(currentAnimID).texture, animations_.at(currentAnimID).srcRect,
 				desRect, transform->scale, angleRad_, isFlipped);
 			// Debug
-			/*TextureManager::DrawDebugBox(desRect, 0x00ff00);*/
+			TextureManager::DrawDebugBox(desRect, 0x00ff00);
 		}
 	}
 }
@@ -138,7 +138,7 @@ void SpriteComponent::HaveOffsetRender()
 
 void SpriteComponent::PlayAnimation(const std::string& animID)
 {
-	if (IsPlaying(animID)) return;
+	if (IsAnimationPlaying(animID)) return;
 	currentAnimID = animID;
 	animations_.at(animID).indexX = 0;
 	animations_.at(animID).indexY = 0;
@@ -155,15 +155,17 @@ void SpriteComponent::PlayAnimation(const std::string& animID)
 	isPlaying_ = true;
 }
 
-void SpriteComponent::PlayLoop(const std::string& animID)
+void SpriteComponent::PlayLoop(const std::string& animID, const unsigned int playTime)
 {
+	playLength_ = playTime;
 	PlayAnimation(animID);
 	animateUpdate_ = &SpriteComponent::PlayLoopUpdate;
 	playState_ = PLAY::LOOP;
 }
 
-void SpriteComponent::PlayOnce(const std::string& animID)
+void SpriteComponent::PlayOnce(const std::string& animID, const unsigned int playTime)
 {
+	playLength_ = playTime;
 	PlayAnimation(animID);
 	animateUpdate_ = &SpriteComponent::PlayOnceUpdate;
 	playState_ = PLAY::ONCE;
@@ -204,17 +206,20 @@ void SpriteComponent::SetAnimationSpeed(const unsigned int& animSpeed)
 	animation.animSpeed = animSpeed;
 }
 
-bool SpriteComponent::IsPlaying(const std::string& animID)
+bool SpriteComponent::IsAnimationPlaying(const std::string& animID)
 {
 	return currentAnimID.compare(animID) == 0;
 }
 
-bool SpriteComponent::IsFinished()
+bool SpriteComponent::IsAnimationFinished()
 {
 	auto& animation = animations_.at(currentAnimID);
 	return playTimer_ >= animation.animSpeed * (animation.numCelX * animation.numCelY);
-	/*return (animation.indexX == (animation.numCelX - 1)) && 
-			(animation.indexY == (animation.numCelY - 1));*/
+}
+
+bool SpriteComponent::IsFinished()
+{
+	return playTimer_ >= playLength_;
 }
 
 SpriteComponent::~SpriteComponent()

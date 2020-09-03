@@ -51,6 +51,7 @@ private:
     };
     PLAY playState_;
     unsigned int playTimer_ = 0;
+    unsigned int playLength_ = 0;
     bool isPlaying_;
     using AnimateUpdate_t = void (SpriteComponent::*)(const float&);
     AnimateUpdate_t animateUpdate_;
@@ -78,14 +79,15 @@ public:
     inline void Flip() { isFlipped = !isFlipped; }
     int GetCurrentCelNO() const;
     void SetAnimationOffset(const std::string& animaID, const Vector2& offset);
-    void PlayLoop(const std::string& animID);
+    void PlayLoop(const std::string& animID, const unsigned int playTime = 0);
     void PlayAnimation(const std::string& animID);
-    void PlayOnce(const std::string& animID);
+    void PlayOnce(const std::string& animID, const unsigned int playTime = 0);
     void SetFinish();
     void Pause();
     void Resume();
     void SetAnimationSpeed(const unsigned int& animSpeed);
-    bool IsPlaying(const std::string& animID);
+    bool IsAnimationPlaying(const std::string& animID);
+    bool IsAnimationFinished();
     bool IsFinished();
 
     SpriteComponent(const std::shared_ptr<Entity>& owner, bool isFixed = false);

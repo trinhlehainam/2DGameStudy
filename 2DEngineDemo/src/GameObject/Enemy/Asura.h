@@ -13,6 +13,7 @@ private:
 
     using Updater_t = void (Asura::*)(const float&);
     Updater_t updater_;
+    float cooldown_ = 0;
 
     void EnteringUpdate(const float& deltaTime);
     void NormalUpdate(const float& deltaTime);
