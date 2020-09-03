@@ -27,7 +27,7 @@ namespace
 	constexpr float collider_offset_y = bomb_height * scale / 2.0f;
 	constexpr float bomb_exp_scale = 2.0f;
 
-	constexpr int shake_time = 100;
+	constexpr int shake_time = 200;
 	constexpr float shake_range_x = 10;
 	constexpr float shake_range_y = 10;
 }
@@ -69,8 +69,9 @@ int BombShot::GetDamage() const
 
 void BombShot::Update(const float& deltaTime)
 {
-	if (!IsOwnerActive())
+	if (!IsOwnerActive() || self_->GetComponent<ProjectileEmitterComponent>()->IsOutOfRange())
 	{
+		self_->Destroy();
 		auto transform = self_->GetComponent<TransformComponent>();
 		Vector2 pos = Vector2(transform->pos.X + transform->w / 2 * transform->scale,
 							transform->pos.Y + transform->h / 2 * transform->scale);

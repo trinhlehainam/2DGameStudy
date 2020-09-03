@@ -27,7 +27,7 @@ void SideSpawner::Update(const float& deltaTime)
 	if (frame_ < 0)
 	{
 		pos_.X = Camera::Instance().Position().X - offSetX_ + 
-			(Camera::Instance().viewport.w + offSetX_) * (rand()%2);
+			(Camera::Instance().ViewWidth() + offSetX_) * (rand()%2);
 		pos_.Y = Camera::Instance().Position().Y + rand()%static_cast<int>(offSetY_);
 		CreateClone();
 		frame_ = spawn_frame_cnt;

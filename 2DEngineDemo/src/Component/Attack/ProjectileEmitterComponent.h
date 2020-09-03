@@ -16,7 +16,7 @@ private:
     float range_;
 
     bool IsOutOfRange();
-    bool IsOutOfWorld();
+    bool IsOutOfMap();
     inline Vector2 GetVelocity() const { return velocity_; }
     inline void SetVelocity(const Vector2& vel) { velocity_ = vel; }
 public:

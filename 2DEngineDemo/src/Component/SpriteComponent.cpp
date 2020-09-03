@@ -98,9 +98,9 @@ void SpriteComponent::Render()
 	const auto& transform = transform_.lock();
 
 	if (desRect.pos.X >= -desRect.w &&
-		desRect.pos.X <= Camera::Instance().viewport.w + desRect.w &&
+		desRect.pos.X <= Camera::Instance().ViewWidth() + desRect.w &&
 		desRect.pos.Y >= -desRect.h &&
-		desRect.pos.Y <= Camera::Instance().viewport.h + desRect.h)
+		desRect.pos.Y <= Camera::Instance().ViewHeight() + desRect.h)
 	{
 		if (animations_.count(currentAnimID))
 		{

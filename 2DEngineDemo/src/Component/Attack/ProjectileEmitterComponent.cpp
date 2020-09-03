@@ -23,7 +23,7 @@ void ProjectileEmitterComponent::Update(const float& deltaTime)
 	const auto& transform = owner->GetComponent<TransformComponent>();
 	transform->pos += velocity_ * deltaTime;
 	
-	if (IsOutOfWorld())
+	if (IsOutOfMap())
 	{
 		owner->Destroy();
 	}
@@ -37,7 +37,7 @@ bool ProjectileEmitterComponent::IsOutOfRange()
 	return travel_range * travel_range >= range_ * range_;
 }
 
-bool ProjectileEmitterComponent::IsOutOfWorld()
+bool ProjectileEmitterComponent::IsOutOfMap()
 {
 	const auto& owner = owner_.lock();
 	const auto& transform = owner->GetComponent<TransformComponent>();

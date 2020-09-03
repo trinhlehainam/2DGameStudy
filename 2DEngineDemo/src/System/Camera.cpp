@@ -4,9 +4,14 @@
 #include "../Component/TransformComponent.h"
 #include "Time.h"
 
+namespace
+{
+    constexpr float smooth_speed = 0.125f;
+}
+
 Camera::Camera()
 {
-    updater_ = &Camera::TrackingUpdate;
+    updater_ = &Camera::FollowingUpdate;
 }
 
 Camera& Camera::Instance()
@@ -18,32 +23,47 @@ Camera& Camera::Instance()
 void Camera::Update()
 {
     (this->*updater_)();
+    if (shakeFlag_)
+        ShakingUpdate();
 }
 
-void Camera::TrackingUpdate()
+void Camera::SetTargetEntity(const std::shared_ptr<TransformComponent>& entity)
+{
+    trackEntity_ = entity;
+}
+
+void Camera::SetTargetPosition(const Vector2& pos)
+{
+    targetPos_ = pos;
+}
+
+void Camera::FollowingUpdate()
 {
     auto transform = trackEntity_.lock();
-    viewport.pos = transform->pos - offset_;
+    SmoothFollow(transform->pos);
     viewport.pos.X = clamp(viewport.pos.X, 0.0f, limit_.X);
 }
 
 void Camera::LockingUpdate()
 {
-    
+    SmoothFollow(targetPos_);
 }
 
 void Camera::ShakingUpdate()
 {
-    if(timer_ <= 0)
-        updater_ = &Camera::TrackingUpdate;
+    if (timer_ <= 0)
+    {
+        shakeFlag_ = false;
+        shakeValue_ = Vector2(0, 0);
+        return;
+    }
     shakeValue_ = GetShakeValue();
     timer_ -= Time::Instance().DeltaTimeF();
 }
 
-void Camera::TrackingOn(const std::shared_ptr<TransformComponent>& entity)
+void Camera::SmoothFollow(const Vector2& pos)
 {
-    trackEntity_ = entity;
-    updater_ = &Camera::TrackingUpdate;
+    viewport.pos += (pos - offset_ - viewport.pos) * smooth_speed;
 }
 
 void Camera::LockCameraAt(const Vector2& pos)
@@ -67,7 +87,7 @@ void Camera::ShakeCamera(const int& howLong, const float& rangeX, const float& r
     timer_ = howLong/static_cast<float>(second_to_millisecond);
     shakeRange_.X = rangeX;
     shakeRange_.Y = rangeY;
-    updater_ = &Camera::ShakingUpdate;
+    shakeFlag_ = true;
 }
 
 Vector2 Camera::GetShakeValue() const
@@ -79,5 +99,16 @@ Vector2 Camera::GetShakeValue() const
 Vector2 Camera::Position() const
 {
     return viewport.pos + shakeValue_;
+}
+
+void Camera::SetPosition(const Vector2& pos)
+{
+    viewport.pos = pos - offset_;
+}
+
+void Camera::SetViewSize(const float& w, const float& h)
+{
+    viewport.w = w;
+    viewport.h = h;
 }
 

@@ -9,7 +9,6 @@
 
 #include "../../Scene/GameScene.h"
 #include "../../System/AssetManager.h"
-#include "../../System/Camera.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
 
@@ -127,9 +126,6 @@ void Player::Initialize()
 	playerAnim->SetAnimationOffset("attack-1", attack1_offset);
 	playerAnim->SetAnimationOffset("attack-2", attack2_offset);
 	playerAnim->SetAnimationOffset("attack-3", attack3_offset);
-
-	// Set camera track to player
-	Camera::Instance().TrackingOn(self_->GetComponent<TransformComponent>());
 
 	// Initialize Equipment list
 	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_, shuriken_tag, self_, shuriken_damage)));
