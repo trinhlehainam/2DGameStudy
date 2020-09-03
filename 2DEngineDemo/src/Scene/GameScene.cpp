@@ -128,6 +128,8 @@ void GameScene::LoadLevel(const int& level)
 	// Initialize Camera ( Track Camera to Player )
 	Camera::Instance().viewport.w = WINDOW_WIDTH;
 	Camera::Instance().viewport.h = WINDOW_HEIGHT;
+	Camera::Instance().SetOffset(Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 2 / 3));
+	Camera::Instance().SetLimit(Vector2(WORLD_MAP_X - WINDOW_WIDTH, 0));
 
 	// Create player Entity
 	player_ = std::make_unique<Player>(*this);

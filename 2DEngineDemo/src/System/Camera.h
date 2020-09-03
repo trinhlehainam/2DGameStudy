@@ -17,19 +17,25 @@ private:
 	void operator = (Camera&&) = delete;
 
 	std::weak_ptr<TransformComponent> trackEntity_;
-	Vector2 offSet_;
+	Vector2 offset_;
+	Vector2 shakeOffset_;
+	Vector2 limit_;
+	unsigned int timer_;
 
 	using Updater_t = void (Camera::*)();
 	Updater_t updater_;
 
 	void TrackingUpdate();
-	void LockUpdate();
+	void LockingUpdate();
+	void ShakingUpdate();
 public:
 	~Camera() = default;
 	static Camera& Instance();
 	void Update();
-	void TrackingOn(std::shared_ptr<TransformComponent> entity);
+	void TrackingOn(const std::shared_ptr<TransformComponent>& entity);
 	void LockCameraAt(const Vector2& pos);
+	void SetOffset(const Vector2& offset);
+	void SetLimit(const Vector2& limit);
 
 	Rect viewport;
 };

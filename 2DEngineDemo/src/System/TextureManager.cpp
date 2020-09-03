@@ -23,7 +23,7 @@ void TextureManager::DrawRect(const int& texture, const Rect& desRect, const Rec
 		srcRect.pos.X, srcRect.pos.Y, srcRect.w, srcRect.h, texture,true);
 }
 
-void TextureManager::DrawCircle( const Circle& desCir, const int& color, const bool& fill)
+void TextureManager::DrawDebugCircle( const Circle& desCir, const int& color, const bool& fill)
 {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
 	DxLib::DrawCircle(desCir.pos.X, desCir.pos.Y, desCir.radius,color, fill);
@@ -37,12 +37,12 @@ void TextureManager::DrawDebugBox(const Rect& desRect, const int& color, const b
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void TextureManager::DeleteGraph(int texture)
+void TextureManager::DeleteGraph(const int& texture)
 {
 	DxLib::DeleteGraph(texture);
 }
 
-void TextureManager::DrawIconBox(const int& texture, const Rect& desRect)
+void TextureManager::DrawBoxIcon(const int& texture, const Rect& desRect)
 {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, 128);
 	DxLib::DrawBox(desRect.Left(), desRect.Top(), desRect.Right(), desRect.Bottom(), 0x000000, true);

@@ -21,5 +21,5 @@ Equipment::Equipment(GameScene& gs, const std::string& tag, const std::shared_pt
 
 void Equipment::DrawEquipmentBox(const int& texture)
 {
-	TextureManager::DrawIconBox(texture, destination_rect);
+	TextureManager::DrawBoxIcon(texture, destination_rect);
 }
