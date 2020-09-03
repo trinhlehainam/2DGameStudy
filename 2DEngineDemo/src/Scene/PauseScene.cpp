@@ -11,9 +11,9 @@
 
 namespace
 {
-	constexpr int appear_time = 25;
-	constexpr int disappear_time = 25;
-	int frame_ = 0;
+	constexpr float appear_time = 0.5f;
+	constexpr float disappear_time = 0.5f;
+	float timer_ = 0;
 	int indicatorTexture_ = -1;
 
 	constexpr int menu_y_interval = 48;		// Space between each item
@@ -42,7 +42,7 @@ PauseScene::PauseScene(SceneManager& sceneMng, KeyboardInput& sceneInput, Keyboa
 		indicatorTexture_ = DxLib::LoadGraph(L"assets/Image/UI/indicator.png");
 	}
 	
-	frame_ = 0;
+	timer_ = 0;
 
 	pauseTextLength = DxLib::GetStringLength(pauseTitleText);
 
@@ -141,32 +141,32 @@ void PauseScene::AppearDraw()
 	int expend = (menuBox.h / 2) / appear_time;
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, 128);
 	DxLib::DrawBox(menuBox.Left(),
-		menuBox.Center().Y - (expend * frame_),
+		menuBox.Center().Y - (expend * timer_),
 		menuBox.Right(),
-		menuBox.Center().Y + (expend * frame_),
+		menuBox.Center().Y + (expend * timer_),
 		0x000000, true);
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	DxLib::DrawBoxAA(menuBox.Left(),
-		menuBox.Center().Y - (expend * frame_),
+		menuBox.Center().Y - (expend * timer_),
 		menuBox.Right(),
-		menuBox.Center().Y + (expend * frame_),
+		menuBox.Center().Y + (expend * timer_),
 		0xffffff, false, 2.0f);
 }
 
 void PauseScene::DisappearDraw()
 {
-	int expend = (menuBox.h / 2) / appear_time;
+	float expend = (menuBox.h / 2) / appear_time;
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, 128);
 	DxLib::DrawBox(menuBox.Left(),
-		menuBox.Top() + (expend * frame_),
+		menuBox.Top() + (expend * timer_),
 		menuBox.Right(),
-		menuBox.Bottom() - (expend * frame_),
+		menuBox.Bottom() - (expend * timer_),
 		0x000000, true);
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	DxLib::DrawBoxAA(menuBox.Left(),
-		menuBox.Top() + (expend * frame_),
+		menuBox.Top() + (expend * timer_),
 		menuBox.Right(),
-		menuBox.Bottom() - (expend * frame_),
+		menuBox.Bottom() - (expend * timer_),
 		0xffffff, false, 2.0f);
 }
 
@@ -210,23 +210,25 @@ void PauseScene::CloseScene()
 {
 	updateFunc_ = &PauseScene::DisappearUpdate;
 	drawFunc_ = &PauseScene::DisappearDraw;
-	frame_ = 0;
+	timer_ = 0;
 }
 
 void PauseScene::AppearUpdate(const float& deltaTime)
 {
-	if (++frame_ >= appear_time)
+	if (timer_ >= appear_time)
 	{
 		updateFunc_ = &PauseScene::NormalUpdate;
 		drawFunc_ = &PauseScene::NormalDraw;
-		frame_ = 0;
+		timer_ = 0;
 	}
+	timer_ += deltaTime;
 }
 
 void PauseScene::DisappearUpdate(const float& deltaTime)
 {
-	if (++frame_ >= appear_time)
+	if (timer_ >= appear_time)
 	{
 		sceneMng_.PopScene();
 	}
+	timer_ += deltaTime;
 }

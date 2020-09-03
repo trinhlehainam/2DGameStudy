@@ -20,7 +20,7 @@ namespace {
 	constexpr float collider_radius = 50.0f;
 
 	constexpr float entering_speed = 100.0f;
-	constexpr float ground_line = 250.0f;
+	constexpr float ground_line = 350.0f;
 	
 }
 

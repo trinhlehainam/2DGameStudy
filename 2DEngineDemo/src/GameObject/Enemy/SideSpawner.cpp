@@ -7,14 +7,14 @@
 
 namespace
 {
-	float frame_ = 0;
+	float timer_ = 0;
 	constexpr float spawn_frame_cnt = 2.0f;
 }
 
 SideSpawner::SideSpawner(std::unique_ptr<Enemy> protoype, Vector2 pos, EnemyManager& enemyMng):
 	Spawner(std::move(protoype),pos,enemyMng)
 {
-	frame_ = spawn_frame_cnt;
+	timer_ = spawn_frame_cnt;
 }
 
 SideSpawner::~SideSpawner()
@@ -23,14 +23,14 @@ SideSpawner::~SideSpawner()
 
 void SideSpawner::Update(const float& deltaTime)
 {
-	frame_ -= deltaTime;
-	if (frame_ < 0)
+	timer_ -= deltaTime;
+	if (timer_ < 0)
 	{
 		pos_.X = Camera::Instance().Position().X - offSetX_ + 
 			(Camera::Instance().ViewWidth() + offSetX_) * (rand()%2);
 		pos_.Y = Camera::Instance().Position().Y + rand()%static_cast<int>(offSetY_);
 		CreateClone();
-		frame_ = spawn_frame_cnt;
+		timer_ = spawn_frame_cnt;
 	}
 }
 
