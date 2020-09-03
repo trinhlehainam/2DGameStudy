@@ -51,9 +51,9 @@ void Engine::Run()
         auto& time = Time::Instance();
         time.FixedFrameRate();
         
-        sceneInput_->Update(time.FixedDeltaTime());
+        sceneInput_->Update(time.FixedDeltaTimeF());
         sceneMng_->ProcessInput();
-        sceneMng_->Update(time.FixedDeltaTime());
+        sceneMng_->Update(time.FixedDeltaTimeF());
 
         // Game Draw
         sceneMng_->Render();

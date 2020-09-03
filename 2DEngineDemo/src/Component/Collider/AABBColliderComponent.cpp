@@ -35,7 +35,7 @@ void AABBColliderComponent::Update(const float& deltaTime)
 
 void AABBColliderComponent::Render()
 {
-	destRect_.pos = collider_.pos - Camera::Instance().viewport.pos;
+	destRect_.pos = collider_.pos - Camera::Instance().Position();
 	int color = isActive_ ? 0xffff00 : 0xff0000;
 	TextureManager::DrawDebugBox(destRect_, color);
 }

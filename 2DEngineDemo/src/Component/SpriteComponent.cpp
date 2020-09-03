@@ -117,7 +117,7 @@ void SpriteComponent::NormalRender()
 	const auto& transform = transform_.lock();
 	auto& animation = animations_.at(currentAnimID);
 
-	desRect.pos = transform->pos - animation.offset_ - Camera::Instance().viewport.pos;
+	desRect.pos = transform->pos - animation.offset_ - Camera::Instance().Position();
 }
 
 void SpriteComponent::FixedOnScreenRender()
@@ -133,7 +133,7 @@ void SpriteComponent::HaveOffsetRender()
 	desRect.pos.X = transform->pos.X - (!isFlipped ? animation.offset_.X :
 									desRect.w - transform->w * transform->scale - animation.offset_.X);
 	desRect.pos.Y = transform->pos.Y - animation.offset_.Y;
-	desRect.pos -= Camera::Instance().viewport.pos;
+	desRect.pos -= Camera::Instance().Position();
 }
 
 void SpriteComponent::PlayAnimation(const std::string& animID)

@@ -24,12 +24,13 @@ public:
 	void SetFrameRate(const unsigned int& frameRate);
 	unsigned int GetFrameRate() const;
 	unsigned int GetCurrentTicks() const;
+	unsigned int DeltaTime() const;
 	void Delay(const int& time);	
 
 	float GetCurrentTicksF() const;
 	void SetFixedDeltaTimeF(const float& time);
-	float FixedDeltaTime() const;
-	float DeltaTime() const;
+	float FixedDeltaTimeF() const;
+	float DeltaTimeF() const;	
 	void DelayF(const float& time);
 };
 

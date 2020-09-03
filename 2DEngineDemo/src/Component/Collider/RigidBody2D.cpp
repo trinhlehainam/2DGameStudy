@@ -32,7 +32,7 @@ void RigidBody2D::Update(const float& deltaTime)
 
 void RigidBody2D::Render()
 {
-	destRect_.pos = collider_.pos - Camera::Instance().viewport.pos;
+	destRect_.pos = collider_.pos - Camera::Instance().Position();
 	destRect_.w = collider_.w;
 	destRect_.h = collider_.h;
 	TextureManager::DrawDebugBox(destRect_, 0xffffff);

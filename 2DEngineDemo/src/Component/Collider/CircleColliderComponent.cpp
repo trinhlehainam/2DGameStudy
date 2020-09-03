@@ -41,7 +41,7 @@ void CircleColliderComponent::Update(const float& deltaTime)
 
 void CircleColliderComponent::Render()
 {
-	destCir_.pos = collider_.pos - Camera::Instance().viewport.pos;
+	destCir_.pos = collider_.pos - Camera::Instance().Position();
 	int color = isActive_ ? 0xffff00 : 0xff0000;
 	TextureManager::DrawDebugCircle(destCir_, color);
 }

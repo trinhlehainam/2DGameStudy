@@ -47,7 +47,7 @@ unsigned int Time::GetFrameRate() const
     return frameRate_;
 }
 
-float Time::DeltaTime() const
+float Time::DeltaTimeF() const
 {
     return deltaTime_;
 }
@@ -55,6 +55,11 @@ float Time::DeltaTime() const
 unsigned int Time::GetCurrentTicks() const
 {
     return DxLib::GetNowCount();
+}
+
+unsigned int Time::DeltaTime() const
+{
+    return DeltaTimeF()*second_to_millisecond;
 }
 
 float Time::GetCurrentTicksF() const
@@ -67,7 +72,7 @@ void Time::SetFixedDeltaTimeF(const float& time)
     fixedDeltaTime_ = time;
 }
 
-float Time::FixedDeltaTime() const
+float Time::FixedDeltaTimeF() const
 {
     return fixedDeltaTime_;
 }
