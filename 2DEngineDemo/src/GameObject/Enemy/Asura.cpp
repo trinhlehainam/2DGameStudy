@@ -24,12 +24,18 @@ namespace {
 	constexpr float ground_line = 350.0f;
 
 	constexpr float emit_ball_cooldown = 1.0f;
-	constexpr unsigned int emit_ball_play_time = 500;
+	constexpr unsigned int emit_ball_play_time = 2000;
+
+	constexpr int energy_ball_num = 3;
+	const Vector2 energy_ball_1_offset = Vector2(65, 40);
+	const Vector2 energy_ball_2_offset = Vector2(-65, 40);
+	const Vector2 energy_ball_3_offset = Vector2(50, 50);
 }
 
 Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_) :Enemy(gs, playerPos_)
 {
 	updater_ = &Asura::EnteringUpdate;
+	energyBallPos_.reserve(energy_ball_num);
 }
 
 Asura::~Asura()
@@ -46,6 +52,7 @@ void Asura::Initialize()
 	anim->PlayLoop("idle");
 	auto& collider = gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
 	colliders_.push_back(collider);
+
 }
 
 void Asura::EnteringUpdate(const float& deltaTime)
@@ -54,6 +61,11 @@ void Asura::EnteringUpdate(const float& deltaTime)
 	if (transform->pos.Y <= ground_line)
 	{
 		transform->pos.Y = ground_line;
+		Vector2 offset;
+		offset = transform->pos + energy_ball_1_offset;
+		energyBallPos_.emplace_back(offset);
+		offset = transform->pos + Vector2(transform->w, 0) + energy_ball_2_offset;
+		energyBallPos_.emplace_back(offset);
 		updater_ = &Asura::NormalUpdate;
 	}
 	else
@@ -65,7 +77,9 @@ void Asura::NormalUpdate(const float& deltaTime)
 	if (cooldown_ <= 0.0f)
 	{
 		auto transform = self_->GetComponent<TransformComponent>();
-		gs_.effectMng_->EnergyBallEffect(emit_ball_play_time, transform->pos.X, transform->pos.Y);
+		int energyBallIndex = rand() % energyBallPos_.size();
+		auto& energyBall = energyBallPos_[energyBallIndex];
+		gs_.effectMng_->EnergyBallEffect(emit_ball_play_time, energyBall.X, energyBall.Y);
 		cooldown_ = emit_ball_cooldown;
 	}
 	cooldown_ -= deltaTime;

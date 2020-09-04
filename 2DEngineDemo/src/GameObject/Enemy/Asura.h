@@ -10,6 +10,7 @@ class Asura :
 {
 private:
     std::vector<std::shared_ptr<CircleColliderComponent>> colliders_;
+    std::vector<Vector2> energyBallPos_;
 
     using Updater_t = void (Asura::*)(const float&);
     Updater_t updater_;

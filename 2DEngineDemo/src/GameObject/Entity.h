@@ -25,22 +25,25 @@ private:
 public:
 
 	Entity(EntityManager& entityMng, std::string name);
+	~Entity() = default;
 	void Update(const float& deltaTime);
 	void Render();
 
+	// Functions for combat's system
 	Vector2 GetProjectileVelocity();
 	int GetProjectileDamage() const;
 	int GetMeleeAttackDamage() const;
 	void TakeDamage(const int& damage);
 	inline bool IsActive() const { return isActive_; }
 	inline bool IsHit() const{ return isHit_; }
-	inline void RecoverHit() { isHit_ = false; }		// change to state that can take hit
-	void Destroy()
+	inline void RecoverHit() { isHit_ = false; }		// change back to state that Entity can be hit
+	inline void Destroy()
 	{
 		isActive_ = false;
 		entityMng_->TurnOnRemove();
 	}
 	
+	// Functions for manage entity's elements
 	inline std::string GetName() const { return name_; }
 
 	template<typename T, typename...Args>
