@@ -42,6 +42,7 @@ public:
 	void Update();
 
 	void SetTargetEntity(const std::shared_ptr<TransformComponent>& entity);
+	void FollowEntityMode();
 	void SetTargetPosition(const Vector2& pos);
 	void LockCameraAt(const Vector2& pos);
 	void SetOffset(const Vector2& offset);

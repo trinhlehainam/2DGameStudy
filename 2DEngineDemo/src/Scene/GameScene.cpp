@@ -42,7 +42,6 @@ namespace
 	constexpr float side_spawn_offset_y = WINDOW_HEIGHT/2.0f;
 
 	Rect windowBox_;
-
 }
 
 int GameScene::GetTexture(std::string textureID)
@@ -235,7 +234,6 @@ void GameScene::ProcessEnterBossArea()
 		updateFunc_ = &GameScene::BossSceneUpdate;
 	}
 }
-
 
 void GameScene::Render()
 {

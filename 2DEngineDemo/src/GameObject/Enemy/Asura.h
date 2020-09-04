@@ -33,6 +33,8 @@ private:
     void DamageUpdate(const float& deltaTime);
     void ExitingUpdate(const float& deltaTime);
     void DeadUpdate(const float& deltaTime);
+
+    void CheckHit();
 public:
     Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_);
     ~Asura();

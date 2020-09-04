@@ -126,7 +126,7 @@ void Slasher::SlashUpdate(const float& deltaTime)
 void Slasher::HurtUpdate(const float& deltaTime)
 {
 	auto sprite = self_->GetComponent<SpriteComponent>();
-	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
+	auto health = self_->GetComponent<HealthComponent>()->Health();
 	sprite->PlayOnce("hurt");
 	rigidBody_->velocity_.X = 0;
 	if (sprite->IsAnimationFinished())

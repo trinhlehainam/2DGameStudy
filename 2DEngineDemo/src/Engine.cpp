@@ -58,7 +58,7 @@ void Engine::Run()
         // Game Draw
         sceneMng_->Render();
         // Debug Draw
-        Debugger::Instance().DisplayPerformance();
+        /*Debugger::Instance().DisplayPerformance();*/
         DxLib::ScreenFlip();
     }
 }

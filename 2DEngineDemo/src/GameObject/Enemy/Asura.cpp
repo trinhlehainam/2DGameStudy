@@ -4,16 +4,19 @@
 
 #include "../../Constant.h"
 #include "../Entity.h"
+#include "../Player/Player.h"
 #include "../../Scene/GameScene.h"
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/Collider/CircleColliderComponent.h"
+#include "../../Component/HealthComponent.h"
 
 #include "../../System/EntityManager.h"
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EffectManager.h"
 #include "../../System/CombatManager.h"
+#include "../../System/Camera.h"
 
 #include "../Attack/EnergyBullet.h"
 
@@ -22,9 +25,10 @@ namespace {
 	constexpr float asura_width = 349.0f;
 	constexpr float asura_height = 400.0f;
 	constexpr float size_scale = 1.0f;
-	constexpr float collider_pos_x = 900.0f;
-	constexpr float collider_pos_y = 300.0f;
-	constexpr float collider_radius = 50.0f;
+
+	constexpr float collider_radius = 25.0f;
+	constexpr float collider_offset_x = asura_width / 2;
+	constexpr float collider_offset_y = 100.0f;
 
 	constexpr float entering_speed = 100.0f;
 	constexpr float ground_line = 350.0f;
@@ -41,6 +45,7 @@ namespace {
 
 	constexpr unsigned int num_ball_each_attack = 8;
 	constexpr unsigned int bullet_damage = 1;
+	constexpr unsigned int asura_health = 100;
 }
 
 Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_) :Enemy(gs, playerPos_)
@@ -58,12 +63,10 @@ void Asura::Initialize()
 	self_ = gs_.entityMng_->AddEntity("asura");
 	self_->AddComponent<TransformComponent>(self_, start_pos, asura_width, asura_height, size_scale);
 	self_->AddComponent<SpriteComponent>(self_);
+	self_->AddComponent<HealthComponent>(self_, asura_health);
 	const auto& anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.assetMng_->GetTexture("boss-asura"), "idle", Rect(0, 0, asura_width, asura_height), 1);
 	anim->PlayLoop("idle");
-	auto& collider = gs_.collisionMng_->AddBossCollider(self_, "asura", collider_pos_x, collider_pos_y, collider_radius);
-	colliders_.push_back(collider);
-
 }
 
 void Asura::EnteringUpdate(const float& deltaTime)
@@ -73,6 +76,8 @@ void Asura::EnteringUpdate(const float& deltaTime)
 	{
 		transform->pos.Y = ground_line;
 		Vector2 offset;
+
+		// Add attack's position
 		offset = transform->pos + energy_ball_1_offset;
 		energyBallPos_.emplace_back(offset);
 		offset = transform->pos + energy_ball_2_offset;
@@ -80,6 +85,14 @@ void Asura::EnteringUpdate(const float& deltaTime)
 		offset = transform->pos + energy_ball_3_offset;
 		energyBallPos_.emplace_back(offset);
 		updater_ = &Asura::NormalUpdate;
+
+		// Add Asura's colliders
+		auto& collider = gs_.collisionMng_->AddBossCollider(self_, "ASURA", 
+			transform->pos.X + collider_offset_x,
+			transform->pos.Y + collider_offset_y,
+			collider_radius);
+		collider->SetOffset(collider_offset_x, collider_offset_y);
+		colliders_.push_back(collider);
 	}
 	else
 		transform->pos.Y -= entering_speed * deltaTime;
@@ -132,10 +145,26 @@ void Asura::ExitingUpdate(const float& deltaTime)
 
 void Asura::DeadUpdate(const float& deltaTime)
 {
+	self_->Destroy();
+	Camera::Instance().FollowEntityMode();
+	auto playerTransform = gs_.player_->GetPlayerTransform();
+	playerTransform->SetLeftLimit(0);
+	playerTransform->SetRightLimit(WORLD_MAP_X - playerTransform->w);
+}
+
+void Asura::CheckHit()
+{
+	auto healthComponent = self_->GetComponent<HealthComponent>();
+	auto health = healthComponent->Health();
+	if (health <= 0)
+	{
+		updater_ = &Asura::DeadUpdate;
+	}
 }
 
 void Asura::Update(const float& deltaTime)
 {
+	CheckHit();
 	(this->*updater_)(deltaTime);
 }
 
