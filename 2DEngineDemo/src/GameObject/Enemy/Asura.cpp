@@ -65,7 +65,7 @@ void Asura::NormalUpdate(const float& deltaTime)
 	if (cooldown_ <= 0.0f)
 	{
 		auto transform = self_->GetComponent<TransformComponent>();
-		gs_.effectMng_->EnergyBall(emit_ball_play_time, transform->pos.X, transform->pos.Y);
+		gs_.effectMng_->EnergyBallEffect(emit_ball_play_time, transform->pos.X, transform->pos.Y);
 		cooldown_ = emit_ball_cooldown;
 	}
 	cooldown_ -= deltaTime;

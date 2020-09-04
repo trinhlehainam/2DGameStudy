@@ -23,9 +23,14 @@ namespace
 	constexpr float energy_ball_height = 100.0f;
 	constexpr unsigned int energy_ball_anim_speed = 100;
 
+	constexpr float blood_exp_width = 125.0f;
+	constexpr float blood_exp_height = 111.0f;
+	constexpr unsigned int blood_exp_anim_speed = 100;
+
 	constexpr char emit_blood_tag[] = "emit-blood";
 	constexpr char bomb_exp_tag[] = "bomb-explosion";
 	constexpr char energy_ball_tag[] = "energy-ball";
+	constexpr char blood_exp_tag[] = "blood-explosion";
 }
 
 EffectManager::EffectManager(GameScene& gs):gs_(gs)
@@ -81,7 +86,7 @@ void EffectManager::BombExplosionEffect(const float& posX, const float& posY, co
 	anim->PlayOnce("explosion");
 }
 
-void EffectManager::EnergyBall(const unsigned int& playTime, const float& posX, const float& posY, 
+void EffectManager::EnergyBallEffect(const unsigned int& playTime, const float& posX, const float& posY, 
 	const float& scale)
 {
 	auto effect = gs_.entityMng_->AddEffect(energy_ball_tag);
@@ -93,6 +98,19 @@ void EffectManager::EnergyBall(const unsigned int& playTime, const float& posX, 
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("energy-ball"), "energy-ball", Rect(0, 0, energy_ball_width, energy_ball_height), energy_ball_anim_speed);
 	anim->PlayOnce("energy-ball", playTime);
+}
+
+void EffectManager::BloodExplosionEffect(const float& posX, const float& posY, const float& scale)
+{
+	auto effect = gs_.entityMng_->AddEffect(blood_exp_tag);
+	float blood_exp_offset_x = blood_exp_width * scale / 2.0f;
+	float blood_exp_offset_y = blood_exp_height * scale / 2.0f;
+	effect->AddComponent<TransformComponent>(effect, Vector2(posX - blood_exp_offset_x, posY - blood_exp_offset_y),
+		blood_exp_width, blood_exp_height, scale);
+	effect->AddComponent<SpriteComponent>(effect);
+	auto anim = effect->GetComponent<SpriteComponent>();
+	anim->AddAnimation(gs_.GetTexture("blood-explosion"), "blood-explosion", Rect(0, 0, blood_exp_width, blood_exp_height), blood_exp_anim_speed);
+	anim->PlayOnce("blood-explosion");
 }
 
 void EffectManager::Render()

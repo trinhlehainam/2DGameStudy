@@ -12,6 +12,7 @@
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
+#include "../../System/EffectManager.h"
 
 namespace
 {
@@ -156,6 +157,12 @@ void Slasher::DeathUpdate(const float& deltaTime)
 	}
 }
 
+void Slasher::ExplosionDeathUpdate(const float& deltaTime)
+{
+	gs_.effectMng_->BloodExplosionEffect(rigidBody_->collider_.Center().X, rigidBody_->collider_.Center().Y);
+	self_->Destroy();
+}
+
 void Slasher::WaitDestroyUpdate(const float& deltaTime)
 {
 	timer_ -= deltaTime;
@@ -165,7 +172,13 @@ void Slasher::WaitDestroyUpdate(const float& deltaTime)
 
 void Slasher::CheckHit()
 {
-	auto health = self_->GetComponent<HealthComponent>()->GetHealth();
+	auto health = self_->GetComponent<HealthComponent>();
+
+	if (health->ReceivedDamage() == health->GetMaxHealth())
+	{
+		actionUpdate_ = &Slasher::ExplosionDeathUpdate;
+		return;
+	}
 
 	if (self_->IsHit())
 	{

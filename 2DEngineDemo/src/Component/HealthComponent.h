@@ -8,6 +8,8 @@ class HealthComponent :
 private:
     int health_;
     int maxHealth_;
+    float takenDamage_;                 // damage resist (unit : percentage)
+    int receivedDamage_;                // Latest Damage Received
 public:
 
     HealthComponent(const std::shared_ptr<Entity>& owner, const int& maxHealth);
@@ -17,13 +19,13 @@ public:
     void Update(const float& deltaTime) override;
     void Render() override;
 
-    void SetMaxHealth(int maxHealth);
+    void SetMaxHealth(const int& maxHealth);
     inline int GetMaxHealth() const { return maxHealth_; }
-    void SetHealth(int health);
+    void SetHealth(const int& health);
     inline int GetHealth() const { return health_; }
-
-    void TakeDamage(int damage);
-    void AddMaxHealth(int health);
-    void Heal(int health);
+    inline int ReceivedDamage() const { return receivedDamage_; }
+    void TakeDamage(const int& damage);
+    void AddMaxHealth(const int& health);
+    void Heal(const int& health);
 };
 

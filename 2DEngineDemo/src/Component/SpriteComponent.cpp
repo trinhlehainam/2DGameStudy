@@ -107,7 +107,7 @@ void SpriteComponent::Render()
 			TextureManager::DrawRectRota(animations_.at(currentAnimID).texture, animations_.at(currentAnimID).srcRect,
 				desRect, transform->scale, angleRad_, isFlipped);
 			// Debug
-			TextureManager::DrawDebugBox(desRect, 0x00ff00);
+			/*TextureManager::DrawDebugBox(desRect, 0x00ff00);*/
 		}
 	}
 }

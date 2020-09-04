@@ -18,27 +18,28 @@ void HealthComponent::Render()
 {
 }
 
-void HealthComponent::SetMaxHealth(int maxHealth)
+void HealthComponent::SetMaxHealth(const int& maxHealth)
 {
 	maxHealth_ = maxHealth;
 }
 
-void HealthComponent::SetHealth(int health)
+void HealthComponent::SetHealth(const int& health)
 {
 	health_ = health;
 }
 
-void HealthComponent::TakeDamage(int damage)
+void HealthComponent::TakeDamage(const int& damage)
 {
 	health_ -= damage;
+	receivedDamage_ = damage;
 }
 
-void HealthComponent::AddMaxHealth(int health)
+void HealthComponent::AddMaxHealth(const int& health)
 {
 	maxHealth_ += health;
 }
 
-void HealthComponent::Heal(int health)
+void HealthComponent::Heal(const int& health)
 {
 	health_ += health;
 }

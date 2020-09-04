@@ -17,6 +17,7 @@ private:
 	void SlashUpdate(const float& deltaTime);
 	void HurtUpdate(const float& deltaTime);
 	void DeathUpdate(const float& deltaTime);
+	void ExplosionDeathUpdate(const float& deltaTime);
 	void WaitDestroyUpdate(const float& deltaTime);
 
 	void CheckHit();

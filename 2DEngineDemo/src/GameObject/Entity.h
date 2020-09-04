@@ -34,7 +34,7 @@ public:
 	void TakeDamage(const int& damage);
 	inline bool IsActive() const { return isActive_; }
 	inline bool IsHit() const{ return isHit_; }
-	inline void RecoverHit() { isHit_ = false; }
+	inline void RecoverHit() { isHit_ = false; }		// change to state that can take hit
 	void Destroy()
 	{
 		isActive_ = false;

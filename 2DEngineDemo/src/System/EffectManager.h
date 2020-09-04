@@ -13,7 +13,8 @@ public:
 	void Update(const float& deltaTime);
 	void EmitBloodEffect(const float& posX, const float& posY, bool flipFlag, const float& scale = 1.0f);
 	void BombExplosionEffect(const float& posX, const float& posY, const float& scale = 1.0f);
-	void EnergyBall(const unsigned int& playTime, const float& posX, const float& posY, const float& scale = 1.0f);
+	void EnergyBallEffect(const unsigned int& playTime, const float& posX, const float& posY, const float& scale = 1.0f);
+	void BloodExplosionEffect(const float& posX, const float& posY, const float& scale = 1.0f);
 	void Render();
 };
 
