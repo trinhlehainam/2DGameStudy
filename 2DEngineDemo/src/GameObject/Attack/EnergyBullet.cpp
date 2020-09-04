@@ -5,6 +5,7 @@
 #include "../Entity.h"
 #include "../../System/EntityManager.h"
 #include "../../System/CollisionManager.h"
+#include "../../System/EffectManager.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
@@ -57,7 +58,13 @@ int EnergyBullet::GetDamage() const
 
 void EnergyBullet::Update(const float& deltaTime)
 {
-	if (self_->GetComponent<ProjectileEmitterComponent>()->IsOutOfRange())
+	if (!IsOwnerActive() || self_->GetComponent<ProjectileEmitterComponent>()->IsOutOfRange())
+	{
 		self_->Destroy();
+		auto transform = self_->GetComponent<TransformComponent>();
+		Vector2 pos = Vector2(transform->pos.X + transform->w / 2 * transform->scale,
+			transform->pos.Y + transform->h / 2 * transform->scale);
+		gs_->effectMng_->EliminateEnergyBulletEffect(pos.X, pos.Y);
+	}
 
 }

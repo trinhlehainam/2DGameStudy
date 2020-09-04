@@ -27,10 +27,15 @@ namespace
 	constexpr float blood_exp_height = 111.0f;
 	constexpr unsigned int blood_exp_anim_speed = 100;
 
+	constexpr float elimiate_energy_bullet_width = 32.0f;
+	constexpr float elimiate_energy_bullet_height = 32.0f;
+	constexpr unsigned int elimiate_energy_bullet_anim_speed = 100;
+
 	constexpr char emit_blood_tag[] = "emit-blood";
 	constexpr char bomb_exp_tag[] = "bomb-explosion";
 	constexpr char energy_ball_tag[] = "energy-ball";
 	constexpr char blood_exp_tag[] = "blood-explosion";
+	constexpr char elimiate_energy_bullet_tag[] = "eliminate-energy-bullet";
 }
 
 EffectManager::EffectManager(GameScene& gs):gs_(gs)
@@ -111,6 +116,19 @@ void EffectManager::BloodExplosionEffect(const float& posX, const float& posY, c
 	auto anim = effect->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_.GetTexture("blood-explosion"), "blood-explosion", Rect(0, 0, blood_exp_width, blood_exp_height), blood_exp_anim_speed);
 	anim->PlayOnce("blood-explosion");
+}
+
+void EffectManager::EliminateEnergyBulletEffect(const float& posX, const float& posY, const float& scale)
+{
+	auto effect = gs_.entityMng_->AddEffect(elimiate_energy_bullet_tag);
+	float elimiate_energy_bullet_offset_x = elimiate_energy_bullet_width * scale / 2.0f;
+	float elimiate_energy_bullet_offset_y = elimiate_energy_bullet_height * scale / 2.0f;
+	effect->AddComponent<TransformComponent>(effect, Vector2(posX - elimiate_energy_bullet_offset_x, posY - elimiate_energy_bullet_offset_y),
+		elimiate_energy_bullet_width, elimiate_energy_bullet_height, scale);
+	effect->AddComponent<SpriteComponent>(effect);
+	auto anim = effect->GetComponent<SpriteComponent>();
+	anim->AddAnimation(gs_.GetTexture("eliminate-energy-bullet"), "eliminate", Rect(0, 0, elimiate_energy_bullet_width, elimiate_energy_bullet_height), elimiate_energy_bullet_anim_speed);
+	anim->PlayOnce("eliminate");
 }
 
 void EffectManager::Render()
