@@ -1,6 +1,5 @@
 #include "BombShot.h"
 
-#include "../../Geometry/Geometry.h"
 #include "../../Scene/GameScene.h"
 
 #include "../Entity.h"
@@ -42,7 +41,7 @@ BombShot::BombShot(GameScene& gs, const std::shared_ptr<Entity>& owner, const Ve
 	auto anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_->GetTexture("bomb-equip"), "attack",
 		Rect(0, 0, bomb_width, bomb_height),
-		1, rotate_speed);
+		1,0,rotate_speed);
 	anim->PlayLoop("attack");
 	auto& collider = gs_->collisionMng_->AddProjectileCollider(self_,
 		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_radius);

@@ -99,12 +99,14 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("chain-icon", L"assets/Image/UI/chain.png");
 	assetMng_->AddTexture("bomb-icon", L"assets/Image/UI/bomb.png");
 	assetMng_->AddTexture("sword-icon", L"assets/Image/UI/sword.png");
+	assetMng_->AddTexture("energy-bullet", L"assets/Image/Character/Enemy/asura/fireball_b.png");
 
 	assetMng_->AddTexture("slasher-run", L"assets/Image/Character/Enemy/slasher/slasher-run-Sheet.png");
 	assetMng_->AddTexture("slasher-slash", L"assets/Image/Character/Enemy/slasher/slasher-slash-Sheet.png");
 	assetMng_->AddTexture("slasher-hurt", L"assets/Image/Character/Enemy/slasher/slasher-hurt-Sheet.png");
 	assetMng_->AddTexture("slasher-death", L"assets/Image/Character/Enemy/slasher/slasher-death-Sheet.png");
 	assetMng_->AddTexture("slasher-lying", L"assets/Image/Character/Enemy/slasher/slasher-lying-Sheet.png");
+
 	assetMng_->AddTexture("boss-asura", L"assets/Image/Character/Enemy/asura/ashura.png");
 	
 	assetMng_->AddTexture("environment-1", L"assets/Image/Environment/environment_1.png");

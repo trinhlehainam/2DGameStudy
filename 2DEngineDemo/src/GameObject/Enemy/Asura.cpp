@@ -1,15 +1,19 @@
 #include "Asura.h"
 
+#include "../../Constant.h"
 #include "../Entity.h"
-#include "../../System/EntityManager.h"
 #include "../../Scene/GameScene.h"
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/Collider/CircleColliderComponent.h"
 
+#include "../../System/EntityManager.h"
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EffectManager.h"
+#include "../../System/CombatManager.h"
+
+#include "../Attack/EnergyBullet.h"
 
 namespace {
 	const Vector2 start_pos = Vector2(300.0f, 300.0f);
@@ -28,8 +32,12 @@ namespace {
 
 	constexpr int energy_ball_num = 3;
 	const Vector2 energy_ball_1_offset = Vector2(65, 40);
-	const Vector2 energy_ball_2_offset = Vector2(-65, 40);
-	const Vector2 energy_ball_3_offset = Vector2(50, 50);
+	const Vector2 energy_ball_2_offset = Vector2(asura_width - 65, 40);
+	const Vector2 energy_ball_3_offset = Vector2(asura_width / 2 , asura_height / 2 );
+	const Vector2 bullet_offset = Vector2(-25, 0);
+
+	constexpr unsigned int num_ball_each_attack = 8;
+	constexpr unsigned int bullet_damage = 1;
 }
 
 Asura::Asura(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_) :Enemy(gs, playerPos_)
@@ -64,7 +72,9 @@ void Asura::EnteringUpdate(const float& deltaTime)
 		Vector2 offset;
 		offset = transform->pos + energy_ball_1_offset;
 		energyBallPos_.emplace_back(offset);
-		offset = transform->pos + Vector2(transform->w, 0) + energy_ball_2_offset;
+		offset = transform->pos + energy_ball_2_offset;
+		energyBallPos_.emplace_back(offset);
+		offset = transform->pos + energy_ball_3_offset;
 		energyBallPos_.emplace_back(offset);
 		updater_ = &Asura::NormalUpdate;
 	}
@@ -80,6 +90,13 @@ void Asura::NormalUpdate(const float& deltaTime)
 		int energyBallIndex = rand() % energyBallPos_.size();
 		auto& energyBall = energyBallPos_[energyBallIndex];
 		gs_.effectMng_->EnergyBallEffect(emit_ball_play_time, energyBall.X, energyBall.Y);
+		float angle = 0.0f;
+		for (int i = 0; i < num_ball_each_attack; ++i)
+		{
+			auto bullet = gs_.combatMng_->AddAttack<EnergyBullet>(gs_, self_, energyBall+bullet_offset, angle);
+			bullet->SetDamage(bullet_damage);
+			angle += PI / 4.0f;
+		}
 		cooldown_ = emit_ball_cooldown;
 	}
 	cooldown_ -= deltaTime;

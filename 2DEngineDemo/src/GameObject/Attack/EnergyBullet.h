@@ -1,12 +1,15 @@
 #pragma once
 #include "Attack.h"
 
-class BombShot :
+class EnergyBullet :
     public Attack
 {
+private:
+
 public:
-    BombShot(GameScene& gs, const std::shared_ptr<Entity>& owner, const Vector2& startPos, const float& angle, const int& damage = 0);
-    ~BombShot() = default;
+    EnergyBullet(GameScene& gs, const std::shared_ptr<Entity>& owner, const Vector2& startPos,
+        const float& angle, const int& damage = 0);
+    ~EnergyBullet() = default;
     void Initialize() override;
     void SetDamage(const int& damage) override;
     int GetDamage() const override;

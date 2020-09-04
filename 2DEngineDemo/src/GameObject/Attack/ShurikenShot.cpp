@@ -1,6 +1,5 @@
 #include "ShurikenShot.h"
 
-#include "../../Geometry/Geometry.h"
 #include "../../Scene/GameScene.h"
 
 #include "../Entity.h"
@@ -33,7 +32,7 @@ ShurikenShot::ShurikenShot(GameScene& gs, const std::shared_ptr<Entity>& owner,c
 	auto anim = self_->GetComponent<SpriteComponent>();
 	anim->AddAnimation(gs_->GetTexture("shuriken-equip"), "attack",
 		Rect(0, 0, shuriken_width, shuriken_height),
-		1, rotate_speed);
+		1, 0, rotate_speed);
 	anim->PlayLoop("attack");
 	auto& collider = gs_->collisionMng_->AddProjectileCollider(self_,
 		"PLAYER-SHURIKEN", startPos.X, startPos.Y, shuriken_radius);

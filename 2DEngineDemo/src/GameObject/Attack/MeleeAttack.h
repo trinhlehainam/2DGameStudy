@@ -1,8 +1,6 @@
 #pragma once
 #include "Attack.h"
 
-class Vector2;
-
 class MeleeAttack :
     public Attack
 {

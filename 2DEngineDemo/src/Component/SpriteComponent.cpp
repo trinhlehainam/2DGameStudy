@@ -21,11 +21,12 @@ void SpriteComponent::Initialize()
 }
 
 void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& srcRect,
-	 const unsigned& animSpeed, const float& rotateSpeed)
+	 const unsigned& animSpeed, const float& angle, const float& rotateSpeed)
 {
 	Animation anim;
 	anim.texture = texture;
 	anim.srcRect = srcRect;
+	anim.angle = angle;
 	anim.animSpeed = animSpeed;
 	anim.rotateSpeed = rotateSpeed;
 	TextureManager::GetImageSize(anim.texture, anim.textureW, anim.textureH);
@@ -71,7 +72,7 @@ void SpriteComponent::PlayLoopUpdate(const float& deltaTime)
 	animation.srcRect.pos.X = animation.indexX * animation.srcRect.w;
 	animation.srcRect.pos.Y = animation.indexY * animation.srcRect.w;
 
-	angleRad_ += animation.rotateSpeed * deltaTime;
+	animation.angle += animation.rotateSpeed * deltaTime;
 }
 
 void SpriteComponent::PlayOnceUpdate(const float& deltaTime)
@@ -104,10 +105,11 @@ void SpriteComponent::Render()
 	{
 		if (animations_.count(currentAnimID))
 		{
-			TextureManager::DrawRectRota(animations_.at(currentAnimID).texture, animations_.at(currentAnimID).srcRect,
-				desRect, transform->scale, angleRad_, isFlipped);
+			auto& currentAnim = animations_.at(currentAnimID);
+			TextureManager::DrawRectRota(currentAnim.texture, currentAnim.srcRect,
+				desRect, transform->scale, currentAnim.angle, isFlipped);
 			// Debug
-			TextureManager::DrawDebugBox(desRect, 0x00ff00);
+			/*TextureManager::DrawDebugBox(desRect, 0x00ff00);*/
 		}
 	}
 }
@@ -143,7 +145,6 @@ void SpriteComponent::PlayAnimation(const std::string& animID)
 	animations_.at(animID).indexX = 0;
 	animations_.at(animID).indexY = 0;
 	playTimer_ = 0;
-	angleRad_ = 0.0f;
 	const auto& transform = transform_.lock();
 	auto& animation = animations_.at(currentAnimID);
 	desRect.w = animation.srcRect.w * transform->scale;
