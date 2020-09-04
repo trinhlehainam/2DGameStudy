@@ -32,7 +32,12 @@ void TransformComponent::Initialize()
 
 void TransformComponent::Update(const float& deltaTime)
 {
-	pos.X = clamp(pos.X, leftLimit_, rightLimit_);
+	
+}
+
+void TransformComponent::UpdateLimitPosition(float& posX, float& posY)
+{
+	posX = clamp(posX, leftLimit_, rightLimit_);
 }
 
 void TransformComponent::Render()

@@ -27,6 +27,7 @@ public:
 	~EntityManager();
 	void ClearData();
 	void Update(const float& deltaTime);
+	void BossSceneUpdate(const float& deltaTime);
 	void Render();
 	inline void TurnOnRemove()
 	{

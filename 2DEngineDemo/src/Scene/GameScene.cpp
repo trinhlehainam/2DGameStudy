@@ -204,6 +204,19 @@ void GameScene::GameUpdate(const float& deltaTime)
 	Camera::Instance().Update();
 }
 
+void GameScene::BossSceneUpdate(const float& deltaTime)
+{
+	(*spawners_.rbegin())->Update(deltaTime);
+	enemyMng_->BossSceneUpdate(deltaTime);
+	entityMng_->BossSceneUpdate(deltaTime);
+	Camera::Instance().Update();
+	if (timer_ <= 0)
+	{
+		updateFunc_ = &GameScene::GameUpdate;
+	}
+	timer_ -= deltaTime;
+}
+
 void GameScene::ProcessEnterBossArea()
 {
 	Vector2 bossPos;
@@ -211,11 +224,18 @@ void GameScene::ProcessEnterBossArea()
 	{
 		auto asuraClone = std::make_unique<Asura>(*this, player_->GetPlayerTransform());
 		auto bossSpawner = std::make_unique<BossSpawner>(std::move(asuraClone), bossPos, *enemyMng_);
+		auto playerTransform = player_->self_->GetComponent<TransformComponent>();
+		playerTransform->SetLeftLimit(bossPos.X - WINDOW_WIDTH / 2);
+		playerTransform->SetRightLimit(bossPos.X + WINDOW_WIDTH / 2 - playerTransform->w);
 		spawners_.emplace_back(std::move(bossSpawner));
 		Camera::Instance().LockCameraAt(bossPos);
+		Camera::Instance().ShakeCamera(4000, 10, 10);
 		isBossAdded = true;
+		timer_ = 4.0f;
+		updateFunc_ = &GameScene::BossSceneUpdate;
 	}
 }
+
 
 void GameScene::Render()
 {
