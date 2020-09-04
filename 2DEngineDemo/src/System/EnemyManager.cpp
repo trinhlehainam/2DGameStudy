@@ -23,6 +23,11 @@ void EnemyManager::Update(const float& deltaTime)
 		enemies_.end());
 }
 
+void EnemyManager::BossSceneUpdate(const float& deltaTime)
+{
+	(*enemies_.rbegin())->Update(deltaTime);
+}
+
 void EnemyManager::AddEnemy(std::unique_ptr<Enemy> enemy)
 {
 	enemies_.emplace_back(std::move(enemy));

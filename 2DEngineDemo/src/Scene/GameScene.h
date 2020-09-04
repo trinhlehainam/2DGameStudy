@@ -46,6 +46,7 @@ private:
     std::unique_ptr<CombatManager> combatMng_;
 
     bool isBossAdded = false;
+    float timer_ = 0.0f;
 
     using UpdateFunc_t = void(GameScene::*)(const float&);
     UpdateFunc_t updateFunc_;
@@ -57,6 +58,7 @@ private:
     void Update(const float& deltaTime) override;
     void FadeInUpdate(const float& deltaTime);
     void GameUpdate(const float& deltaTime);
+    void BossSceneUpdate(const float& deltaTime);
     void ProcessEnterBossArea();
 
     void Render() override;

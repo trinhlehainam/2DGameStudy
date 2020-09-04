@@ -26,6 +26,7 @@ public:
     void SetRightLimit(const float& limit);
     void Initialize() override;
     void Update(const float& deltaTime) override;
+    void UpdateLimitPosition(float& posX, float& posY);
     void Render() override;
     
     /// <summary>

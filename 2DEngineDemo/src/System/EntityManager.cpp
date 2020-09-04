@@ -53,6 +53,16 @@ void EntityManager::Update(const float& deltaTime)
     RemoveEntity();
 }
 
+void EntityManager::BossSceneUpdate(const float& deltaTime)
+{
+    auto bossItr = std::find_if(entities_.begin(), entities_.end(),
+        [](std::shared_ptr<Entity>& entity)
+        {
+            return entity->GetName() == "asura";
+        });
+    (*entities_.rbegin())->Update(deltaTime);
+}
+
 void EntityManager::RemoveEntity()
 {
     if (!removeFlag_) return;

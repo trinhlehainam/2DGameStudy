@@ -26,6 +26,7 @@ void RigidBody2D::Update(const float& deltaTime)
 	}
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
 	collider_.pos += velocity_ * deltaTime;
+	transform->UpdateLimitPosition(collider_.pos.X, collider_.pos.Y);
 	transform->pos.X = collider_.pos.X + collider_.w / 2.0f - transform->w * transform->scale / 2.0f;
 	transform->pos.Y = collider_.pos.Y + collider_.h - transform->h * transform->scale;
 }
