@@ -207,26 +207,41 @@ void CollisionManager::ActorVSProjectileCollision()
 {
     for (auto& actor : actorColliders_)
     {
-        if (actor->tag_ == "PLAYER" || !actor->IsActive()) continue;
+        if (!actor->IsActive()) continue;
         for (auto& projectile : projectileColliders_)
         {
-            if (CheckCollision(projectile.collider_, actor->collider_))
+            const auto& projectile_owner = projectile.owner_.lock();
+            const auto& actor_owner = actor->owner_.lock();
+            if (actor_owner->GetName() == "player")
             {
-                const auto& projectile_owner = projectile.owner_.lock();
-                const auto& actor_owner = actor->owner_.lock();
-                projectile_owner->Destroy();
-                if (projectile.tag_ == "PLAYER-SHURIKEN")
+                if (CheckCollision(projectile.collider_, actor->collider_))
                 {
-                    actor_owner->TakeDamage(projectile_owner->GetProjectileDamage());
-
-                    bool flip = projectile_owner->GetProjectileVelocity().X > 0 ? true : false;
-                    float bloodPos = flip ? projectile.collider_.pos.X + projectile.collider_.radius :
-                                             projectile.collider_.pos.X;
-                    gs_.effectMng_->EmitBloodEffect(bloodPos, projectile.collider_.pos.Y, flip, 1);
+                    if (projectile.tag_ == "ASURA-BULLET")
+                    {
+                        projectile_owner->Destroy();
+                        actor_owner->TakeDamage(projectile_owner->GetProjectileDamage());
+                    }
                 }
-                if (projectile.tag_ == "PLAYER-BOMB")
+            }
+            else
+            {
+                if (CheckCollision(projectile.collider_, actor->collider_))
                 {
-                    actor_owner->TakeDamage(projectile_owner->GetProjectileDamage());
+                    if (projectile.tag_ == "PLAYER-SHURIKEN")
+                    {
+                        projectile_owner->Destroy();
+                        actor_owner->TakeDamage(projectile_owner->GetProjectileDamage());
+
+                        bool flip = projectile_owner->GetProjectileVelocity().X > 0 ? true : false;
+                        float bloodPos = flip ? projectile.collider_.pos.X + projectile.collider_.radius :
+                            projectile.collider_.pos.X;
+                        gs_.effectMng_->EmitBloodEffect(bloodPos, projectile.collider_.pos.Y, flip, 1);
+                    }
+                    if (projectile.tag_ == "PLAYER-BOMB")
+                    {
+                        projectile_owner->Destroy();
+                        actor_owner->TakeDamage(projectile_owner->GetProjectileDamage());
+                    }
                 }
             }
         }
@@ -237,15 +252,22 @@ void CollisionManager::ActorVSMeleeActtackCollision()
 {
     for (auto& actor : actorColliders_)
     {
-        if (actor->tag_ == "PLAYER" != !actor->IsActive()) continue;
+        if (!actor->IsActive()) continue;
         for (auto& attack : attackColliders_)
         {
             auto attack_owner = attack.owner_.lock();
             auto actor_owner = actor->owner_.lock();
-            if (CheckCollision(attack.collider_, actor->collider_))
+            if (actor_owner->GetName() == "player")
             {
-                actor_owner->TakeDamage(attack_owner->GetMeleeAttackDamage());
-                gs_.effectMng_->EmitBloodEffect(actor->collider_.pos.X, actor->collider_.pos.Y, false, 1);
+
+            }
+            else
+            {
+                if (CheckCollision(attack.collider_, actor->collider_))
+                {
+                    actor_owner->TakeDamage(attack_owner->GetMeleeAttackDamage());
+                    gs_.effectMng_->EmitBloodEffect(actor->collider_.pos.X, actor->collider_.pos.Y, false, 1);
+                }
             }
         }
     }

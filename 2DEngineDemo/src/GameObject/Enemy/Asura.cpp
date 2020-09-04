@@ -1,5 +1,7 @@
 #include "Asura.h"
 
+#include <algorithm>
+
 #include "../../Constant.h"
 #include "../Entity.h"
 #include "../../Scene/GameScene.h"
@@ -28,13 +30,14 @@ namespace {
 	constexpr float ground_line = 350.0f;
 
 	constexpr float emit_ball_cooldown = 1.0f;
+	constexpr float wait_attack_time = emit_ball_cooldown;
 	constexpr unsigned int emit_ball_play_time = 2000;
 
 	constexpr int energy_ball_num = 3;
 	const Vector2 energy_ball_1_offset = Vector2(65, 40);
 	const Vector2 energy_ball_2_offset = Vector2(asura_width - 65, 40);
 	const Vector2 energy_ball_3_offset = Vector2(asura_width / 2 , asura_height / 2 );
-	const Vector2 bullet_offset = Vector2(-25, 0);
+	const Vector2 bullet_offset = Vector2(-35, -10);
 
 	constexpr unsigned int num_ball_each_attack = 8;
 	constexpr unsigned int bullet_damage = 1;
@@ -90,15 +93,32 @@ void Asura::NormalUpdate(const float& deltaTime)
 		int energyBallIndex = rand() % energyBallPos_.size();
 		auto& energyBall = energyBallPos_[energyBallIndex];
 		gs_.effectMng_->EnergyBallEffect(emit_ball_play_time, energyBall.X, energyBall.Y);
-		float angle = 0.0f;
-		for (int i = 0; i < num_ball_each_attack; ++i)
-		{
-			auto bullet = gs_.combatMng_->AddAttack<EnergyBullet>(gs_, self_, energyBall+bullet_offset, angle);
-			bullet->SetDamage(bullet_damage);
-			angle += PI / 4.0f;
-		}
+		// random floating-point number
+		float angle = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * PI;
+		attacks_.emplace_back(energyBall + bullet_offset, angle, wait_attack_time);
 		cooldown_ = emit_ball_cooldown;
 	}
+
+	for (auto& attack : attacks_)
+	{
+		attack.waitTimer -= deltaTime;
+		if (attack.waitTimer <= 0.0f)
+		{
+			for (int i = 0; i < num_ball_each_attack; ++i)
+			{
+				auto bullet = gs_.combatMng_->AddAttack<EnergyBullet>(gs_, self_, attack.pos, attack.angle);
+				bullet->SetDamage(bullet_damage);
+				attack.angle += PI / 4.0f;
+			}
+			attack.flag = false;
+		}
+		attack.waitTimer -= deltaTime;
+	}
+
+	attacks_.erase(std::remove_if(attacks_.begin(), attacks_.end(), [](AsuraAttack& attack) {
+		return !attack.flag; }),
+		attacks_.end());
+
 	cooldown_ -= deltaTime;
 }
 

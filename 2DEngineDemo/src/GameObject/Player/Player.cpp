@@ -15,6 +15,7 @@
 #include "../../Component/TransformComponent.h"
 #include "../../Component/Collider/RigidBody2D.h"
 #include "../../Component/SpriteComponent.h"
+#include "../../Component/HealthComponent.h"
 
 namespace
 {
@@ -101,6 +102,7 @@ void Player::Initialize()
 		player_height * rigidbody_height_scale);
 	rigidBody_ = rigidBody;
 	rigidBody->SetTag("PLAYER");
+	self_->AddComponent<HealthComponent>(self_, 100);
 	self_->AddComponent<SpriteComponent>(self_);
 	const auto& playerAnim = self_->GetComponent<SpriteComponent>();
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", src_rect, idle_animation_speed);
