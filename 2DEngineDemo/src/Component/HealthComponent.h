@@ -22,7 +22,7 @@ public:
     void SetMaxHealth(const int& maxHealth);
     inline int GetMaxHealth() const { return maxHealth_; }
     void SetHealth(const int& health);
-    inline int GetHealth() const { return health_; }
+    inline int Health() const { return health_; }
     inline int ReceivedDamage() const { return receivedDamage_; }
     void TakeDamage(const int& damage);
     void AddMaxHealth(const int& health);

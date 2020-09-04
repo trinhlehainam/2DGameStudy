@@ -137,6 +137,9 @@ void CollisionManager::Update(const float& deltaTime)
     for (auto& actorCollider : actorColliders_)
         actorCollider->Update(deltaTime);
 
+    for (auto& bossCollider : bossColliders_)
+        bossCollider->Update(deltaTime);
+
     for (auto& projectileCollider : projectileColliders_)
         projectileCollider.Update(deltaTime);
 
@@ -153,6 +156,9 @@ void CollisionManager::RemoveCollider()
     actorColliders_.erase(std::remove_if(actorColliders_.begin(), actorColliders_.end(), [](std::shared_ptr<RigidBody2D>& collider) {
         return !collider->IsOwnerExist(); }),
         actorColliders_.end());
+    bossColliders_.erase(std::remove_if(bossColliders_.begin(), bossColliders_.end(), [](std::shared_ptr<CircleColliderComponent>& collider) {
+        return !collider->IsOwnerExist(); }),
+        bossColliders_.end());
 }
 
 void CollisionManager::PlatformResolution(const float& deltaTime)
@@ -277,6 +283,32 @@ void CollisionManager::CombatCollision()
 {
     ActorVSProjectileCollision();
     ActorVSMeleeActtackCollision();
+    for (auto& bossCollider : bossColliders_)
+    {
+        for (auto& projectile : projectileColliders_)
+        {
+            if (CheckCollision(projectile.collider_, bossCollider->collider_))
+            {
+                const auto& boss = bossCollider->owner_.lock();
+                const auto& projectile_owner = projectile.owner_.lock();
+                if (projectile.tag_ == "PLAYER-SHURIKEN")
+                {
+                    projectile_owner->Destroy();
+                    boss->TakeDamage(projectile_owner->GetProjectileDamage());
+
+                    bool flip = projectile_owner->GetProjectileVelocity().X > 0 ? true : false;
+                    float bloodPos = flip ? projectile.collider_.pos.X + projectile.collider_.radius :
+                        projectile.collider_.pos.X;
+                    gs_.effectMng_->EmitBloodEffect(bloodPos, projectile.collider_.pos.Y, flip, 1);
+                }
+                if (projectile.tag_ == "PLAYER-BOMB")
+                {
+                    projectile_owner->Destroy();
+                    boss->TakeDamage(projectile_owner->GetProjectileDamage());
+                }
+            }
+        }
+    }
 }
 
 void CollisionManager::Render()
@@ -286,6 +318,9 @@ void CollisionManager::Render()
 
     for (auto& actorCollider : actorColliders_)
         actorCollider->Render();
+
+    for (auto& bossCollider : bossColliders_)
+        bossCollider->Render();
 
     for (auto& projectileCollider : projectileColliders_)
         projectileCollider.Render();

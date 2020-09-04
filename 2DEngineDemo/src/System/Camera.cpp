@@ -32,6 +32,11 @@ void Camera::SetTargetEntity(const std::shared_ptr<TransformComponent>& entity)
     trackEntity_ = entity;
 }
 
+void Camera::FollowEntityMode()
+{
+    updater_ = &Camera::FollowingUpdate;
+}
+
 void Camera::SetTargetPosition(const Vector2& pos)
 {
     targetPos_ = pos;
