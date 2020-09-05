@@ -4,11 +4,13 @@
 #include <iostream>
 
 #include "../Constant.h"
-#include "../Geometry/Geometry.h"
-#include "../System/SceneManager.h"
 #include "GameScene.h"
 #include "PauseScene.h"
 #include "../Input/KeyboardInput.h"
+#include "../System/SceneManager.h"
+#include "../System/AssetManager.h"
+#include "../System/TextureManager.h"
+
 
 namespace
 {
@@ -22,16 +24,15 @@ namespace
 	unsigned int blinkTimer_ = 0;
 	int blinkInterval = blink_interval_normal;
 
-	int bgTexture_ = -1;
-	int btnTexture_ = -1;
+	constexpr char title_tag[] = "title";
+	constexpr char play_tag[] = "play";
+	constexpr char exit_tag[] = "exit";
+	constexpr char setting_tag[] = "setting";
 
-	Rect titleBox;
-	Rect pressBox;
-
-	constexpr unsigned int button_width = 410;
-	constexpr unsigned int button_height = 200;
-	constexpr int button_pos_x = (WINDOW_WIDTH - button_width) / 2;
-	constexpr int button_pos_y = 100 + (WINDOW_HEIGHT - button_height) / 2;
+	constexpr float title_pos_x = WINDOW_WIDTH / 2.0f;
+	constexpr float title_pos_y = 100.0f;
+	constexpr float title_button_intervel_y = 200.0f;
+	constexpr float button_intervel_y = 100.0f;
 }
 
 TitleScene::TitleScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScene(sceneMng,sceneInput)
@@ -41,38 +42,50 @@ TitleScene::TitleScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseSc
 
 TitleScene::~TitleScene()
 {
-	DxLib::DeleteGraph(bgTexture_);
-	DxLib::DeleteGraph(btnTexture_);
-	bgTexture_ = -1;
-	btnTexture_ = -1;
+
 }
 
 void TitleScene::Initialize()
 {
-	titleBox = Rect(Vector2(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT);
-	
 	waitTimer_ = 0.0f;
-	pressBox.w = button_width;
-	pressBox.h = button_height;
-	pressBox.pos.X = button_pos_x;
-	pressBox.pos.Y = button_pos_y;
-
-	if (bgTexture_ == -1)
-	{
-		bgTexture_ = DxLib::LoadGraph(L"assets/Image/Title/Title.png");
-	}
-
-	if (btnTexture_ == -1)
-	{
-		btnTexture_ = DxLib::LoadGraph(L"assets/Image/Title/pressstart.png");
-	}
-
 	blinkInterval = blink_interval_normal;
 	blinkTimer_ = 0;
 
 	inputFunc_ = &TitleScene::WaitInput;
 	renderFunc_ = &TitleScene::NormalRender;
 	updateFunc_ = &TitleScene::WaitUpdate;
+
+	assetMng_ = std::make_unique<AssetManager>();
+
+	assetMng_->AddTexture(title_tag, L"assets/Image/Title/game_title.png");
+	assetMng_->AddTexture(play_tag, L"assets/Image/Title/PLAY.png");
+	assetMng_->AddTexture(setting_tag, L"assets/Image/Title/SETTING.png");
+	assetMng_->AddTexture(exit_tag, L"assets/Image/Title/EXIT.png");
+
+	Vector2 pos = Vector2(title_pos_x, title_pos_y);
+	Vector2 size;
+	DxLib::GetGraphSizeF(assetMng_->GetTexture(title_tag), &size.X, &size.Y);
+	menuItems_.emplace_back(title_tag, pos, size, []() {
+
+		});
+
+	pos.Y += title_button_intervel_y;
+	DxLib::GetGraphSizeF(assetMng_->GetTexture(play_tag), &size.X, &size.Y);
+	menuItems_.emplace_back(play_tag, pos, size, []() {
+
+		});
+
+	pos.Y += button_intervel_y;
+	DxLib::GetGraphSizeF(assetMng_->GetTexture(setting_tag), &size.X, &size.Y);
+	menuItems_.emplace_back(setting_tag, pos, size, []() {
+
+		});
+
+	pos.Y += button_intervel_y;
+	DxLib::GetGraphSizeF(assetMng_->GetTexture(exit_tag), &size.X, &size.Y);
+	menuItems_.emplace_back(exit_tag, pos, size, []() {
+
+		});
 }
 
 void TitleScene::ProcessInput()
@@ -125,10 +138,9 @@ void TitleScene::FadeOutUpdate(const float& deltaTime)
 
 void TitleScene::NormalRender()
 {
-	DxLib::DrawExtendGraph(titleBox.Left(), titleBox.Top(), titleBox.Right(), titleBox.Bottom(), bgTexture_, true);
-	if ((blinkTimer_ / blinkInterval) % 2 == 0)
+	for (auto& item : menuItems_)
 	{
-		DxLib::DrawExtendGraph(pressBox.Left(), pressBox.Top(), pressBox.Right(), pressBox.Bottom(), btnTexture_, true);
+		DxLib::DrawRotaGraphF(item.pos.X, item.pos.Y, 1.0f, 0.0f, assetMng_->GetTexture(item.menuText), true);
 	}
 }
 
@@ -137,8 +149,7 @@ void TitleScene::FadeRender()
 	NormalRender();
 	auto blendpara = 255 * (wait_fade_time - waitTimer_) / wait_fade_time;
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, blendpara);
-	DxLib::DrawBox(titleBox.Left(), titleBox.Top(),
-		titleBox.Right(), titleBox.Bottom(),
+	DxLib::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT,
 		0x000000, true);
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
