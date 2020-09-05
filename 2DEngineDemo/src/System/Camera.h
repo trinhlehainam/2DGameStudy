@@ -47,7 +47,7 @@ public:
 	void LockCameraAt(const Vector2& pos);
 	void SetOffset(const Vector2& offset);
 	void SetLimit(const Vector2& limit);
-	void ShakeCamera(const int& howLong, const float& rangeX, const float& rangeY);
+	void ShakeCamera(const float& rangeX, const float& rangeY, const int& howLong = 100);
 	Vector2 GetShakeValue() const;
 	Vector2 Position() const;
 	void SetPosition(const Vector2& pos);

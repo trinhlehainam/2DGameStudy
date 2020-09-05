@@ -25,6 +25,7 @@ void EnemyManager::Update(const float& deltaTime)
 
 void EnemyManager::BossSceneUpdate(const float& deltaTime)
 {
+	// Just update the newest added Enemy ( boss )
 	(*enemies_.rbegin())->Update(deltaTime);
 }
 

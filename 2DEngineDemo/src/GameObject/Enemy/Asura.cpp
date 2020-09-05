@@ -95,7 +95,10 @@ void Asura::EnteringUpdate(const float& deltaTime)
 		colliders_.push_back(collider);
 	}
 	else
+	{
 		transform->pos.Y -= entering_speed * deltaTime;
+		Camera::Instance().ShakeCamera(10, 10);
+	}
 }
 
 void Asura::NormalUpdate(const float& deltaTime)
@@ -147,7 +150,7 @@ void Asura::DeadUpdate(const float& deltaTime)
 {
 	self_->Destroy();
 	Camera::Instance().FollowEntityMode();
-	auto playerTransform = gs_.player_->GetPlayerTransform();
+	auto playerTransform = playerTransform_.lock();
 	playerTransform->SetLeftLimit(0);
 	playerTransform->SetRightLimit(WORLD_MAP_X - playerTransform->w);
 }
@@ -170,7 +173,7 @@ void Asura::Update(const float& deltaTime)
 
 std::unique_ptr<Enemy> Asura::MakeClone()
 {
-	return std::make_unique<Asura>(gs_, playerPos_.lock());
+	return std::make_unique<Asura>(gs_, playerTransform_.lock());
 }
 
 void Asura::SetPosition(const Vector2& pos)

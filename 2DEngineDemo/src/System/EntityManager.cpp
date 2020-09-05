@@ -55,11 +55,7 @@ void EntityManager::Update(const float& deltaTime)
 
 void EntityManager::BossSceneUpdate(const float& deltaTime)
 {
-    auto bossItr = std::find_if(entities_.begin(), entities_.end(),
-        [](std::shared_ptr<Entity>& entity)
-        {
-            return entity->GetName() == "asura";
-        });
+    // Just update the newest added Entity ( boss )
     (*entities_.rbegin())->Update(deltaTime);
 }
 

@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "../Entity.h"
 
-Enemy::Enemy(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos):gs_(gs), playerPos_(playerPos)
+Enemy::Enemy(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos):gs_(gs), playerTransform_(playerPos)
 {
 }
 

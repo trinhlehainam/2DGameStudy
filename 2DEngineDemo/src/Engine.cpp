@@ -22,6 +22,7 @@ void Engine::Start()
 {
     DxLib::ChangeWindowMode(true);
     DxLib::SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 16);
+    DxLib::SetWindowTextW(L"2D Engine");
 
     if (DxLib::DxLib_Init())
     {
@@ -58,7 +59,7 @@ void Engine::Run()
         // Game Draw
         sceneMng_->Render();
         // Debug Draw
-        /*Debugger::Instance().DisplayPerformance();*/
+        Debugger::Instance().DisplayPerformance();
         DxLib::ScreenFlip();
     }
 }

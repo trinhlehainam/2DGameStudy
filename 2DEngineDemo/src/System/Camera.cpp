@@ -87,7 +87,7 @@ void Camera::SetLimit(const Vector2& limit)
     limit_ = limit;
 }
 
-void Camera::ShakeCamera(const int& howLong, const float& rangeX, const float& rangeY)
+void Camera::ShakeCamera(const float& rangeX, const float& rangeY , const int& howLong)
 {
     timer_ = howLong/static_cast<float>(second_to_millisecond);
     shakeRange_.X = rangeX;

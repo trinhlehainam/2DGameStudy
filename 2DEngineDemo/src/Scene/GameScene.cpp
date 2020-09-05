@@ -228,7 +228,6 @@ void GameScene::ProcessEnterBossArea()
 		playerTransform->SetRightLimit(bossPos.X + WINDOW_WIDTH / 2 - playerTransform->w);
 		spawners_.emplace_back(std::move(bossSpawner));
 		Camera::Instance().LockCameraAt(bossPos);
-		Camera::Instance().ShakeCamera(4000, 10, 10);
 		isBossAdded = true;
 		timer_ = 4.0f;
 		updateFunc_ = &GameScene::BossSceneUpdate;

@@ -75,6 +75,6 @@ void BombShot::Update(const float& deltaTime)
 		Vector2 pos = Vector2(transform->pos.X + transform->w / 2 * transform->scale,
 							transform->pos.Y + transform->h / 2 * transform->scale);
 		gs_->effectMng_->BombExplosionEffect(pos.X , pos.Y, bomb_exp_scale);
-		Camera::Instance().ShakeCamera(shake_time, shake_range_x, shake_range_y);
+		Camera::Instance().ShakeCamera(shake_range_x, shake_range_y, shake_time);
 	}
 }

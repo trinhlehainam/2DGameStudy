@@ -11,7 +11,7 @@ class Enemy
 {
 protected:
 	GameScene& gs_;
-	std::weak_ptr<TransformComponent> playerPos_;
+	std::weak_ptr<TransformComponent> playerTransform_;
 	std::shared_ptr<Entity> self_;
 public:
 	Enemy(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_);
