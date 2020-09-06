@@ -19,13 +19,11 @@ private:
     {
         std::string menuText;
         Vector2 pos;
-        Vector2 size;
         std::function<void(void)> func;
         bool isActive = false;
-        MenuItem(const std::string& str, const Vector2& p,const Vector2& s, std::function<void(void)> f) :
+        MenuItem(const std::string& str, const Vector2& p, std::function<void(void)> f) :
             menuText(str),
             pos(p),
-            size(s),
             func(f) {};
     };
     std::vector<MenuItem> menuItems_;
@@ -39,8 +37,8 @@ private:
     using InputFunc_t = void(TitleScene::*)();
     InputFunc_t inputFunc_;
 
-    void WaitInput();
     void StartInput();
+    void SleepInput();
 
     void WaitUpdate(const float& deltaTime);
     void BlinkUpdate(const float& deltaTime);
@@ -53,6 +51,8 @@ private:
     void ProcessInput() override;
     void Update(const float& deltaTime) override;
     void Render() override;
+
+    void SetCurrentItem();
 public:
     TitleScene(SceneManager&, KeyboardInput&);
     ~TitleScene();
