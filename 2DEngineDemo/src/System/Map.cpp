@@ -22,19 +22,22 @@ Map::~Map()
 }
 
 void Map::LoadMapLayer(const std::string& layerID, int texture, const char* filePath,
-	const int& mapSizeX, const int& mapSizeY, const int& textureSizeX, const int& textureSizeY)
+	const int& numTileX, const int& numTileY)
 {
-	entityMng_.AddMapLayer(layerID, mapSizeX, mapSizeY);
+	entityMng_.AddMapLayer(layerID, numTileX, numTileY);
 
 	std::fstream mapFile;
 	mapFile.open(filePath);
 	
-	const int tileX = textureSizeX / tileSize;
-	const int tileY = textureSizeY / tileSize;
+	int texture_size_x, texture_size_y;
+	TextureManager::GetImageSize(texture, texture_size_x, texture_size_y);
 
-	for (int y = 0; y < mapSizeY; y++)
+	const int tileX = texture_size_x / tileSize;
+	const int tileY = texture_size_y / tileSize;
+
+	for (int y = 0; y < numTileY; y++)
 	{
-		for (int x = 0; x < mapSizeX; x++)
+		for (int x = 0; x < numTileX; x++)
 		{
 			char ch;
 			int tileNum;
@@ -62,16 +65,17 @@ void Map::AddTile(const std::string& layerID,int texture, const float& srcX, con
 	newTile->AddComponent<TileComponent>(newTile, texture, srcX, srcY, posX, posY,tileSize, scale);
 }
 
-void Map::LoadCollisionLayer(const std::string& layerID, const std::string& tileID, const char* filePath, const int& mapSizeX, const int& mapSizeY)
+void Map::LoadCollisionLayer(const std::string& layerID, const std::string& tileID, const char* filePath, 
+	const int& numTileX, const int& numTileY)
 {
-	entityMng_.AddMapLayer(layerID, mapSizeX, mapSizeY);
+	entityMng_.AddMapLayer(layerID, numTileX, numTileY);
 
 	std::fstream mapFile;
 	mapFile.open(filePath);
 
-	for (int y = 0; y < mapSizeY; y++)
+	for (int y = 0; y < numTileY; y++)
 	{
-		for (int x = 0; x < mapSizeX; x++)
+		for (int x = 0; x < numTileX; x++)
 		{
 			char ch;
 

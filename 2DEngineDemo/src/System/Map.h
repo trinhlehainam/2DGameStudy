@@ -28,7 +28,7 @@ public:
 	/// <param name="mapSizeX:">max number of tiles in direction X</param>
 	/// <param name="mapSizeY:">max number of tiles in direction Y</param>
 	void LoadMapLayer(const std::string& layerID, int texture, const char* filePath,
-		const int& mapSizeX, const int& mapSizeY, const int& textureSizeX, const int& textureSizeY);
+		const int& mapSizeX, const int& mapSizeY);
 
 	/// <summary>
 	/// Create an tile Entity to game scene
