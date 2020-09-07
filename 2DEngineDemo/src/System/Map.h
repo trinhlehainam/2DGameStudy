@@ -27,7 +27,7 @@ public:
 	/// <param name="filePath">path to .map file to load map info</param>
 	/// <param name="mapSizeX:">max number of tiles in direction X</param>
 	/// <param name="mapSizeY:">max number of tiles in direction Y</param>
-	void LoadMapLayer(std::string layerID, int texture, const char* filePath,
+	void LoadMapLayer(const std::string& layerID, int texture, const char* filePath,
 		const int& mapSizeX, const int& mapSizeY, const int& textureSizeX, const int& textureSizeY);
 
 	/// <summary>
@@ -40,7 +40,7 @@ public:
 	/// <param name="posX:">position on the world map</param>
 	/// <param name="posY:">position on the world map</param>
 	/// <param name="collisionFlag:">is this tile has collision</param>
-	void AddTile(std::string layerID, int texture, const float& srcX,
+	void AddTile(const std::string& layerID, int texture, const float& srcX,
 		const float& srcY, const float& posX, const float& posY);
 
 	/// <summary>
@@ -50,7 +50,7 @@ public:
 	/// <param name="filePath">path to .map file to load map info</param>
 	/// <param name="mapSizeX">max number of tiles in direction X</param>
 	/// <param name="mapSizeY">max number of tiles in direction X</param>
-	void LoadCollisionLayer(std::string collisionID, const char* filePath, const int& mapSizeX, const int& mapSizeY);
+	void LoadCollisionLayer(const std::string& layerID, const std::string& tileID, const char* filePath, const int& mapSizeX, const int& mapSizeY);
 
 	/// <summary>
 	/// Create collision tile to game world
@@ -58,6 +58,6 @@ public:
 	/// <param name="collisionID"></param>
 	/// <param name="posX">position on the world map</param>
 	/// <param name="posY">position on the world map</param>
-	void AddCollisionTile(std::string collisionID, const float& posX, const float& posY);
+	void AddCollisionTile(const std::string& layerID, const std::string& tileID, const float& posX, const float& posY);
 };
 

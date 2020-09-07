@@ -21,7 +21,7 @@ Map::~Map()
 {
 }
 
-void Map::LoadMapLayer(std::string layerID, int texture, const char* filePath,
+void Map::LoadMapLayer(const std::string& layerID, int texture, const char* filePath,
 	const int& mapSizeX, const int& mapSizeY, const int& textureSizeX, const int& textureSizeY)
 {
 	entityMng_.AddMapLayer(layerID, mapSizeX, mapSizeY);
@@ -38,7 +38,6 @@ void Map::LoadMapLayer(std::string layerID, int texture, const char* filePath,
 		{
 			char ch;
 			int tileNum;
-
 
 			mapFile.get(ch);
 			tileNum = atoi(&ch) * 10;
@@ -57,15 +56,15 @@ void Map::LoadMapLayer(std::string layerID, int texture, const char* filePath,
 	mapFile.close();
 }
 
-void Map::AddTile(std::string layerID,int texture, const float& srcX, const float& srcY, const float& posX, const float& posY)
+void Map::AddTile(const std::string& layerID,int texture, const float& srcX, const float& srcY, const float& posX, const float& posY)
 {
 	auto newTile = entityMng_.AddTileEntity(layerID);
 	newTile->AddComponent<TileComponent>(newTile, texture, srcX, srcY, posX, posY,tileSize, scale);
 }
 
-void Map::LoadCollisionLayer(std::string collisionID, const char* filePath, const int& mapSizeX, const int& mapSizeY)
+void Map::LoadCollisionLayer(const std::string& layerID, const std::string& tileID, const char* filePath, const int& mapSizeX, const int& mapSizeY)
 {
-	entityMng_.AddMapLayer("collision", mapSizeX, mapSizeY);
+	entityMng_.AddMapLayer(layerID, mapSizeX, mapSizeY);
 
 	std::fstream mapFile;
 	mapFile.open(filePath);
@@ -80,10 +79,8 @@ void Map::LoadCollisionLayer(std::string collisionID, const char* filePath, cons
 			
 			int val = atoi(&ch);
 
-			if (val != 0)
-			{
-				AddCollisionTile(collisionID, x * tileSize * scale, y * tileSize * scale);
-			}
+			if(val!=0)
+				AddCollisionTile(layerID, tileID, x * tileSize * scale, y * tileSize * scale);
 
 			mapFile.ignore();
 		}
@@ -91,10 +88,10 @@ void Map::LoadCollisionLayer(std::string collisionID, const char* filePath, cons
 	mapFile.close();
 }
 
-void Map::AddCollisionTile(std::string collisionID, const float& posX, const float& posY)
+void Map::AddCollisionTile(const std::string& layerID, const std::string& tileID, const float& posX, const float& posY)
 {
-	auto newTile = entityMng_.AddTileEntity("collision");
+	auto newTile = entityMng_.AddTileEntity(layerID);
 	newTile->AddComponent<TransformComponent>(newTile, Vector2(posX, posY), tileSize, tileSize, scale);
-	collisionMng_.AddMapCollider(newTile, collisionID, Vector2(posX, posY), tileSize*scale, tileSize*scale);
+	collisionMng_.AddMapCollider(newTile, tileID, Vector2(posX, posY), tileSize * scale, tileSize * scale);
 }
 

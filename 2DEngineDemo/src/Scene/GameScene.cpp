@@ -119,15 +119,15 @@ void GameScene::LoadLevel(const int& level)
 	
 	// Create Title Map
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
-	map_->LoadMapLayer("background",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
+	map_->LoadMapLayer("BACKGROUND",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
 		MAP_SIZE_X, MAP_SIZE_Y, MAP_TEXTURE_SIZE_X, MAP_TEXTURE_SIZE_Y);
-	map_->LoadMapLayer("foreground", assetMng_->GetTexture("map"), "assets/Image/Tilemap/foreground.map",
+	map_->LoadMapLayer("FOREGROUND", assetMng_->GetTexture("map"), "assets/Image/Tilemap/foreground.map",
 		MAP_SIZE_X, MAP_SIZE_Y, MAP_TEXTURE_SIZE_X, MAP_TEXTURE_SIZE_Y);
 
 	// Load Collision Map
-	map_->LoadCollisionLayer("GROUND", "assets/Image/Tilemap/ground.map", MAP_SIZE_X, MAP_SIZE_Y);
-	map_->LoadCollisionLayer("BRICK", "assets/Image/Tilemap/brick.map", MAP_SIZE_X, MAP_SIZE_Y);
-	map_->LoadCollisionLayer("ASURA", "assets/Image/Tilemap/boss-position.map", MAP_SIZE_X, MAP_SIZE_Y);
+	map_->LoadCollisionLayer("TERRAIN","GROUND", "assets/Image/Tilemap/ground.map", MAP_SIZE_X, MAP_SIZE_Y);
+	map_->LoadCollisionLayer("TERRAIN","BRICK", "assets/Image/Tilemap/brick.map", MAP_SIZE_X, MAP_SIZE_Y);
+	map_->LoadCollisionLayer("STAGE", "ASURA", "assets/Image/Tilemap/boss-position.map", MAP_SIZE_X, MAP_SIZE_Y);
 
 	// Create player Entity
 	player_ = std::make_unique<Player>(*this);
