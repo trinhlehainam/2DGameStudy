@@ -43,11 +43,21 @@ void Map::LoadMapLayer(const std::string& layerID, int texture, const char* file
 			int tileNum;
 
 			mapFile.get(ch);
-			tileNum = atoi(&ch) * 10;
+			tileNum = atoi(&ch) * 100;
+
+			mapFile.get(ch);
+			tileNum += atoi(&ch) * 10;
 
 			mapFile.get(ch);
 			tileNum += atoi(&ch);
 
+			// Don't add Tile Entity when it's null
+			if (tileNum == 1)
+			{
+				mapFile.ignore();
+				continue;
+			}
+				
 			int srcY = (tileNum / tileX) * tileSize;
 			int srcX = (tileNum % tileX) * tileSize;
 

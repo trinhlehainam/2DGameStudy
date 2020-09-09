@@ -47,6 +47,7 @@ void Camera::FollowingUpdate()
     auto transform = trackEntity_.lock();
     SmoothFollow(transform->pos);
     viewport.pos.X = clamp(viewport.pos.X, 0.0f, limit_.X);
+    viewport.pos.Y = clamp(viewport.pos.Y, 0.0f, limit_.Y);
 }
 
 void Camera::LockingUpdate()

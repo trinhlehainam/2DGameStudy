@@ -11,8 +11,8 @@ constexpr int MAP_TEXTURE_SIZE_Y = 176;
 constexpr int TILE_SIZE = 16;
 constexpr int TILE_SCALE = 2;
 
-constexpr int NUM_TILE_X = 100;
-constexpr int NUM_TILE_Y = 30;
+constexpr int NUM_TILE_X = 250;
+constexpr int NUM_TILE_Y = 150;
 
 constexpr unsigned int WORLD_MAP_X = NUM_TILE_X * TILE_SIZE * TILE_SCALE;
 constexpr unsigned int WORLD_MAP_Y = NUM_TILE_Y * TILE_SIZE * TILE_SCALE;

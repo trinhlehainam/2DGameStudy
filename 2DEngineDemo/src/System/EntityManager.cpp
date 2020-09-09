@@ -32,13 +32,6 @@ void EntityManager::ClearData()
 
 void EntityManager::Update(const float& deltaTime)
 {
-    for (auto& layer : mapLayers_)
-    {
-        for (auto& tileEntity : layer.second)
-        {
-            tileEntity->Update(deltaTime);
-        }
-    }
 
     for (auto& entity : entities_)
     {
@@ -75,14 +68,17 @@ void EntityManager::Render()
     for (auto& mapEntity : mapLayers_["BACKGROUND"])
         mapEntity->Render();
 
+    for (auto& mapEntity : mapLayers_["PLATFORM"])
+        mapEntity->Render();
+
     // Reverse order to draw Player on top of other Entities
     for (auto it = entities_.rbegin(); it != entities_.rend(); ++it)
     {
         (*it)->Render();
     }
 
-    for (auto& mapEntity : mapLayers_["FOREGROUND"])
-        mapEntity->Render();
+    /*for (auto& mapEntity : mapLayers_["FOREGROUND"])
+        mapEntity->Render();*/
 
     for (auto& projectile : projectiles_)
     {

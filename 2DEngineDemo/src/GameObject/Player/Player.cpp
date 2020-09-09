@@ -21,7 +21,7 @@ namespace
 {
 	// Initialize
 	const Rect src_rect = Rect(0, 0, 32, 32);
-	const Vector2 start_pos = Vector2(30.0f, 512.0f);
+	const Vector2 start_pos = Vector2(30.0f, 1000.0f);
 	constexpr float player_width = 32.0f;
 	constexpr float player_height = 32.0f;
 	constexpr float player_scale = 2.0f;

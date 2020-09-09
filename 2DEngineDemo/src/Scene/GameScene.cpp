@@ -71,7 +71,7 @@ void GameScene::LoadLevel(const int& level)
 {
 	// Load assets
 	assetMng_->AddTexture("bg", L"assets/Title.png");
-	assetMng_->AddTexture("map", L"assets/Image/Tilemap/Assets.png");
+	assetMng_->AddTexture("map", L"assets/Image/Tilemap/tileset.png");
 
 	assetMng_->AddTexture("player-run", L"assets/Image/Character/Player/adventurer-run-sheet.png");
 	assetMng_->AddTexture("player-sword-run", L"assets/Image/Character/Player/adventurer-swd-run-sheet.png");
@@ -121,13 +121,13 @@ void GameScene::LoadLevel(const int& level)
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
 	map_->LoadMapLayer("BACKGROUND",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
 		NUM_TILE_X, NUM_TILE_Y);
+	map_->LoadMapLayer("PLATFORM", assetMng_->GetTexture("map"), "assets/Image/Tilemap/platform.map",
+		NUM_TILE_X, NUM_TILE_Y);
 	map_->LoadMapLayer("FOREGROUND", assetMng_->GetTexture("map"), "assets/Image/Tilemap/foreground.map",
 		NUM_TILE_X, NUM_TILE_Y);
 
 	// Load Collision Map
-	map_->LoadCollisionLayer("TERRAIN","GROUND", "assets/Image/Tilemap/ground.map", NUM_TILE_X, NUM_TILE_Y);
-	map_->LoadCollisionLayer("TERRAIN","BRICK", "assets/Image/Tilemap/brick.map", NUM_TILE_X, NUM_TILE_Y);
-	map_->LoadCollisionLayer("STAGE", "ASURA", "assets/Image/Tilemap/boss-position.map", NUM_TILE_X, NUM_TILE_Y);
+	map_->LoadCollisionLayer("TERRAIN","COLLISION", "assets/Image/Tilemap/collision.map", NUM_TILE_X, NUM_TILE_Y);
 
 	// Create player Entity
 	player_ = std::make_unique<Player>(*this);
@@ -145,7 +145,7 @@ void GameScene::LoadLevel(const int& level)
 	// Initialize Camera ( Track Camera to Player )
 	Camera::Instance().SetViewSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Camera::Instance().SetOffset(Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 2 / 3));
-	Camera::Instance().SetLimit(Vector2(WORLD_MAP_X - WINDOW_WIDTH, 0));
+	Camera::Instance().SetLimit(Vector2(WORLD_MAP_X - WINDOW_WIDTH, WORLD_MAP_Y - WINDOW_HEIGHT));
 	auto playerTransform = player_->self_->GetComponent<TransformComponent>();
 	Camera::Instance().SetTargetEntity(playerTransform);
 	Camera::Instance().SetPosition(playerTransform->pos);
@@ -181,10 +181,10 @@ void GameScene::FadeInUpdate(const float& deltaTime)
 void GameScene::GameUpdate(const float& deltaTime)
 {
 	player_->Input(deltaTime);
-	for (auto& spawner : spawners_)
+	/*for (auto& spawner : spawners_)
 	{
 		spawner->Update(deltaTime);
-	}
+	}*/
 	collisionMng_->ApplyForce(deltaTime);
 	/*----------------------------------------------------------------------------*/
 	// Update player's STATE right after received player's INPUT
@@ -195,7 +195,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	entityMng_->Update(deltaTime);
 	combatMng_->Update(deltaTime);
 	environment_->Update(deltaTime);
-	ProcessEnterBossArea();
+	/*ProcessEnterBossArea();*/
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	collisionMng_->CombatCollision();
