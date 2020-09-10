@@ -56,7 +56,7 @@ void Engine::Run()
 
         DxLib::ClearDrawScreen();
         sceneMng_->Render();
-        Debugger::Instance().DisplayPerformance();
+        /*Debugger::Instance().DisplayPerformance();*/
         DxLib::ScreenFlip();
     }
 }

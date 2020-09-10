@@ -18,10 +18,10 @@ MeleeAttack::MeleeAttack(GameScene& gs, const std::shared_ptr<Entity>& owner, co
 	const float& w, const float& h, const int& damage):
 	Attack(gs,owner)
 {
-	self_ = gs_->entityMng_->AddProjectTile("bomb");
+	self_ = gs_->entityMng_->AddProjectTile(owner->GetName());
 	self_->AddComponent<TransformComponent>(self_, startPos, w, h);
 	auto& collider = gs_->collisionMng_->AddMeleeAttackCollider(self_,
-		"PLAYER-BOMB", startPos, w, h);
+		"MELEE-ATTACK", startPos, w, h);
 
 	self_->AddComponent<MeleeAttackComponent>(self_, damage);
 	auto attack = self_->GetComponent<MeleeAttackComponent>();

@@ -282,6 +282,7 @@ void CollisionManager::ActorVSMeleeActtackCollision()
             }
             else
             {
+                if (attack.GetOwnerName() != "player") continue;
                 if (CheckCollision(attack.collider_, actor->collider_))
                 {
                     actor_owner->TakeDamage(attack_owner->GetMeleeAttackDamage());
