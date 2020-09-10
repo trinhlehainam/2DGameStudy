@@ -44,7 +44,6 @@ void Engine::Start()
 
 void Engine::Run()
 {
-    
     while (!DxLib::ProcessMessage() && isActive_)
     {
         DxLib::ClearDrawScreen();
