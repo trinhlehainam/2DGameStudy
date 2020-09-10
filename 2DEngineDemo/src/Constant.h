@@ -25,3 +25,13 @@ constexpr float bamboo_collider_offset_x = 0;
 constexpr float bamboo_collider_offset_y = 10;
 constexpr float bamboo_collider_w = 32;
 constexpr float bamboo_collider_h = 12;
+
+constexpr float bamboo_horizontal_trap_offset_x = 0;
+constexpr float bamboo_horizontal_trap_offset_y = 10;
+constexpr float bamboo_horizontal_trap_w = 32;
+constexpr float bamboo_horizontal_trap_h = 12;
+
+constexpr float bamboo_vertical_trap_offset_x = 10;
+constexpr float bamboo_vertical_trap_offset_y = 0;
+constexpr float bamboo_vertical_trap_w = 12;
+constexpr float bamboo_vertical_trap_h = 32;

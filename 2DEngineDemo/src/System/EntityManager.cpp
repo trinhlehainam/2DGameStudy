@@ -77,8 +77,8 @@ void EntityManager::Render()
         (*it)->Render();
     }
 
-    /*for (auto& mapEntity : mapLayers_["FOREGROUND"])
-        mapEntity->Render();*/
+    for (auto& mapEntity : mapLayers_["FOREGROUND"])
+        mapEntity->Render();
 
     for (auto& projectile : projectiles_)
     {
