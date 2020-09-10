@@ -8,11 +8,13 @@
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/Collider/RigidBody2D.h"
 #include "../../Component/HealthComponent.h"
+#include "../Attack/MeleeAttack.h"
 
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/EffectManager.h"
+#include "../../System/CombatManager.h"
 
 namespace
 {
@@ -36,6 +38,12 @@ namespace
 	constexpr float aim_velocity_x = 100;
 	constexpr float aim_velocity_y = 100;
 	constexpr float guard_velocity_x = 50;
+
+	constexpr float attack_size_x = 56;
+	constexpr float attack_size_y = 40;
+	constexpr int attack_damage = 1;
+	constexpr float wait_attack_time = 0.5f;
+	constexpr float attack_offset_y = 35;
 
 	constexpr short int max_health = 5;
 
@@ -186,7 +194,7 @@ void FlyingEye::AimPlayerUpdate(const float&)
 	}
 }
 
-void FlyingEye::AttackUpdate(const float&)
+void FlyingEye::AttackUpdate(const float& deltaTime)
 {
 	rigidBody_->velocity_.Y = 0;
 	CheckHit();
@@ -194,16 +202,23 @@ void FlyingEye::AttackUpdate(const float&)
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
-	float distance = (playerTransform_.lock()->pos.X - transform->pos.X) * (playerTransform_.lock()->pos.X - transform->pos.X) +
-		(playerTransform_.lock()->pos.Y - transform->pos.Y) * (playerTransform_.lock()->pos.Y - transform->pos.Y);
-	if (distance > attack_distance * attack_distance)
+	if (timer_ <= 0 && attackFlag_)
 	{
-		if (sprite->IsAnimationFinished())
-		{
-			sprite->PlayLoop("flight");
-			actionUpdate_ = &FlyingEye::AimPlayerUpdate;
-		}
+		attackFlag_ = false;
+		timer_ = wait_attack_time;
+		auto melee = gs_.combatMng_->AddAttack<MeleeAttack>(gs_, self_, transform->pos, attack_size_x, attack_size_y);
+		melee->SetDamage(attack_damage);
 	}
+
+	if (sprite->IsAnimationFinished())
+	{
+		sprite->PlayOnce("flight");
+		timer_ = wait_attack_time;
+		attackFlag_ = true;
+		actionUpdate_ = &FlyingEye::AimPlayerUpdate;
+	}
+
+	timer_ -= deltaTime;
 }
 
 void FlyingEye::WaitForDestroyUpdate(const float& deltaTime)

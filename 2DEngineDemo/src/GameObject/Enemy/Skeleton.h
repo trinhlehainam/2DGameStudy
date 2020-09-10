@@ -13,6 +13,7 @@ private:
 
     float timer_ = 0;
     float startPosX_ = 0;
+    bool attackFlag_ = false;
 
     void HurtUpdate(const float&);
     void DeathUpdate(const float&);
@@ -20,6 +21,8 @@ private:
     void AimPlayerUpdate(const float&);
     void AttackUpdate(const float&);
     void WaitForDestroyUpdate(const float&);
+
+    void SetMeleeAttack();
 
     void CheckHit();
 public:

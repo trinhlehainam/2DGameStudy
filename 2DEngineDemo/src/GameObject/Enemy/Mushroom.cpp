@@ -8,11 +8,13 @@
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/Collider/RigidBody2D.h"
 #include "../../Component/HealthComponent.h"
+#include "../Attack/MeleeAttack.h"
 
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/EffectManager.h"
+#include "../../System/CombatManager.h"
 
 namespace
 {
@@ -34,6 +36,13 @@ namespace
 	constexpr float attack_distance = 50;
 	constexpr float aim_velocity_x = 100;
 	constexpr float guard_velocity_x = 50;
+
+	constexpr float attack_size_x = 26 * scale;
+	constexpr float attack_size_y = 48 * scale;
+	constexpr int attack_damage = 1;
+	constexpr float wait_attack_time = 0.5f;
+	constexpr float attack_right_offset_x = 50;
+	constexpr float attack_left_offset_x = 10;
 
 	constexpr short int max_health = 10;
 
@@ -171,28 +180,39 @@ void Mushroom::AimPlayerUpdate(const float&)
 	if (distance <= attack_distance * attack_distance)
 	{
 		actionUpdate_ = &Mushroom::AttackUpdate;
-		sprite->PlayLoop("attack");
+		sprite->PlayOnce("attack");
+		timer_ = wait_attack_time;
+		attackFlag_ = true;
 		rigidBody_->velocity_.X = 0.0f;
 	}
 }
 
-void Mushroom::AttackUpdate(const float&)
+void Mushroom::AttackUpdate(const float& deltaTime)
 {
 	CheckHit();
 
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
-	float distance = (playerTransform_.lock()->pos.X - transform->pos.X) * (playerTransform_.lock()->pos.X - transform->pos.X) +
-		(playerTransform_.lock()->pos.Y - transform->pos.Y) * (playerTransform_.lock()->pos.Y - transform->pos.Y);
-	if (distance > attack_distance * attack_distance)
+	if (timer_ <= 0 && attackFlag_)
 	{
-		if (sprite->IsAnimationFinished())
-		{
-			sprite->PlayLoop("run");
-			actionUpdate_ = &Mushroom::AimPlayerUpdate;
-		}
+		attackFlag_ = false;
+		timer_ = wait_attack_time;
+		Vector2 attack_pos;
+		attack_pos.Y = transform->pos.Y;
+		attack_pos.X = !sprite->IsFlipped() ? transform->pos.X + attack_right_offset_x : 
+			transform->pos.X - attack_left_offset_x;
+		auto melee = gs_.combatMng_->AddAttack<MeleeAttack>(gs_, self_, attack_pos, attack_size_x, attack_size_y);
+		melee->SetDamage(attack_damage);
 	}
+
+	if (sprite->IsAnimationFinished())
+	{
+		sprite->PlayLoop("run");
+		actionUpdate_ = &Mushroom::AimPlayerUpdate;
+	}
+
+	timer_ -= deltaTime;
 }
 
 void Mushroom::WaitForDestroyUpdate(const float& deltaTime)

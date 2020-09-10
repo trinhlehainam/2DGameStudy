@@ -13,6 +13,7 @@ private:
 
     float timer_ = 0;
     float startPosX_ = 0;
+    bool attackFlag_ = false;
 
     void HurtUpdate(const float&);
     void DeathUpdate(const float&);

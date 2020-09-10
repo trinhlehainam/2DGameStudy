@@ -8,11 +8,13 @@
 #include "../../Component/SpriteComponent.h"
 #include "../../Component/Collider/RigidBody2D.h"
 #include "../../Component/HealthComponent.h"
+#include "../Attack/MeleeAttack.h"
 
 #include "../../System/AssetManager.h"
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/EffectManager.h"
+#include "../../System/CombatManager.h"
 
 namespace
 {
@@ -34,6 +36,9 @@ namespace
 	constexpr unsigned int hurt_animation_speed = 100;
 	constexpr unsigned int death_animation_speed = 300;
 	constexpr unsigned int idle_animation_speed = 100;
+
+	constexpr float wait_attack_time = 0.5f;
+	constexpr int attack_damage = 2;
 
 	constexpr float sight_distance = 150;
 	constexpr float attack_distance = 80;
@@ -178,28 +183,29 @@ void Skeleton::AimPlayerUpdate(const float&)
 	if (distance <= attack_distance * attack_distance)
 	{
 		actionUpdate_ = &Skeleton::AttackUpdate;
-		sprite->PlayLoop("attack");
+		sprite->PlayOnce("attack");
+		timer_ = wait_attack_time;
+		attackFlag_ = true;
 		rigidBody_->velocity_.X = 0.0f;
 	}
 }
 
-void Skeleton::AttackUpdate(const float&)
+void Skeleton::AttackUpdate(const float& deltaTime)
 {
 	CheckHit();
 
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
 
-	float distance = (playerTransform_.lock()->pos.X - transform->pos.X) * (playerTransform_.lock()->pos.X - transform->pos.X) +
-		(playerTransform_.lock()->pos.Y - transform->pos.Y) * (playerTransform_.lock()->pos.Y - transform->pos.Y);
-	if (distance > attack_distance * attack_distance)
+	SetMeleeAttack();
+
+	if (sprite->IsAnimationFinished())
 	{
-		if (sprite->IsAnimationFinished())
-		{
-			sprite->PlayLoop("run");
-			actionUpdate_ = &Skeleton::AimPlayerUpdate;
-		}
+		sprite->PlayLoop("run");
+		actionUpdate_ = &Skeleton::AimPlayerUpdate;
 	}
+
+	timer_ -= deltaTime;
 }
 
 void Skeleton::WaitForDestroyUpdate(const float& deltaTime)
@@ -207,6 +213,27 @@ void Skeleton::WaitForDestroyUpdate(const float& deltaTime)
 	timer_ -= deltaTime;
 	if (timer_ <= 0)
 		self_->Destroy();
+}
+
+void Skeleton::SetMeleeAttack()
+{
+	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	const auto& transform = self_->GetComponent<TransformComponent>();
+	Rect destRect = attack_src_rect;
+	destRect.w *= transform->scale;
+	destRect.h *= transform->scale;
+	destRect.pos.X = transform->pos.X - (!sprite->IsFlipped() ? attack_anim_offset.X :
+		destRect.w - transform->w * transform->scale - attack_anim_offset.X);
+	destRect.pos.Y = transform->pos.Y - attack_anim_offset.Y;
+
+	if (timer_ <= 0 && attackFlag_)
+	{
+		attackFlag_ = false;
+		timer_ = wait_attack_time;
+		auto melee = gs_.combatMng_->AddAttack<MeleeAttack>(gs_, self_, destRect.pos, destRect.w, destRect.h);
+		melee->SetDamage(attack_damage);
+	}
+
 }
 
 void Skeleton::CheckHit()
