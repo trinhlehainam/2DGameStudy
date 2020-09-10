@@ -25,6 +25,7 @@
 #include "../GameObject/Enemy/Asura.h"
 #include "../GameObject/Enemy/FlyingEye.h"
 #include "../GameObject/Enemy/Mushroom.h"
+#include "../GameObject/Enemy/Skeleton.h"
 
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
@@ -124,7 +125,7 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("skeleton-Death", L"assets/Image/Character/Enemy/Skeleton/skeleton-Death-sheet.png");
 	assetMng_->AddTexture("skeleton-Hurt", L"assets/Image/Character/Enemy/Skeleton/skeleton-Hurt-sheet.png");
 	assetMng_->AddTexture("skeleton-Idle", L"assets/Image/Character/Enemy/Skeleton/skeleton-Idle-sheet.png");
-	assetMng_->AddTexture("skeleton-Run", L"assets/Image/Character/Enemy/Skeleton/skeleton-Run-sheet.png");
+	assetMng_->AddTexture("skeleton-Run", L"assets/Image/Character/Enemy/Skeleton/skeleton-Walk-sheet.png");
 
 	assetMng_->AddTexture("boss-asura", L"assets/Image/Character/Enemy/asura/ashura.png");
 	
@@ -171,7 +172,7 @@ void GameScene::LoadLevel(const int& level)
 	enemyMng_ = std::make_unique<EnemyManager>(player_->GetPlayerTransform(), *this);
 
 	// Create spawn enemy
-	auto slasherClone = std::make_unique<Mushroom>(*this, player_->GetPlayerTransform());
+	auto slasherClone = std::make_unique<Skeleton>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
 	spawners_.emplace_back(std::move(sideSpawner));
