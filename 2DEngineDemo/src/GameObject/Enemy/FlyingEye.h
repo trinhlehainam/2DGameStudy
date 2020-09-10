@@ -12,6 +12,7 @@ private:
     std::shared_ptr<RigidBody2D> rigidBody_;
 
     float timer_ = 0;
+    float startPosX_ = 0;
 
     void HurtUpdate(const float&);
     void DeathUpdate(const float&);

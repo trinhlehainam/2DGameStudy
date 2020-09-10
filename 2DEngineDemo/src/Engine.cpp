@@ -3,6 +3,7 @@
 #include <DxLib.h>
 #include <iostream>
 #include <cassert>
+#include <thread>
 
 #include "Constant.h"
 
@@ -46,18 +47,15 @@ void Engine::Run()
 {
     while (!DxLib::ProcessMessage() && isActive_)
     {
-        DxLib::ClearDrawScreen();
-
         auto& time = Time::Instance();
         time.FixedFrameRate();
-        
+
         sceneInput_->Update(time.DeltaTimeF());
         sceneMng_->ProcessInput();
         sceneMng_->Update(time.DeltaTimeF());
 
-        // Game Draw
+        DxLib::ClearDrawScreen();
         sceneMng_->Render();
-        // Debug Draw
         Debugger::Instance().DisplayPerformance();
         DxLib::ScreenFlip();
     }

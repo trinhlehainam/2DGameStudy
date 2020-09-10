@@ -29,16 +29,19 @@ namespace
 	constexpr unsigned int flight_animation_speed = 100;
 	constexpr unsigned int attack_animation_speed = 100;
 	constexpr unsigned int hurt_animation_speed = 100;
-	constexpr unsigned int death_animation_speed = 200;
+	constexpr unsigned int death_animation_speed = 300;
 
 	constexpr float sight_distance = 150;
-	constexpr float attack_distance = 50;
+	constexpr float attack_distance = 20;
 	constexpr float aim_velocity_x = 100;
 	constexpr float aim_velocity_y = 100;
+	constexpr float guard_velocity_x = 50;
 
 	constexpr short int max_health = 5;
 
 	constexpr float wait_destroy_time = 5.0f;
+	constexpr float guard_area_x = 300;
+	constexpr float moving_offset = 5;
 }
 
 FlyingEye::FlyingEye(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos):
@@ -68,7 +71,6 @@ void FlyingEye::Initialize()
 
 void FlyingEye::Update(const float& deltaTime)
 {
-	rigidBody_->velocity_.Y = 0;
 	(this->*actionUpdate_)(deltaTime);
 }
 
@@ -81,6 +83,7 @@ void FlyingEye::SetPosition(const Vector2& pos)
 {
 	const auto& transform = self_->GetComponent<TransformComponent>();
 	transform->pos = pos;
+	startPosX_ = pos.X;
 	// Because RigidBody2D Constructor will Initialize its collider's position depend on owner's Transform
 	// Add RigidBody here after set position for owner's transform
 	const auto& body = gs_.collisionMng_->AddRigidBody2D(
@@ -94,6 +97,7 @@ void FlyingEye::SetPosition(const Vector2& pos)
 
 void FlyingEye::HurtUpdate(const float&)
 {
+	rigidBody_->velocity_.Y = 0;
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	auto health = self_->GetComponent<HealthComponent>()->Health();
 	sprite->PlayOnce("hurt");
@@ -116,7 +120,7 @@ void FlyingEye::DeathUpdate(const float&)
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	sprite->PlayOnce("death");
 	rigidBody_->velocity_.X = 0;
-	if (sprite->IsAnimationFinished())
+	if (sprite->IsAnimationFinished() && rigidBody_->isGrounded_)
 	{
 		timer_ = wait_destroy_time;
 		sprite->Pause();
@@ -127,13 +131,22 @@ void FlyingEye::DeathUpdate(const float&)
 
 void FlyingEye::PatrollingUpdate(const float&)
 {
+	rigidBody_->velocity_.Y = 0;
 	CheckHit();
 
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
+	auto& playerPos = playerTransform_.lock()->pos;
 
-	float distance = (playerTransform_.lock()->pos.X - transform->pos.X) * (playerTransform_.lock()->pos.X - transform->pos.X) +
-		(playerTransform_.lock()->pos.Y - transform->pos.Y) * (playerTransform_.lock()->pos.Y - transform->pos.Y);
+	if (transform->pos.X - startPosX_ >= guard_area_x)
+		rigidBody_->velocity_.X = -guard_velocity_x;
+	else if(transform->pos.X - startPosX_ <= 0)
+		rigidBody_->velocity_.X = guard_velocity_x;
+
+	sprite->SetFlipState(!(rigidBody_->velocity_.X > 0));
+
+	float distance = (playerPos.X - transform->pos.X) * (playerPos.X - transform->pos.X) +
+		(playerPos.Y - transform->pos.Y) * (playerPos.Y - transform->pos.Y);
 	if (distance <= sight_distance * sight_distance)
 	{
 		actionUpdate_ = &FlyingEye::AimPlayerUpdate;
@@ -146,9 +159,21 @@ void FlyingEye::AimPlayerUpdate(const float&)
 
 	auto transform = self_->GetComponent<TransformComponent>();
 	auto sprite = self_->GetComponent<SpriteComponent>();
+	auto& playerPos = playerTransform_.lock()->pos;
 
-	rigidBody_->velocity_.X = (playerTransform_.lock()->pos.X - transform->pos.X) > 0 ? aim_velocity_x : -aim_velocity_x;
-	rigidBody_->velocity_.Y = (playerTransform_.lock()->pos.Y - transform->pos.Y) > 0 ? aim_velocity_y : -aim_velocity_y;
+	if ((playerPos.X - transform->pos.X) > moving_offset)
+		rigidBody_->velocity_.X = aim_velocity_x;
+	else if ((playerPos.X - transform->pos.X) < -moving_offset)
+		rigidBody_->velocity_.X = -aim_velocity_x;
+	else
+		rigidBody_->velocity_.X = 0;
+
+	if ((playerPos.Y - transform->pos.Y) > moving_offset)
+		rigidBody_->velocity_.Y = aim_velocity_y;
+	else if ((playerPos.Y - transform->pos.Y) < -moving_offset)
+		rigidBody_->velocity_.Y = -aim_velocity_y;
+	else
+		rigidBody_->velocity_.Y = 0;
 
 	sprite->SetFlipState(!(rigidBody_->velocity_.X > 0));
 	float distance = (playerTransform_.lock()->pos.X - transform->pos.X) * (playerTransform_.lock()->pos.X - transform->pos.X) +
@@ -156,13 +181,14 @@ void FlyingEye::AimPlayerUpdate(const float&)
 	if (distance <= attack_distance*attack_distance)
 	{
 		actionUpdate_ = &FlyingEye::AttackUpdate;
-		sprite->PlayOnce("attack");
+		sprite->PlayLoop("attack");
 		rigidBody_->velocity_.X = 0.0f;
 	}
 }
 
 void FlyingEye::AttackUpdate(const float&)
 {
+	rigidBody_->velocity_.Y = 0;
 	CheckHit();
 
 	auto transform = self_->GetComponent<TransformComponent>();
@@ -174,8 +200,8 @@ void FlyingEye::AttackUpdate(const float&)
 	{
 		if (sprite->IsAnimationFinished())
 		{
-			actionUpdate_ = &FlyingEye::AimPlayerUpdate;
 			sprite->PlayLoop("flight");
+			actionUpdate_ = &FlyingEye::AimPlayerUpdate;
 		}
 	}
 }

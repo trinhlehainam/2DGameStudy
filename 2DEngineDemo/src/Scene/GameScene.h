@@ -34,6 +34,7 @@ class GameScene :
     friend class MeleeAttack;
     friend class EnergyBullet;
     friend class FlyingEye;
+    friend class Mushroom;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;

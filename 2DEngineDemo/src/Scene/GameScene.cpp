@@ -24,6 +24,7 @@
 #include "../GameObject/Enemy/BossSpawner.h"
 #include "../GameObject/Enemy/Asura.h"
 #include "../GameObject/Enemy/FlyingEye.h"
+#include "../GameObject/Enemy/Mushroom.h"
 
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
@@ -170,7 +171,7 @@ void GameScene::LoadLevel(const int& level)
 	enemyMng_ = std::make_unique<EnemyManager>(player_->GetPlayerTransform(), *this);
 
 	// Create spawn enemy
-	auto slasherClone = std::make_unique<FlyingEye>(*this, player_->GetPlayerTransform());
+	auto slasherClone = std::make_unique<Mushroom>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
 	spawners_.emplace_back(std::move(sideSpawner));
