@@ -168,6 +168,18 @@
     <ClCompile Include="src\GameObject\Attack\EnergyBullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameObject\Enemy\SpiderSkeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Enemy\FlyingEye.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Enemy\Mushroom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject\Enemy\Skeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine.h">
@@ -321,6 +333,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GameObject\Attack\EnergyBullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Enemy\SpiderSkeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Enemy\FlyingEye.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Enemy\Mushroom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject\Enemy\Skeleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

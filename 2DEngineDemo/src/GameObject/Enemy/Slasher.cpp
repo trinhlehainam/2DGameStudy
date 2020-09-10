@@ -101,7 +101,7 @@ void Slasher::AimPlayer(const float& deltaTime)
 	if (std::abs(playerTransform_.lock()->pos.X - transform->pos.X) < slash_distancce)
 	{
 		actionUpdate_ = &Slasher::SlashUpdate;
-		sprite->PlayLoop("slash");
+		sprite->PlayOnce("slash");
 		rigidBody_->velocity_.X = 0.0f;
 	}
 }

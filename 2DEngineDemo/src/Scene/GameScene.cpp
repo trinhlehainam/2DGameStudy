@@ -23,6 +23,7 @@
 #include "../GameObject/Environment.h"
 #include "../GameObject/Enemy/BossSpawner.h"
 #include "../GameObject/Enemy/Asura.h"
+#include "../GameObject/Enemy/FlyingEye.h"
 
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
@@ -107,8 +108,30 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("slasher-death", L"assets/Image/Character/Enemy/slasher/slasher-death-Sheet.png");
 	assetMng_->AddTexture("slasher-lying", L"assets/Image/Character/Enemy/slasher/slasher-lying-Sheet.png");
 
+	assetMng_->AddTexture("flying-eye-attack", L"assets/Image/Character/Enemy/Flying Eye/flying-eye-attack-sheet.png");
+	assetMng_->AddTexture("flying-eye-flight", L"assets/Image/Character/Enemy/Flying Eye/flying-eye-flight-sheet.png");
+	assetMng_->AddTexture("flying-eye-hurt", L"assets/Image/Character/Enemy/Flying Eye/flying-eye-hurt-sheet.png");
+	assetMng_->AddTexture("flying-eye-death", L"assets/Image/Character/Enemy/Flying Eye/fyling-eye-death-sheet.png");
+
+	assetMng_->AddTexture("mushroom-Attack", L"assets/Image/Character/Enemy/Mushroom/mushroom-Attack-sheet.png");
+	assetMng_->AddTexture("mushroom-Death", L"assets/Image/Character/Enemy/Mushroom/mushroom-Death-sheet.png");
+	assetMng_->AddTexture("mushroom-Hurt", L"assets/Image/Character/Enemy/Mushroom/mushroom-Hurt-sheet.png");
+	assetMng_->AddTexture("mushroom-Idle", L"assets/Image/Character/Enemy/Mushroom/mushroom-Idle-sheet.png");
+	assetMng_->AddTexture("mushroom-Run", L"assets/Image/Character/Enemy/Mushroom/mushroom-Run-sheet.png");
+
+	assetMng_->AddTexture("skeleton-Attack", L"assets/Image/Character/Enemy/Skeleton/skeleton-Attack-sheet.png");
+	assetMng_->AddTexture("skeleton-Death", L"assets/Image/Character/Enemy/Skeleton/skeleton-Death-sheet.png");
+	assetMng_->AddTexture("skeleton-Hurt", L"assets/Image/Character/Enemy/Skeleton/skeleton-Hurt-sheet.png");
+	assetMng_->AddTexture("skeleton-Idle", L"assets/Image/Character/Enemy/Skeleton/skeleton-Idle-sheet.png");
+	assetMng_->AddTexture("skeleton-Run", L"assets/Image/Character/Enemy/Skeleton/skeleton-Run-sheet.png");
+
 	assetMng_->AddTexture("boss-asura", L"assets/Image/Character/Enemy/asura/ashura.png");
 	
+	assetMng_->AddTexture("spider-king-walk", L"assets/Image/Character/Enemy/Skeleton King/SkeletonKing_Walk_Sheet.png");
+	assetMng_->AddTexture("spider-king-dead", L"assets/Image/Character/Enemy/Skeleton King/SkeletonKing_Death_Sheet.png");
+	assetMng_->AddTexture("spider-king-bullet", L"assets/Image/Character/Enemy/Skeleton King/SkeletonKing_Obstacle_Sheet.png");
+	assetMng_->AddTexture("spider-king-bullet-exp", L"assets/Image/Character/Enemy/Skeleton King/SkeletonKing_Ostacle_Death_Sheet.png");
+
 	assetMng_->AddTexture("environment-1", L"assets/Image/Environment/environment_1.png");
 	assetMng_->AddTexture("environment-2", L"assets/Image/Environment/environment_2.png");
 
@@ -147,7 +170,7 @@ void GameScene::LoadLevel(const int& level)
 	enemyMng_ = std::make_unique<EnemyManager>(player_->GetPlayerTransform(), *this);
 
 	// Create spawn enemy
-	auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
+	auto slasherClone = std::make_unique<FlyingEye>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
 	spawners_.emplace_back(std::move(sideSpawner));
@@ -191,10 +214,10 @@ void GameScene::FadeInUpdate(const float& deltaTime)
 void GameScene::GameUpdate(const float& deltaTime)
 {
 	player_->Input(deltaTime);
-	/*for (auto& spawner : spawners_)
+	for (auto& spawner : spawners_)
 	{
 		spawner->Update(deltaTime);
-	}*/
+	}
 	collisionMng_->ApplyForce(deltaTime);
 	/*----------------------------------------------------------------------------*/
 	// Update player's STATE right after received player's INPUT

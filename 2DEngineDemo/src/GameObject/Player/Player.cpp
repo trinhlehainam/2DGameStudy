@@ -47,7 +47,7 @@ namespace
 
 	// Movement's velocity
 	constexpr float jump_velocity = 400.0f;
-	constexpr float wall_jump_velocity_x = 400.0f;
+	constexpr float wall_jump_velocity_x = 800.0f;
 	constexpr float wall_jump_velocity_y = 500.0f;
 	constexpr float remain_jump_velocity = 300.0f;
 	constexpr float normal_side_velocity = 200.0f;
@@ -365,16 +365,9 @@ void Player::SlidingWallState(const float&)
 	}
 	if (input_->IsTriggered(L"jump"))
 	{
-		if (!sprite->IsFlipped())
-		{
-			rigidBody_->velocity_.X = wall_jump_velocity_x;
-			rigidBody_->velocity_.Y = -wall_jump_velocity_y;
-		}
-		else
-		{
-			rigidBody_->velocity_.X = -wall_jump_velocity_x;
-			rigidBody_->velocity_.Y = -wall_jump_velocity_y;
-		}
+		rigidBody_->velocity_.X = !sprite->IsFlipped() ? -wall_jump_velocity_x : wall_jump_velocity_x;
+		rigidBody_->velocity_.Y = -wall_jump_velocity_y;
+		rigidBody_->isTouchWall_ = false;
 		isSlidingWall = false;
 		isJumping = true;
 		actionState_ = ACTION::JUMP;
@@ -518,7 +511,7 @@ void Player::TurnBackState()
 
 void Player::ProcessSlidingWall()
 {
-	if (rigidBody_->isTouchWall_ && rigidBody_->velocity_.Y > 0)
+	if (rigidBody_->isTouchWall_ && rigidBody_->velocity_.Y > 0 && !rigidBody_->isGrounded_)
 	{
 		jumpCnt_ = 1;
 		isSlidingWall = true;

@@ -33,6 +33,7 @@ class GameScene :
     friend class ShurikenShot;
     friend class MeleeAttack;
     friend class EnergyBullet;
+    friend class FlyingEye;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;

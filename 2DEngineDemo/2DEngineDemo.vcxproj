@@ -147,6 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\Enemy\Skeleton.cpp" />
+    <ClCompile Include="src\GameObject\Enemy\Mushroom.cpp" />
+    <ClCompile Include="src\GameObject\Enemy\FlyingEye.cpp" />
+    <ClCompile Include="src\GameObject\Enemy\SpiderSkeleton.cpp" />
     <ClCompile Include="src\GameObject\Attack\EnergyBullet.cpp" />
     <ClCompile Include="src\GameObject\Attack\MeleeAttack.cpp" />
     <ClCompile Include="src\GameObject\Attack\ShurikenShot.cpp" />
@@ -200,6 +204,10 @@
     <ClCompile Include="src\System\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\Enemy\Skeleton.h" />
+    <ClInclude Include="src\GameObject\Enemy\Mushroom.h" />
+    <ClInclude Include="src\GameObject\Enemy\FlyingEye.h" />
+    <ClInclude Include="src\GameObject\Enemy\SpiderSkeleton.h" />
     <ClInclude Include="src\GameObject\Attack\EnergyBullet.h" />
     <ClInclude Include="src\GameObject\Attack\MeleeAttack.h" />
     <ClInclude Include="src\GameObject\Attack\ShurikenShot.h" />
