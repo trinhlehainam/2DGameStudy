@@ -21,6 +21,7 @@ public:
 	Rect destRect_;
 	Vector2 velocity_ = Vector2(0, 0);
 	bool isGrounded_ = false;
+	bool isTouchWall_ = false;
 
 	void Initialize() override;
 	void Update(const float& deltaTime) override;

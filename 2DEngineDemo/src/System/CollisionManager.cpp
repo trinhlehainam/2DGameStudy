@@ -167,26 +167,38 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
 {
     for (auto& actor : actorColliders_)
     {
+        if (actor->velocity_.Y > 0)  actor->isGrounded_ = false;
+        if (actor->velocity_.X != 0) actor->isTouchWall_ = false;
         for (auto& target : mapColliders_)
         {
             Vector2 cn;
             float ct;
-            if (actor->velocity_.Y > 0)  actor->isGrounded_ = false;
-            if (CheckSweptAABB(actor->collider_, actor->velocity_, target.collider_, cn,
-                ct, deltaTime))
+            if (target.GetTag() == "TERRAIN")
             {
-                if (actor->collider_.Bottom() <= target.collider_.pos.Y && !actor->isGrounded_)
+                if (CheckSweptAABB(actor->collider_, actor->velocity_, target.collider_, cn,
+                    ct, deltaTime))
                 {
-                    actor->isGrounded_ = true;
-                    actor->collider_.pos.Y = target.collider_.pos.Y - actor->collider_.h;
-                    actor->velocity_.Y = 0;
-                    continue;
+                    if (!actor->isGrounded_)
+                    {
+                        if (actor->collider_.Top() >= target.collider_.Bottom() && cn.Y > 0)
+                        {
+                            actor->collider_.pos.Y = target.collider_.Bottom();
+                            actor->velocity_.Y = 0;
+                        }
+                        if (actor->collider_.Bottom() <= target.collider_.pos.Y && cn.Y < 0)
+                        {
+                            actor->isGrounded_ = true;
+                            actor->collider_.pos.Y = target.collider_.pos.Y - actor->collider_.h;
+                            actor->velocity_.Y = 0;
+                        }
+                    }
+
+                    if (actor->collider_.Bottom() > target.collider_.Top())
+                    {
+                        actor->velocity_.X = 0;
+                        actor->isTouchWall_ = true;
+                    }
                 }
-                if (actor->collider_.Bottom() > target.collider_.Top())
-                {
-                    actor->velocity_.X = 0.0f;
-                }
-                
             }
         }
     }

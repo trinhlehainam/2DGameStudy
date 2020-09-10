@@ -90,6 +90,7 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("player-attack1", L"assets/Image/Character/Player/adventurer-attack1-sheet.png");
 	assetMng_->AddTexture("player-attack2", L"assets/Image/Character/Player/adventurer-attack2-sheet.png");
 	assetMng_->AddTexture("player-attack3", L"assets/Image/Character/Player/adventurer-attack3-sheet.png");
+	assetMng_->AddTexture("player-slide-wall", L"assets/Image/Character/Player/adventurer-wall-slide-sheet.png");
 
 	assetMng_->AddTexture("bomb-equip", L"assets/Image/Character/Player/Equipment/bombshot.png");
 	assetMng_->AddTexture("shuriken-equip", L"assets/Image/Character/Player/Equipment/shuriken.png");
@@ -127,9 +128,9 @@ void GameScene::LoadLevel(const int& level)
 		NUM_TILE_X, NUM_TILE_Y);
 
 	// Load Collision Map
-	map_->LoadCollisionLayer("TERRAIN","SOLID", "assets/Image/Tilemap/terrain.map", NUM_TILE_X, NUM_TILE_Y,
+	map_->LoadCollisionLayer("TERRAIN","TERRAIN", "assets/Image/Tilemap/terrain.map", NUM_TILE_X, NUM_TILE_Y,
 		32,32);
-	map_->LoadCollisionLayer("TERRAIN", "BAMBOO", "assets/Image/Tilemap/bamboo-terrain.map", NUM_TILE_X, NUM_TILE_Y,
+	map_->LoadCollisionLayer("TERRAIN", "TERRAIN", "assets/Image/Tilemap/bamboo-terrain.map", NUM_TILE_X, NUM_TILE_Y,
 		bamboo_collider_w, bamboo_collider_h, bamboo_collider_offset_x, bamboo_collider_offset_y);
 	map_->LoadCollisionLayer("TERRAIN", "BAMBOO-H-TRAP", "assets/Image/Tilemap/bamboo-h-trap.map", NUM_TILE_X, NUM_TILE_Y,
 		bamboo_horizontal_trap_w, bamboo_horizontal_trap_h, bamboo_horizontal_trap_offset_x, bamboo_horizontal_trap_offset_y);

@@ -35,7 +35,7 @@ namespace
 	const Vector2 attack3_offset = Vector2(10, (attack3_src_rect.h - player_height) * player_scale);
 
 	// Animation's hit box
-	constexpr float rigidbody_width_scale = 1.2f;
+	constexpr float rigidbody_width_scale = 1.0f;
 	constexpr float rigidbody_height_scale = 2.0f;
 	constexpr float rigidbody_jump_scale = 1.5f;
 	constexpr float rigidbody_crouch_scale = 1.4f;
@@ -65,6 +65,7 @@ namespace
 	constexpr unsigned short int attack2_animation_speed = 70;
 	constexpr unsigned short int attack3_animation_speed = 70;
 	constexpr unsigned short int draw_withdraw_animation_speed = 100;
+	constexpr unsigned short int slide_wall_animation_speed = 100;
 
 	// Attack frame
 	// Attack collider is created at this frame
@@ -122,6 +123,7 @@ void Player::Initialize()
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack1"), "attack-1", attack1_src_rect, attack1_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack2"), "attack-2", attack2_src_rect, attack2_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack3"), "attack-3", attack3_src_rect, attack3_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-slide-wall"), "slide-wall", src_rect, slide_wall_animation_speed);
 	playerAnim->PlayLoop("idle");
 
 	// Set animation offset
@@ -281,6 +283,7 @@ void Player::FallState(const float& deltaTime)
 	SetSideMoveVelocity(normal_side_velocity);
 	ProcessThrow();
 	ProcessCheckGround();
+	ProcessSlidingWall();
 	// Second jump
 	if (input_->IsTriggered(L"jump"))
 	{
@@ -308,6 +311,7 @@ void Player::SecondJumpState(const float& deltaTime)
 
 	SetSideMoveVelocity(normal_side_velocity);
 	ProcessThrow();
+	ProcessSlidingWall();
 	if (isJumping && sprite->IsAnimationFinished())
 	{
 		isJumping = false;
@@ -352,6 +356,18 @@ void Player::GroundAttackState(const float& deltaTime)
 		}
 	}
 
+}
+
+void Player::SlidingWallState(const float&)
+{
+	SetSideMoveVelocity(normal_side_velocity);
+	rigidBody_->velocity_.Y = 10;
+	if (!rigidBody_->isTouchWall_)
+	{
+		isSlidingWall = false;
+		actionState_ = ACTION::FALL;
+		inputState_ = &Player::FallState;
+	}
 }
 
 void Player::DrawWithdrawSwordState(const float&)
@@ -486,6 +502,16 @@ void Player::TurnBackState()
 	actionState_ = oldActionState_;
 }
 
+void Player::ProcessSlidingWall()
+{
+	if (rigidBody_->isTouchWall_ && rigidBody_->velocity_.Y > 0)
+	{
+		isSlidingWall = true;
+		inputState_ = &Player::SlidingWallState;
+		actionState_ = ACTION::SLIDE_WALL;
+	}
+}
+
 void Player::UpdateState()
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
@@ -539,6 +565,9 @@ void Player::UpdateState()
 		break;
 	case ACTION::WITHDRAW_SWORD:
 		sprite->PlayOnce("withdraw");
+		break;
+	case ACTION::SLIDE_WALL:
+		sprite->PlayLoop("slide-wall");
 		break;
 	}
 
