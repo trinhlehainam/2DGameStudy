@@ -20,3 +20,8 @@ constexpr unsigned int WORLD_MAP_Y = NUM_TILE_Y * TILE_SIZE * TILE_SCALE;
 constexpr unsigned int second_to_millisecond = 1000;
 
 constexpr float PI = 3.1415926535897932384626433832795f;
+
+constexpr float bamboo_collider_offset_x = 0;
+constexpr float bamboo_collider_offset_y = 10;
+constexpr float bamboo_collider_w = 32;
+constexpr float bamboo_collider_h = 12;

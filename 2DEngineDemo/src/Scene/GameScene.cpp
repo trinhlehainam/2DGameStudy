@@ -127,7 +127,8 @@ void GameScene::LoadLevel(const int& level)
 		NUM_TILE_X, NUM_TILE_Y);
 
 	// Load Collision Map
-	map_->LoadCollisionLayer("TERRAIN","COLLISION", "assets/Image/Tilemap/collision.map", NUM_TILE_X, NUM_TILE_Y);
+	map_->LoadCollisionLayer("TERRAIN","COLLISION", "assets/Image/Tilemap/collision.map", NUM_TILE_X, NUM_TILE_Y,
+		32,32);
 
 	// Create player Entity
 	player_ = std::make_unique<Player>(*this);
@@ -256,7 +257,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	/*collisionMng_->Render();*/	// collision debug
+	collisionMng_->Render();	// collision debug
 	effectMng_->Render();
 	player_->RenderUI();
 }

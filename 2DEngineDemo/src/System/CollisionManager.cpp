@@ -7,7 +7,6 @@
 
 #include "../GameObject/Entity.h"
 
-
 #include "../Component/Collider/CircleColliderComponent.h"
 #include "../Component/Collider/AABBColliderComponent.h"
 #include "../Component/TransformComponent.h"
@@ -16,6 +15,7 @@
 namespace
 {
     constexpr unsigned int actor_size = 100;
+    constexpr float max_fall_velocity = 600;
 }
 
 CollisionManager::CollisionManager(GameScene& gs):gs_(gs)
@@ -122,10 +122,12 @@ void CollisionManager::SetGravity(const Vector2& gravity)
 
 void CollisionManager::ApplyForce(const float& deltaTime)
 {
+    // Apply gravity force
     for (auto& actorCollider : actorColliders_)
     {
-        Vector2 oldVel = actorCollider->velocity_;
-        actorCollider->velocity_.Y = oldVel.Y + gravity_.Y * deltaTime;
+        actorCollider->velocity_.Y += gravity_.Y * deltaTime;
+        actorCollider->velocity_.Y = actorCollider->velocity_.Y > max_fall_velocity ?
+            max_fall_velocity : actorCollider->velocity_.Y;
     }
 }
 

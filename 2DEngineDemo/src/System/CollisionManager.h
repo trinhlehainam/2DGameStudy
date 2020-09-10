@@ -62,9 +62,10 @@ public:
 	void Render();
 
 	template<typename...Args>
-	void AddMapCollider(Args&&...args)
+	AABBColliderComponent& AddTileCollider(Args&&...args)
 	{
 		mapColliders_.emplace_back(std::forward<Args>(args)...);
+		return (*mapColliders_.rbegin());
 	}
 
 	/// <param name="owner"></param>
