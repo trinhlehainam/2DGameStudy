@@ -94,6 +94,10 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("player-attack2", L"assets/Image/Character/Player/adventurer-attack2-sheet.png");
 	assetMng_->AddTexture("player-attack3", L"assets/Image/Character/Player/adventurer-attack3-sheet.png");
 	assetMng_->AddTexture("player-slide-wall", L"assets/Image/Character/Player/adventurer-wall-slide-sheet.png");
+	assetMng_->AddTexture("player-air-attack", L"assets/Image/Character/Player/adventurer-air-attack-sheet.png");
+	assetMng_->AddTexture("player-air-charge", L"assets/Image/Character/Player/adventurer-air-attack2-sheet.png");
+	assetMng_->AddTexture("player-slash-down", L"assets/Image/Character/Player/adventurer-air-attack3-loop-sheet.png");
+	assetMng_->AddTexture("player-end-slash-down", L"assets/Image/Character/Player/adventurer-air-attack-3-end-sheet.png");
 
 	assetMng_->AddTexture("bomb-equip", L"assets/Image/Character/Player/Equipment/bombshot.png");
 	assetMng_->AddTexture("shuriken-equip", L"assets/Image/Character/Player/Equipment/shuriken.png");
@@ -258,6 +262,7 @@ void GameScene::FadeInUpdate(const float& deltaTime)
 {
 	Camera::Instance().Update();
 	entityMng_->Update(deltaTime);
+
 	if (waitTimer_ <= 0)
 	{
 		updateFunc_ = &GameScene::GameUpdate;

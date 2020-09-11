@@ -77,7 +77,7 @@ public:
     inline bool IsFlipped() const { return isFlipped; }
     inline void SetFlipState(bool flipFlag) { isFlipped = flipFlag; }
     inline void Flip() { isFlipped = !isFlipped; }
-    int GetCurrentCelNO() const;
+    int CurrentAminationFrame() const;
     void SetAnimationOffset(const std::string& animaID, const Vector2& offset);
     void PlayLoop(const std::string& animID, const unsigned int playTime = 0);
     void PlayAnimation(const std::string& animID);

@@ -34,9 +34,11 @@ namespace
 	const Rect attack1_src_rect = Rect(0, 0, 42, 36);
 	const Rect attack2_src_rect = Rect(0, 0, 45, 29);
 	const Rect attack3_src_rect = Rect(0, 0, 50, 26);
+	const Rect air_attack_src_rect = Rect(0, 0, 50, 32);
 	const Vector2 attack1_offset = Vector2(0, (attack1_src_rect.h - player_height) * player_scale);
 	const Vector2 attack2_offset = Vector2(10, (attack2_src_rect.h - player_height) * player_scale);
 	const Vector2 attack3_offset = Vector2(10, (attack3_src_rect.h - player_height) * player_scale);
+	const Vector2 air_attack_offset = Vector2(10, (air_attack_src_rect.h - player_height) * player_scale);
 
 	// Animation's hit box
 	constexpr float rigidbody_width_scale = 1.0f;
@@ -71,6 +73,7 @@ namespace
 	constexpr unsigned short int attack1_animation_speed = 70;
 	constexpr unsigned short int attack2_animation_speed = 70;
 	constexpr unsigned short int attack3_animation_speed = 70;
+	constexpr unsigned short int air_attack_animation_speed = 70;
 	constexpr unsigned short int draw_withdraw_animation_speed = 100;
 	constexpr unsigned short int slide_wall_animation_speed = 100;
 
@@ -79,6 +82,7 @@ namespace
 	constexpr unsigned short int attack1_frame = 3;
 	constexpr unsigned short int attack2_frame = 4;
 	constexpr unsigned short int attack3_frame = 3;
+	constexpr unsigned short int air_attack_frame = 2;
 
 	// Weapon's damage
 	constexpr int shuriken_damage = 1;
@@ -131,12 +135,14 @@ void Player::Initialize()
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack2"), "attack-2", attack2_src_rect, attack2_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack3"), "attack-3", attack3_src_rect, attack3_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-slide-wall"), "slide-wall", src_rect, slide_wall_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-air-attack"), "air-attack", air_attack_src_rect, air_attack_animation_speed);
 	playerAnim->PlayLoop("idle");
 
 	// Set animation offset
 	playerAnim->SetAnimationOffset("attack-1", attack1_offset);
 	playerAnim->SetAnimationOffset("attack-2", attack2_offset);
 	playerAnim->SetAnimationOffset("attack-3", attack3_offset);
+	playerAnim->SetAnimationOffset("air-attack", air_attack_offset);
 
 	// Initialize Equipment list
 	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_, shuriken_tag, self_, shuriken_damage)));
@@ -224,6 +230,17 @@ void Player::ProcessGroundAttack()
 	}
 }
 
+void Player::ProcessAirAttack()
+{
+	if (equipments_[currentEquip_]->GetTag() != sword_tag) return;
+	if (input_->IsPressed(L"attack") && isDrawn && !rigidBody_->isGrounded_)
+	{
+		actionState_ = ACTION::AIR_ATTACK;
+		inputState_ = &Player::AirAttackState;
+		isAirAttackActive = true;
+	}
+}
+
 void Player::ThrowState(const float&)
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
@@ -261,6 +278,7 @@ void Player::JumpState(const float& deltaTime)
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
 	SetSideMoveVelocity(normal_side_velocity);
 	ProcessThrow();
+	ProcessAirAttack();
 	if (input_->IsPressed(L"jump") && isJumping)
 	{
 		if (timer_ > 0)
@@ -293,6 +311,7 @@ void Player::FallState(const float& deltaTime)
 	ProcessThrow();
 	ProcessCheckGround();
 	ProcessSlidingWall();
+	ProcessAirAttack();
 	// Second jump
 	if (input_->IsTriggered(L"jump"))
 	{
@@ -355,6 +374,25 @@ void Player::GroundAttackState(const float& deltaTime)
 		}
 	}
 
+}
+
+void Player::AirAttackState(const float& deltaTime)
+{
+	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	const auto& transform = self_->GetComponent<TransformComponent>();
+
+	if (isAirAttackActive && sprite->CurrentAminationFrame() == air_attack_frame)
+	{
+		SetMeleeAttack(1, air_attack_frame, sprite->IsFlipped(), air_attack_offset, air_attack_src_rect);
+		isAirAttackActive = false;
+	}
+		
+	if (sprite->IsAnimationFinished())
+	{
+		inputState_ = &Player::FallState;
+		actionState_ = ACTION::FALL;
+		timer_ = 0.0f;
+	}
 }
 
 void Player::SlidingWallState(const float&)
@@ -429,7 +467,7 @@ void Player::SetMeleeAttack(const int& damage, const unsigned int& frame_no, boo
 	destRect.pos.X = transform->pos.X - (!sprite->IsFlipped() ? offset.X :
 		destRect.w - transform->w * transform->scale - offset.X);
 	destRect.pos.Y = transform->pos.Y - offset.Y;
-	if (sprite->GetCurrentCelNO() == frame_no)
+	if (sprite->CurrentAminationFrame() == frame_no)
 	{
 		equipments_[currentEquip_]->Attack(destRect.pos, attackAngle_, destRect.w, destRect.h);
 		isMeleeActive = false;
@@ -573,6 +611,9 @@ void Player::UpdateState()
 		break;
 	case ACTION::ATTACK_3:
 		sprite->PlayOnce("attack-3");
+		break;
+	case ACTION::AIR_ATTACK:
+		sprite->PlayOnce("air-attack");
 		break;
 	case ACTION::DRAW_SWORD:
 		sprite->PlayOnce("draw");

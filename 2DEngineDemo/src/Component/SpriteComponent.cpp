@@ -37,7 +37,7 @@ void SpriteComponent::AddAnimation(int texture, std::string animID, const Rect& 
 	animations_.emplace(animID, std::move(anim));
 }
 
-int SpriteComponent::GetCurrentCelNO() const
+int SpriteComponent::CurrentAminationFrame() const
 {
 	const auto& anim = animations_.at(currentAnimID);
 	return (anim.indexY * anim.numCelX + anim.indexX + 1);
