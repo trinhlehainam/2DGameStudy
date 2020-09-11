@@ -35,6 +35,7 @@ namespace
 	constexpr float item_interval_y = 100.0f;
 	int currentItemNo_ = 0;
 	int itemSize = 0;
+	int frame_ = 0;
 }
 
 TitleScene::TitleScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScene(sceneMng,sceneInput)
@@ -53,6 +54,7 @@ void TitleScene::Initialize()
 	blinkInterval = blink_interval_normal;
 	blinkTimer_ = 0;
 	currentItemNo_ = 0;
+	frame_ = 0;
 
 	inputFunc_ = &TitleScene::StartInput;
 	renderFunc_ = &TitleScene::NormalRender;
@@ -64,6 +66,7 @@ void TitleScene::Initialize()
 	assetMng_->AddTexture(play_tag, L"assets/Image/Title/PLAY.png");
 	assetMng_->AddTexture(setting_tag, L"assets/Image/Title/SETTING.png");
 	assetMng_->AddTexture(exit_tag, L"assets/Image/Title/EXIT.png");
+	assetMng_->AddTexture("PRESS ENTER", L"assets/Image/Title/PRESS ENTER()KEY.png");
 
 	Vector2 pos = Vector2(menu_pos_x, menu_pos_y);
 	Vector2 size;
@@ -184,11 +187,14 @@ void TitleScene::FadeRender()
 void TitleScene::Update(const float& deltaTime)
 {
 	(this->*updateFunc_)(deltaTime);
+	frame_++;
 }
 
 void TitleScene::Render()
 {
 	(this->*renderFunc_)();
+	if ((frame_ / 60) % 2 == 0)
+		DrawRotaGraph(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 50, 1.0f, 0.0f, assetMng_->GetTexture("PRESS ENTER"), true);
 }
 
 void TitleScene::SetCurrentItem()

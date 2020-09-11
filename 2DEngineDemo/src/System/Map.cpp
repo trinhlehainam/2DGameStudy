@@ -71,7 +71,7 @@ void Map::LoadMapLayer(const std::string& layerID, int texture, const char* file
 
 void Map::AddTile(const std::string& layerID,int texture, const float& srcX, const float& srcY, const float& posX, const float& posY)
 {
-	auto newTile = entityMng_.AddTileEntity(layerID);
+	auto newTile = entityMng_.AddTileEntity(layerID, layerID);
 	newTile->AddComponent<TileComponent>(newTile, texture, srcX, srcY, posX, posY,tileSize, scale);
 }
 
@@ -106,7 +106,7 @@ void Map::LoadCollisionLayer(const std::string& layerID, const std::string& tile
 void Map::AddCollisionTile(const std::string& layerID, const std::string& tileID, const float& posX, 
 	const float& posY, const float& colliderW, const float& colliderH, const float& offsetX, const float& offsetY)
 {
-	auto newTile = entityMng_.AddTileEntity(layerID);
+	auto newTile = entityMng_.AddTileEntity(layerID, tileID);
 	newTile->AddComponent<TransformComponent>(newTile, Vector2(posX, posY), tileSize, tileSize, scale);
 	auto& collider = collisionMng_.AddTileCollider(newTile, tileID, Vector2(posX, posY), 
 		colliderW, colliderH);

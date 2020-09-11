@@ -143,6 +143,21 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("blood-explosion", L"assets/Image/Effect/blood_exp.png");
 	assetMng_->AddTexture("eliminate-energy-bullet", L"assets/Image/Effect/eliminate_b.png");
 	
+	// character UI
+	assetMng_->AddTexture("UI_jump", L"assets/Image/UI/Command/jump.png");
+	assetMng_->AddTexture("UI_attack", L"assets/Image/UI/Command/Attack.png");
+	assetMng_->AddTexture("UI_change_weapon", L"assets/Image/UI/Command/change_wepon.png");
+
+	assetMng_->AddTexture("UI_MoveLeft", L"assets/Image/UI/Command/run.png");
+	//assetMng_->AddTexture("UI_MoveRight", L"assets/Image/UI/Command/run.png");
+	// keymap
+	assetMng_->AddTexture("Z_jump", L"assets/Image/UI/Key/z_alternative_paper.png");
+	assetMng_->AddTexture("X_attack", L"assets/Image/UI/Key/x_alternative_paper.png");
+	assetMng_->AddTexture("C_change_weapon", L"assets/Image/UI/Key/c_alternative_paper.png");
+
+	assetMng_->AddTexture("LeftArrow_Move", L"assets/Image/UI/Key/arrowleft_alternative_paper.png");
+	assetMng_->AddTexture("RightArrow_Move", L"assets/Image/UI/Key/arrowright_alternative_paper.png");
+
 	// Create Title Map
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
 	map_->LoadMapLayer("BACKGROUND",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
@@ -163,6 +178,9 @@ void GameScene::LoadLevel(const int& level)
 		bamboo_vertical_trap_w, bamboo_vertical_trap_h, bamboo_vertical_trap_offset_x, bamboo_vertical_trap_offset_y);
 	map_->LoadCollisionLayer("TERRAIN", "METAL-TRAP", "assets/Image/Tilemap/metal-trap.map", NUM_TILE_X, NUM_TILE_Y,
 		32, 32);
+	map_->LoadCollisionLayer("ENEMY", "FLYING-EYE", "assets/Image/Tilemap/flying-eye.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
+	map_->LoadCollisionLayer("ENEMY", "MUSHROOM", "assets/Image/Tilemap/mushroom.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
+	map_->LoadCollisionLayer("ENEMY", "SKELETON", "assets/Image/Tilemap/skeleton.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 
 	// Create player Entity
 	player_ = std::make_unique<Player>(*this);
@@ -171,8 +189,10 @@ void GameScene::LoadLevel(const int& level)
 	// Create Enemy Slasher Entity
 	enemyMng_ = std::make_unique<EnemyManager>(player_->GetPlayerTransform(), *this);
 
+	LoadEnemy();
+
 	// Create spawn enemy
-	auto slasherClone = std::make_unique<Mushroom>(*this, player_->GetPlayerTransform());
+	auto slasherClone = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
 	auto sideSpawner = std::make_unique<SideSpawner>(std::move(slasherClone), slasher_start_pos, *enemyMng_);
 	sideSpawner->SetOffSet(side_spawn_offset_x, side_spawn_offset_y);
 	spawners_.emplace_back(std::move(sideSpawner));
@@ -186,6 +206,35 @@ void GameScene::LoadLevel(const int& level)
 	Camera::Instance().SetPosition(playerTransform->pos);
 	
 	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
+}
+
+void GameScene::LoadEnemy()
+{
+	for (auto& enemy : entityMng_->mapLayers_["ENEMY"])
+	{
+		auto transform = enemy->GetComponent<TransformComponent>();
+		if (enemy->GetName() == "FLYING-EYE")
+		{
+			auto flyingEye = std::make_unique<FlyingEye>(*this, player_->GetPlayerTransform());
+			flyingEye->Initialize();
+			flyingEye->SetPosition(transform->pos);
+			enemyMng_->AddEnemy(std::move(flyingEye));
+		}
+		if (enemy->GetName() == "MUSHROOM")
+		{
+			auto mushroom = std::make_unique<Mushroom>(*this, player_->GetPlayerTransform());
+			mushroom->Initialize();
+			mushroom->SetPosition(transform->pos - Vector2(transform->w * transform->scale, transform->h * transform->scale));
+			enemyMng_->AddEnemy(std::move(mushroom));
+		}
+		if (enemy->GetName() == "SKELETON")
+		{
+			auto skeleton = std::make_unique<Skeleton>(*this, player_->GetPlayerTransform());
+			skeleton->Initialize();
+			skeleton->SetPosition(transform->pos - Vector2(transform->w * transform->scale, transform->h * transform->scale));
+			enemyMng_->AddEnemy(std::move(skeleton));
+		}
+	}
 }
 
 void GameScene::ProcessInput()
@@ -291,7 +340,7 @@ void GameScene::GameRender()
 {
 	environment_->RenderBackGround();
 	entityMng_->Render();
-	collisionMng_->Render();	// collision debug
+	/*collisionMng_->Render();*/	// collision debug
 	effectMng_->Render();
 	player_->RenderUI();
 }

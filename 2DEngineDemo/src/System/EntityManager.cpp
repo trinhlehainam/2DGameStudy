@@ -86,16 +86,16 @@ void EntityManager::Render()
     }
 }
 
-std::shared_ptr<Entity> EntityManager::AddEntity(std::string name)
+std::shared_ptr<Entity> EntityManager::AddEntity(const std::string& name)
 {
     auto entity = std::make_shared<Entity>(*this, name);
     entities_.emplace_back(entity);
     return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::AddTileEntity(std::string layerID)
+std::shared_ptr<Entity> EntityManager::AddTileEntity(const std::string& layerID, const std::string& tileID)
 {
-    auto tileEntity = std::make_shared<Entity>(*this, layerID);
+    auto tileEntity = std::make_shared<Entity>(*this, tileID);
     mapLayers_.at(layerID).emplace_back(tileEntity);
     return tileEntity;
 }

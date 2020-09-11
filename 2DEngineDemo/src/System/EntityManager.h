@@ -13,6 +13,7 @@ class EntityManager
 {
 private:
 	friend class EffectManager;
+	friend class GameScene;
 
 	std::vector<std::shared_ptr<Entity>> entities_;
 	std::unordered_map<std::string, std::vector<std::shared_ptr<Entity>>> mapLayers_;
@@ -34,9 +35,9 @@ public:
 		removeFlag_ = true;
 	}
 
-	std::shared_ptr<Entity> AddEntity(std::string layerID);
+	std::shared_ptr<Entity> AddEntity(const std::string& layerID);
 
-	std::shared_ptr<Entity> AddTileEntity(std::string layerID);
+	std::shared_ptr<Entity> AddTileEntity(const std::string& layerID, const std::string& tileID);
 
 	void AddMapLayer(std::string layerID, const int& sizeX, const int& sizeY);
 

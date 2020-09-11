@@ -69,6 +69,7 @@ private:
     void GameRender();
 
     void LoadLevel(const int& level);
+    void LoadEnemy();
 public:
 
     int GetTexture(std::string textureID);
