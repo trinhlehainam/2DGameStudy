@@ -15,6 +15,7 @@
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/TextureManager.h"
+#include "../../System/Time.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/Collider/RigidBody2D.h"
@@ -448,8 +449,14 @@ void Player::SlashDownState(const float&)
 void Player::SmashDownState(const float&)
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	auto& time = Time::Instance();
+	time.SetTimeScale(0.3f);
 	if (sprite->IsAnimationFinished())
+	{
+		time.SetTimeScale(1.0f);
 		ProcessCheckGround();
+	}
+		
 }
 
 void Player::SlidingWallState(const float&)

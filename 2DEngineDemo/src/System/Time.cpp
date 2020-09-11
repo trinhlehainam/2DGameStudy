@@ -1,6 +1,7 @@
 #include "Time.h"
 
 #include <DxLib.h>
+#include "../Geometry/Geometry.h"
 
 namespace
 {
@@ -20,8 +21,14 @@ Time& Time::Instance()
 
 void Time::UpdateTicks()
 {
-    deltaTime_ = ProcessDeltaTime()/static_cast<float>(second_to_millisecond);
+    timeScale_ = clamp(timeScale_, 0.0f, 1.0f);
+    deltaTime_ = ProcessDeltaTime() / static_cast<float>(second_to_millisecond) * timeScale_;
     lastTicks_ = DxLib::GetNowCount();
+}
+
+void Time::SetTimeScale(const float& time)
+{
+    timeScale_ = time;
 }
 
 unsigned int Time::MillisecondsPerFrame(const unsigned int& frameRate)

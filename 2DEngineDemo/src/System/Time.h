@@ -9,7 +9,7 @@ private:
 	unsigned int frameRate_ = 60;				// frames per second (FPS)
 	float deltaTime_;
 	float fixedDeltaTime_;
-	float timeScale = 1.0f;
+	float timeScale_ = 1.0f;
 	Time() = default;
 	~Time() = default;
 
@@ -19,6 +19,10 @@ public:
 
 	void UpdateTicks();
 	void FixedFrameRate();
+
+	// value range : 0.0 ~ 1.0
+	// 0.5 is slower than half of delta time
+	void SetTimeScale(const float& time);
 
 	unsigned int MillisecondsPerFrame(const unsigned int& frameRate);
 	void SetFrameRate(const unsigned int& frameRate);
