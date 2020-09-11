@@ -7,6 +7,8 @@
 namespace
 {
     constexpr float smooth_speed = 0.125f;
+    constexpr int shake_speed = 10;
+    int frame_ = 0;
 }
 
 Camera::Camera()
@@ -57,6 +59,8 @@ void Camera::LockingUpdate()
 
 void Camera::ShakingUpdate()
 {
+    auto& time = Time::Instance();
+
     if (timer_ <= 0)
     {
         shakeFlag_ = false;
@@ -64,7 +68,7 @@ void Camera::ShakingUpdate()
         return;
     }
     shakeValue_ = GetShakeValue();
-    timer_ -= Time::Instance().DeltaTimeF();
+    timer_ -= time.DeltaTimeF();
 }
 
 void Camera::SmoothFollow(const Vector2& pos)

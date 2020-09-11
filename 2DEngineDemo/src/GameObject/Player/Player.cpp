@@ -15,7 +15,9 @@
 #include "../../System/CollisionManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/TextureManager.h"
+#include "../../System/EffectManager.h"
 #include "../../System/Time.h"
+#include "../../System/Camera.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/Collider/RigidBody2D.h"
@@ -93,6 +95,7 @@ namespace
 	constexpr unsigned short int attack2_frame = 4;
 	constexpr unsigned short int attack3_frame = 3;
 	constexpr unsigned short int air_attack_frame = 2;
+	constexpr unsigned short int smash_attack_frame = 2;
 
 	// Weapon's damage
 	constexpr int shuriken_damage = 1;
@@ -101,12 +104,14 @@ namespace
 	constexpr int attack2_damage = 2;
 	constexpr int attack3_damage = 2;
 	constexpr int air_attack_damage = 2;
+	constexpr int slash_down_damage = 1;
+	constexpr int smash_down_damage = 1;
 
 	constexpr char sword_tag[] = "SWORD";
 	constexpr char shuriken_tag[] = "BOMB";
 	constexpr char bomb_tag[] = "SHURIKEN";
 
-	Vector2 smashDownPos;
+	Vector2 slashDownPos;
 }
 
 Player::Player(GameScene& gs):gs_(gs)
@@ -424,20 +429,33 @@ void Player::AirAttackState(const float& deltaTime)
 
 void Player::AirChargeState(const float& deltaTime)
 {
+	const auto& transform = self_->GetComponent<TransformComponent>();
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
 	rigidBody_->velocity_.X = 0;
 	rigidBody_->velocity_.Y = 0;
+
 	if (timer_ <= 0)
 	{
 		actionState_ = ACTION::SLASH_DOWN;
 		inputState_ = &Player::SlashDownState;
+		slashDownPos = transform->pos;
+		equipments_[currentEquip_]->SetDamage(slash_down_damage);
 	}
 
 	timer_ -= deltaTime;
 }
 
 void Player::SlashDownState(const float&)
+// Slash down's collider will be created depend on the distance Player travelling each frame
 {
+	const auto& transform = self_->GetComponent<TransformComponent>();
+
+	// Calculate the distance that slash attack travelling compare to last frame
+	Vector2 dif = Vector2(src_rect.w * player_scale, src_rect.h * player_scale);
+	equipments_[currentEquip_]->Attack(transform->pos, attackAngle_, dif.X , dif.Y);
+	// Set slash position to current position to next process frame
+	slashDownPos = transform->pos;
+
 	rigidBody_->velocity_.Y = slash_down_velocity;
 	if (rigidBody_->isGrounded_)
 	{
@@ -450,7 +468,17 @@ void Player::SmashDownState(const float&)
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
 	auto& time = Time::Instance();
+	auto& camera = Camera::Instance();
+
 	time.SetTimeScale(0.3f);
+	camera.ShakeCamera(10, 5);
+
+	if (isAirAttackActive && sprite->CurrentAminationFrame() == air_attack_frame)
+	{
+		SetMeleeAttack(smash_down_damage, smash_attack_frame, sprite->IsFlipped(), smash_down_offset, smash_down_src_rect);
+		isAirAttackActive = false;
+	}
+
 	if (sprite->IsAnimationFinished())
 	{
 		time.SetTimeScale(1.0f);
@@ -524,13 +552,15 @@ void Player::SetMeleeAttack(const int& damage, const unsigned int& frame_no, boo
 {
 	const auto& sprite = self_->GetComponent<SpriteComponent>();
 	const auto& transform = self_->GetComponent<TransformComponent>();
-	equipments_[currentEquip_]->SetDamage(damage);
+	
 	Rect destRect = srcRect;
 	destRect.w *= transform->scale;
 	destRect.h *= transform->scale;
 	destRect.pos.X = transform->pos.X - (!sprite->IsFlipped() ? offset.X :
 		destRect.w - transform->w * transform->scale - offset.X);
 	destRect.pos.Y = transform->pos.Y - offset.Y;
+
+	equipments_[currentEquip_]->SetDamage(damage);
 	if (sprite->CurrentAminationFrame() == frame_no)
 	{
 		equipments_[currentEquip_]->Attack(destRect.pos, attackAngle_, destRect.w, destRect.h);

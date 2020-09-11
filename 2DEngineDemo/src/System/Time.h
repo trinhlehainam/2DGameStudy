@@ -23,6 +23,7 @@ public:
 	// value range : 0.0 ~ 1.0
 	// 0.5 is slower than half of delta time
 	void SetTimeScale(const float& time);
+	inline float TimeScale() const { return timeScale_; }
 
 	unsigned int MillisecondsPerFrame(const unsigned int& frameRate);
 	void SetFrameRate(const unsigned int& frameRate);
