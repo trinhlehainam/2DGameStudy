@@ -25,6 +25,10 @@ void RigidBody2D::Update(const float& deltaTime)
 		return;
 	}
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
+
+	velocity_.X = clamp(velocity_.X, -maxVelocity_.X, maxVelocity_.X);
+	velocity_.Y = clamp(velocity_.Y, -maxVelocity_.Y, maxVelocity_.Y);
+
 	collider_.pos += velocity_ * deltaTime;
 	transform->UpdateLimitPosition(collider_.pos.X, collider_.pos.Y);
 	transform->pos.X = collider_.pos.X + collider_.w / 2.0f - transform->w * transform->scale / 2.0f;
@@ -37,6 +41,12 @@ void RigidBody2D::Render()
 	destRect_.w = collider_.w;
 	destRect_.h = collider_.h;
 	TextureManager::DrawDebugBox(destRect_, 0xffffff);
+}
+
+void RigidBody2D::SetMaxVelocity(const float& velX, const float& velY)
+{
+	maxVelocity_.X = velX;
+	maxVelocity_.Y = velY;
 }
 
 

@@ -35,10 +35,12 @@ namespace
 	const Rect attack2_src_rect = Rect(0, 0, 45, 29);
 	const Rect attack3_src_rect = Rect(0, 0, 50, 26);
 	const Rect air_attack_src_rect = Rect(0, 0, 50, 32);
+	const Rect smash_down_src_rect = Rect(0, 0, 50, 37);
 	const Vector2 attack1_offset = Vector2(0, (attack1_src_rect.h - player_height) * player_scale);
 	const Vector2 attack2_offset = Vector2(10, (attack2_src_rect.h - player_height) * player_scale);
 	const Vector2 attack3_offset = Vector2(10, (attack3_src_rect.h - player_height) * player_scale);
 	const Vector2 air_attack_offset = Vector2(10, (air_attack_src_rect.h - player_height) * player_scale);
+	const Vector2 smash_down_offset = Vector2(10, (smash_down_src_rect.h - player_height) * player_scale);
 
 	// Animation's hit box
 	constexpr float rigidbody_width_scale = 1.0f;
@@ -51,6 +53,7 @@ namespace
 	constexpr float wall_jump_time = 0.25f;
 	constexpr float change_attack_time = 0.07f;
 	constexpr float cooldown_attack_time = 0.2f;
+	constexpr float air_charge_time = 0.25f;
 
 	// Movement's velocity
 	constexpr float jump_velocity = 400.0f;
@@ -59,6 +62,9 @@ namespace
 	constexpr float remain_jump_velocity = 300.0f;
 	constexpr float normal_side_velocity = 200.0f;
 	constexpr float crouch_velocity = 50.0f;
+	constexpr float slash_down_velocity = 1200.0f;
+	constexpr float player_max_velocity_x = 700.0f;
+	constexpr float player_max_velocity_y = 1200.0f;
 
 	// Animation's speed
 	constexpr unsigned short int idle_animation_speed = 100;
@@ -74,6 +80,9 @@ namespace
 	constexpr unsigned short int attack2_animation_speed = 70;
 	constexpr unsigned short int attack3_animation_speed = 70;
 	constexpr unsigned short int air_attack_animation_speed = 70;
+	constexpr unsigned short int air_charge_animation_speed = 200;
+	constexpr unsigned short int slash_down_animation_speed = 100;
+	constexpr unsigned short int smash_down_animation_speed = 100;
 	constexpr unsigned short int draw_withdraw_animation_speed = 100;
 	constexpr unsigned short int slide_wall_animation_speed = 100;
 
@@ -88,10 +97,15 @@ namespace
 	constexpr int shuriken_damage = 1;
 	constexpr int bomb_damage = 5;
 	constexpr int attack1_damage = 1;
+	constexpr int attack2_damage = 2;
+	constexpr int attack3_damage = 2;
+	constexpr int air_attack_damage = 2;
 
 	constexpr char sword_tag[] = "SWORD";
 	constexpr char shuriken_tag[] = "BOMB";
 	constexpr char bomb_tag[] = "SHURIKEN";
+
+	Vector2 smashDownPos;
 }
 
 Player::Player(GameScene& gs):gs_(gs)
@@ -114,6 +128,7 @@ void Player::Initialize()
 		player_height * rigidbody_height_scale);
 	rigidBody_ = rigidBody;
 	rigidBody->SetTag("PLAYER");
+	rigidBody_->SetMaxVelocity(player_max_velocity_x, player_max_velocity_y);
 	self_->AddComponent<HealthComponent>(self_, 100);
 	self_->AddComponent<SpriteComponent>(self_);
 	const auto& playerAnim = self_->GetComponent<SpriteComponent>();
@@ -136,6 +151,9 @@ void Player::Initialize()
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-attack3"), "attack-3", attack3_src_rect, attack3_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-slide-wall"), "slide-wall", src_rect, slide_wall_animation_speed);
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-air-attack"), "air-attack", air_attack_src_rect, air_attack_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-air-charge"), "air-charge", src_rect, air_charge_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-slash-down"), "slash-down", src_rect, slash_down_animation_speed);
+	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-end-slash-down"), "smash-down", smash_down_src_rect, smash_down_animation_speed);
 	playerAnim->PlayLoop("idle");
 
 	// Set animation offset
@@ -143,6 +161,7 @@ void Player::Initialize()
 	playerAnim->SetAnimationOffset("attack-2", attack2_offset);
 	playerAnim->SetAnimationOffset("attack-3", attack3_offset);
 	playerAnim->SetAnimationOffset("air-attack", air_attack_offset);
+	playerAnim->SetAnimationOffset("smash-down", smash_down_offset);
 
 	// Initialize Equipment list
 	equipments_.emplace_back(std::move(std::make_unique<ShurikenEquip>(gs_, shuriken_tag, self_, shuriken_damage)));
@@ -233,11 +252,18 @@ void Player::ProcessGroundAttack()
 void Player::ProcessAirAttack()
 {
 	if (equipments_[currentEquip_]->GetTag() != sword_tag) return;
-	if (input_->IsPressed(L"attack") && isDrawn && !rigidBody_->isGrounded_)
+	if (input_->IsPressed(L"attack") && isDrawn)
 	{
 		actionState_ = ACTION::AIR_ATTACK;
 		inputState_ = &Player::AirAttackState;
 		isAirAttackActive = true;
+		// Trigger smash down attack
+		if (input_->IsPressed(L"down"))
+		{
+			timer_ = air_charge_time;
+			actionState_ = ACTION::AIR_CHARGE;
+			inputState_ = &Player::AirChargeState;
+		}
 	}
 }
 
@@ -349,13 +375,13 @@ void Player::GroundAttackState(const float& deltaTime)
 		switch (actionState_)
 		{
 		case ACTION::ATTACK_1:
-			SetMeleeAttack(1, attack1_frame, sprite->IsFlipped(), attack1_offset, attack1_src_rect);
+			SetMeleeAttack(attack1_damage, attack1_frame, sprite->IsFlipped(), attack1_offset, attack1_src_rect);
 			break;
 		case ACTION::ATTACK_2:
-			SetMeleeAttack(2, attack2_frame, sprite->IsFlipped(), attack2_offset, attack2_src_rect);
+			SetMeleeAttack(attack2_damage, attack2_frame, sprite->IsFlipped(), attack2_offset, attack2_src_rect);
 			break;
 		case ACTION::ATTACK_3:
-			SetMeleeAttack(2, attack3_frame, sprite->IsFlipped(), attack3_offset, attack3_src_rect);
+			SetMeleeAttack(attack2_damage, attack3_frame, sprite->IsFlipped(), attack3_offset, attack3_src_rect);
 			break;
 		}
 	}
@@ -383,7 +409,7 @@ void Player::AirAttackState(const float& deltaTime)
 
 	if (isAirAttackActive && sprite->CurrentAminationFrame() == air_attack_frame)
 	{
-		SetMeleeAttack(1, air_attack_frame, sprite->IsFlipped(), air_attack_offset, air_attack_src_rect);
+		SetMeleeAttack(air_attack_damage, air_attack_frame, sprite->IsFlipped(), air_attack_offset, air_attack_src_rect);
 		isAirAttackActive = false;
 	}
 		
@@ -393,6 +419,37 @@ void Player::AirAttackState(const float& deltaTime)
 		actionState_ = ACTION::FALL;
 		timer_ = 0.0f;
 	}
+}
+
+void Player::AirChargeState(const float& deltaTime)
+{
+	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	rigidBody_->velocity_.X = 0;
+	rigidBody_->velocity_.Y = 0;
+	if (timer_ <= 0)
+	{
+		actionState_ = ACTION::SLASH_DOWN;
+		inputState_ = &Player::SlashDownState;
+	}
+
+	timer_ -= deltaTime;
+}
+
+void Player::SlashDownState(const float&)
+{
+	rigidBody_->velocity_.Y = slash_down_velocity;
+	if (rigidBody_->isGrounded_)
+	{
+		actionState_ = ACTION::SMASH_DOWN;
+		inputState_ = &Player::SmashDownState;
+	}
+}
+
+void Player::SmashDownState(const float&)
+{
+	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	if (sprite->IsAnimationFinished())
+		ProcessCheckGround();
 }
 
 void Player::SlidingWallState(const float&)
@@ -614,6 +671,15 @@ void Player::UpdateState()
 		break;
 	case ACTION::AIR_ATTACK:
 		sprite->PlayOnce("air-attack");
+		break;
+	case ACTION::AIR_CHARGE:
+		sprite->PlayOnce("air-charge");
+		break;
+	case ACTION::SLASH_DOWN:
+		sprite->PlayLoop("slash-down");
+		break;
+	case ACTION::SMASH_DOWN:
+		sprite->PlayOnce("smash-down");
 		break;
 	case ACTION::DRAW_SWORD:
 		sprite->PlayOnce("draw");

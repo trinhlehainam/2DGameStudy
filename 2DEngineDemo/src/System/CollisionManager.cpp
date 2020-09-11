@@ -14,8 +14,7 @@
 
 namespace
 {
-    constexpr unsigned int actor_size = 100;
-    constexpr float max_fall_velocity = 600;
+    constexpr unsigned int actor_size = 300;
 }
 
 CollisionManager::CollisionManager(GameScene& gs):gs_(gs)
@@ -124,11 +123,7 @@ void CollisionManager::ApplyForce(const float& deltaTime)
 {
     // Apply gravity force
     for (auto& actorCollider : actorColliders_)
-    {
         actorCollider->velocity_.Y += gravity_.Y * deltaTime;
-        actorCollider->velocity_.Y = actorCollider->velocity_.Y > max_fall_velocity ?
-            max_fall_velocity : actorCollider->velocity_.Y;
-    }
 }
 
 void CollisionManager::Update(const float& deltaTime)
