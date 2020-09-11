@@ -9,3 +9,8 @@ bool Enemy::IsOwnerExist() const
 {
     return self_->IsActive();
 }
+
+std::shared_ptr<Entity> Enemy::GetOwner() const
+{
+    return self_;
+}

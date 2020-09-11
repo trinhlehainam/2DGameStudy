@@ -17,6 +17,7 @@ public:
 	Enemy(GameScene& gs, const std::shared_ptr<TransformComponent>& playerPos_);
 	virtual ~Enemy() = default;
 	bool IsOwnerExist() const;
+	std::shared_ptr<Entity> GetOwner() const;
 	virtual void Initialize() = 0;
 	virtual void Update(const float& deltaTime) = 0;
 	virtual std::unique_ptr<Enemy> MakeClone() = 0;

@@ -46,12 +46,13 @@ namespace
 
 	// Time counter ( millisecond )
 	constexpr float jump_time = 0.35f;
+	constexpr float wall_jump_time = 0.25f;
 	constexpr float change_attack_time = 0.07f;
 	constexpr float cooldown_attack_time = 0.2f;
 
 	// Movement's velocity
 	constexpr float jump_velocity = 400.0f;
-	constexpr float wall_jump_velocity_x = 800.0f;
+	constexpr float wall_jump_velocity_x = 400.0f;
 	constexpr float wall_jump_velocity_y = 500.0f;
 	constexpr float remain_jump_velocity = 300.0f;
 	constexpr float normal_side_velocity = 200.0f;
@@ -369,6 +370,7 @@ void Player::SlidingWallState(const float&)
 	}
 	if (input_->IsTriggered(L"jump"))
 	{
+		timer_ = wall_jump_time;
 		rigidBody_->velocity_.X = !sprite->IsFlipped() ? -wall_jump_velocity_x : wall_jump_velocity_x;
 		rigidBody_->velocity_.Y = -wall_jump_velocity_y;
 		rigidBody_->isTouchWall_ = false;
