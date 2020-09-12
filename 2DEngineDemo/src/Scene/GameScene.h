@@ -16,6 +16,7 @@ class Spawner;
 class Environment;
 class EffectManager;
 class CombatManager;
+class LevelManager;
 
 class GameScene :
     public BaseScene
@@ -36,6 +37,7 @@ class GameScene :
     friend class FlyingEye;
     friend class Mushroom;
     friend class Skeleton;
+    friend class BornFire;
 private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;
@@ -47,6 +49,7 @@ private:
     std::unique_ptr<Environment> environment_;
     std::unique_ptr<EffectManager> effectMng_;
     std::unique_ptr<CombatManager> combatMng_;
+    std::unique_ptr<LevelManager> levelMng_;
 
     bool isBossAdded = false;
     float timer_ = 0.0f;
@@ -62,6 +65,7 @@ private:
     void FadeInUpdate(const float& deltaTime);
     void GameUpdate(const float& deltaTime);
     void BossSceneUpdate(const float& deltaTime);
+    void RespawnPlayerUpdate(const float& deltaTime);
     void ProcessEnterBossArea();
 
     void Render() override;
@@ -70,6 +74,8 @@ private:
 
     void LoadLevel(const int& level);
     void LoadEnemy();
+
+    void CheckRespawnPlayer();
 public:
 
     int GetTexture(std::string textureID);

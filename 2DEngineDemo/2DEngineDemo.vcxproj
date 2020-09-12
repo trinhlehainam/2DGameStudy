@@ -147,6 +147,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\BornFire.cpp" />
+    <ClCompile Include="src\System\LevelManager.cpp" />
+    <ClCompile Include="src\GameObject\CheckPoint.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Skeleton.cpp" />
     <ClCompile Include="src\GameObject\Enemy\Mushroom.cpp" />
     <ClCompile Include="src\GameObject\Enemy\FlyingEye.cpp" />
@@ -204,6 +207,9 @@
     <ClCompile Include="src\System\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\BornFire.h" />
+    <ClInclude Include="src\System\LevelManager.h" />
+    <ClInclude Include="src\GameObject\CheckPoint.h" />
     <ClInclude Include="src\GameObject\Enemy\Skeleton.h" />
     <ClInclude Include="src\GameObject\Enemy\Mushroom.h" />
     <ClInclude Include="src\GameObject\Enemy\FlyingEye.h" />

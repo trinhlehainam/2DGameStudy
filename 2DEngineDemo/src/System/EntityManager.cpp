@@ -86,11 +86,11 @@ void EntityManager::Render()
     }
 }
 
-std::shared_ptr<Entity> EntityManager::AddEntity(const std::string& name)
+std::shared_ptr<Entity>& EntityManager::AddEntity(const std::string& name)
 {
     auto entity = std::make_shared<Entity>(*this, name);
-    entities_.emplace_back(entity);
-    return entity;
+    entities_.emplace_back(std::move(entity));
+    return (*entities_.rbegin());
 }
 
 std::shared_ptr<Entity> EntityManager::AddTileEntity(const std::string& layerID, const std::string& tileID)

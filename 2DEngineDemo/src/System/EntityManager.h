@@ -35,7 +35,7 @@ public:
 		removeFlag_ = true;
 	}
 
-	std::shared_ptr<Entity> AddEntity(const std::string& layerID);
+	std::shared_ptr<Entity>& AddEntity(const std::string& layerID);
 
 	std::shared_ptr<Entity> AddTileEntity(const std::string& layerID, const std::string& tileID);
 

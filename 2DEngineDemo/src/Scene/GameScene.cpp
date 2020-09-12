@@ -15,6 +15,7 @@
 #include "../System/Camera.h"
 #include "../System/EffectManager.h"
 #include "../System/CombatManager.h"
+#include "../System/LevelManager.h"
 
 #include "../GameObject/Entity.h"
 #include "../GameObject/Player/Player.h"
@@ -26,6 +27,7 @@
 #include "../GameObject/Enemy/FlyingEye.h"
 #include "../GameObject/Enemy/Mushroom.h"
 #include "../GameObject/Enemy/Skeleton.h"
+#include "../GameObject/BornFire.h"
 
 #include "../Component/TransformComponent.h"
 #include "../Component/SpriteComponent.h"
@@ -162,6 +164,8 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("LeftArrow_Move", L"assets/Image/UI/Key/arrowleft_alternative_paper.png");
 	assetMng_->AddTexture("RightArrow_Move", L"assets/Image/UI/Key/arrowright_alternative_paper.png");
 
+	assetMng_->AddTexture("born-fire", L"assets/Image/UI/bornfire.png");
+
 	// Create Title Map
 	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
 	map_->LoadMapLayer("BACKGROUND",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
@@ -210,6 +214,9 @@ void GameScene::LoadLevel(const int& level)
 	Camera::Instance().SetPosition(playerTransform->pos);
 	
 	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
+	levelMng_ = std::make_unique<LevelManager>(*this, (*player_));
+	auto& bornFire = levelMng_->AddCheckPoint<BornFire>();
+	bornFire->SetPosition(Vector2(100, 2500));
 }
 
 void GameScene::LoadEnemy()
@@ -243,6 +250,12 @@ void GameScene::LoadEnemy()
 			enemyMng_->AddEnemy(std::move(skeleton));
 		}
 	}
+}
+
+void GameScene::CheckRespawnPlayer()
+{
+	if (!player_->IsAlive())
+		updateFunc_ = &GameScene::RespawnPlayerUpdate;
 }
 
 void GameScene::ProcessInput()
@@ -284,14 +297,17 @@ void GameScene::GameUpdate(const float& deltaTime)
 	// Purpose : update player's state before updating player's animation to AVOID BLINKING animation ( late animation )
 	player_->UpdateState();
 	/*----------------------------------------------------------------------------*/
+	CheckRespawnPlayer();
 	enemyMng_->Update(deltaTime);
 	entityMng_->Update(deltaTime);
 	combatMng_->Update(deltaTime);
 	environment_->Update(deltaTime);
 	/*ProcessEnterBossArea();*/
+	collisionMng_->ProcessCheckPoint();
 	collisionMng_->PlatformResolution(deltaTime);
 	collisionMng_->Update(deltaTime);
 	collisionMng_->CombatCollision();
+	levelMng_->Update(deltaTime);
 	effectMng_->Update(deltaTime);
 	Camera::Instance().Update();
 }
@@ -307,6 +323,12 @@ void GameScene::BossSceneUpdate(const float& deltaTime)
 		updateFunc_ = &GameScene::GameUpdate;
 	}
 	timer_ -= deltaTime;
+}
+
+void GameScene::RespawnPlayerUpdate(const float& deltaTime)
+{
+	levelMng_->RespawnPlayer();
+	updateFunc_ = &GameScene::GameUpdate;
 }
 
 void GameScene::ProcessEnterBossArea()

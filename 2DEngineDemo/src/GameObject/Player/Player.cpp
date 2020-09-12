@@ -114,6 +114,25 @@ namespace
 	Vector2 slashDownPos;
 }
 
+void Player::SetPosition(const float& posX, const float& posY)
+{
+	auto transform = self_->GetComponent<TransformComponent>();
+	transform->pos = Vector2(posX, posY);
+	rigidBody_->collider_.pos = Vector2(posX, posY);
+}
+
+float Player::Width() const
+{
+	auto transform = self_->GetComponent<TransformComponent>();
+	return transform->w * transform->scale;
+}
+
+float Player::Height() const
+{
+	auto transform = self_->GetComponent<TransformComponent>();
+	return transform->h * transform->scale;
+}
+
 Player::Player(GameScene& gs):gs_(gs)
 {
 	rigidBody_ = nullptr;
@@ -178,6 +197,8 @@ void Player::Initialize()
 void Player::Input(const float& deltaTime)
 {
 	input_->Update(deltaTime);
+	if (input_->IsTriggered(L"space"))
+		isAlive_ = false;
 	SetAngleDirection();
 	ChangeEquip();
 	const auto& sprite = self_->GetComponent<SpriteComponent>();

@@ -36,6 +36,7 @@ private:
 	std::vector<CircleColliderComponent> projectileColliders_;
 	std::vector<AABBColliderComponent> attackColliders_;
 	/*----------------------------------------------------------------------*/
+	std::vector<std::shared_ptr<AABBColliderComponent>> checkPoints_;
 
 	Vector2 gravity_;
 	Vector2 friction_;
@@ -89,9 +90,13 @@ public:
 	AABBColliderComponent& AddMeleeAttackCollider(const std::shared_ptr<Entity>& owner, std::string tag,
 		const Vector2& pos, const float& w, const float& h);
 
+	std::shared_ptr<AABBColliderComponent>& AddCheckPointCollider(const std::shared_ptr<Entity>& owner, std::string tag,
+		const Vector2& pos, const float& w, const float& h);
+
 	void ActorVSProjectileCollision();
 	void ActorVSMeleeActtackCollision();
 	void CombatCollision();
+	void ProcessCheckPoint();
 
 	inline void TurnOnRemoveFlag()
 	{

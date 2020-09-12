@@ -37,6 +37,13 @@ AABBColliderComponent& CollisionManager::AddMeleeAttackCollider(const std::share
     return (*attackColliders_.rbegin());
 }
 
+std::shared_ptr<AABBColliderComponent>& CollisionManager::AddCheckPointCollider(const std::shared_ptr<Entity>& owner, std::string tag, const Vector2& pos, const float& w, const float& h)
+{
+    auto collider = std::make_shared<AABBColliderComponent>(owner, tag, pos, w, h);
+    checkPoints_.emplace_back(std::move(collider));
+    return (*checkPoints_.rbegin());
+}
+
 std::shared_ptr<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag, const float& posX, const float& posY, const float& radius)
 {
     auto collider = std::make_shared<CircleColliderComponent>(owner, tag, posX, posY, radius);
@@ -316,6 +323,23 @@ void CollisionManager::CombatCollision()
                     boss->TakeDamage(projectile_owner->GetProjectileDamage());
                 }
             }
+        }
+    }
+}
+
+void CollisionManager::ProcessCheckPoint()
+{
+    for (auto& actor : actorColliders_)
+    {
+        if (actor->GetOwnerName() == "player")
+        {
+            for (auto& checkPoint : checkPoints_)
+            {
+                checkPoint->NoCollide();
+                if (CheckCollision(actor->collider_, checkPoint->collider_))
+                    checkPoint->Collide();
+            }   
+            break;
         }
     }
 }

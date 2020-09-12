@@ -27,6 +27,7 @@ public:
 	inline void SetTag(const std::string& tag) { tag_ = tag; }
 	void SetOffset(const float& X, const float& Y);
 	inline void Collide() { isCollide_ = true; }
+	inline void NoCollide() { isCollide_ = false; }
 	inline bool IsCollide() const { return isCollide_; }
 	inline bool IsActive() const { return isActive_; }
 	inline void Activate() { isActive_ = true; }

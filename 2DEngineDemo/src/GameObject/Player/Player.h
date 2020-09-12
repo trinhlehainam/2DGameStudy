@@ -49,6 +49,7 @@ private:
 	int ammountOfJump_ = 2;
 	int jumpCnt_ = 0;
 	float timer_;
+	bool isAlive_ = true;
 	bool isDrawn = false;
 	bool isJumping = false;
 	bool isCrouch = false;
@@ -92,6 +93,11 @@ private:
 	void TurnBackState();
 public:
 	void UpdateState();
+	inline bool IsAlive() const { return isAlive_; }
+	inline void SetAlive() { isAlive_ = true; }
+	void SetPosition(const float& posX, const float& posY);
+	float Width() const;
+	float Height() const;
 	Player(GameScene& gs);
 	void Initialize();
 	void Input(const float& deltaTime);

@@ -29,6 +29,7 @@ void KeyboardInput::Initialize()
 	keyCon_.emplace(L"jump", KEY_INPUT_Z);
 	keyCon_.emplace(L"throw", KEY_INPUT_S);
 	keyCon_.emplace(L"draw", KEY_INPUT_D);
+	keyCon_.emplace(L"space", KEY_INPUT_SPACE);
 
 	currentIndexState_ = 0;
 	for (auto& key : keyCon_)
