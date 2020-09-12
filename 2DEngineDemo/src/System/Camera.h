@@ -19,12 +19,17 @@ private:
 	Rect viewport;
 	std::weak_ptr<TransformComponent> trackEntity_;
 	Vector2 offset_;
-	Vector2 shakeRange_ = Vector2(10,10);
-	Vector2 shakeValue_ = Vector2(0,0);
 	Vector2 limit_;
 	Vector2 targetPos_;
-	float timer_;
+	float timer_ = 0;
 	float followSpeed_;
+
+	// Variable for shake camera
+	Vector2 shakeRange_ = Vector2(10, 10);
+	Vector2 shakeValue_ = Vector2(0, 0);
+	float elapsed_ = 0;
+	int shakeSpeed_ = 1;
+	Vector2 shakeFadeTime_;
 	bool shakeFlag_ = false;
 
 	using Updater_t = void (Camera::*)();
@@ -47,7 +52,7 @@ public:
 	void LockCameraAt(const Vector2& pos);
 	void SetOffset(const Vector2& offset);
 	void SetLimit(const Vector2& limit);
-	void ShakeCamera(const float& rangeX, const float& rangeY, const int& howLong = 100);
+	void ShakeCamera(const float& rangeX, const float& rangeY, const int& shakeSpeed = 1, const int& howLong = 100);
 	Vector2 GetShakeValue() const;
 	Vector2 Position() const;
 	void SetPosition(const Vector2& pos);

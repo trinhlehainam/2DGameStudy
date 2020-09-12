@@ -7,8 +7,7 @@
 namespace
 {
     constexpr float smooth_speed = 0.125f;
-    constexpr int shake_speed = 10;
-    int frame_ = 0;
+    int frameCnt_ = 0;
 }
 
 Camera::Camera()
@@ -61,14 +60,20 @@ void Camera::ShakingUpdate()
 {
     auto& time = Time::Instance();
 
-    if (timer_ <= 0)
+    if (elapsed_ <= 0)
     {
         shakeFlag_ = false;
         shakeValue_ = Vector2(0, 0);
         return;
     }
-    shakeValue_ = GetShakeValue();
-    timer_ -= time.DeltaTimeF();
+    if (frameCnt_ <= 0)
+    {
+        frameCnt_ = shakeSpeed_;
+        shakeValue_ = GetShakeValue();
+    }
+        
+    elapsed_ -= time.DeltaTimeF();
+    --frameCnt_;
 }
 
 void Camera::SmoothFollow(const Vector2& pos)
@@ -92,12 +97,14 @@ void Camera::SetLimit(const Vector2& limit)
     limit_ = limit;
 }
 
-void Camera::ShakeCamera(const float& rangeX, const float& rangeY , const int& howLong)
+void Camera::ShakeCamera(const float& rangeX, const float& rangeY, const int& shakeSpeed, const int& howLong)
 {
-    timer_ = howLong/static_cast<float>(second_to_millisecond);
+    elapsed_ = howLong / static_cast<float>(second_to_millisecond);
     shakeRange_.X = rangeX;
     shakeRange_.Y = rangeY;
     shakeFlag_ = true;
+    shakeFadeTime_ = shakeRange_ / elapsed_;
+    shakeSpeed_ = shakeSpeed;
 }
 
 Vector2 Camera::GetShakeValue() const

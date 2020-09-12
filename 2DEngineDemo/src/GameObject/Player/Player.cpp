@@ -471,7 +471,7 @@ void Player::SmashDownState(const float&)
 	auto& camera = Camera::Instance();
 
 	time.SetTimeScale(0.3f);
-	camera.ShakeCamera(10, 5);
+	camera.ShakeCamera(10, 5, 10);
 
 	if (isAirAttackActive && sprite->CurrentAminationFrame() == air_attack_frame)
 	{

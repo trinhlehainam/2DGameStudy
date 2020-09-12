@@ -27,6 +27,7 @@ namespace
 	constexpr float bomb_exp_scale = 2.0f;
 
 	constexpr int shake_time = 200;
+	constexpr int shake_speed = 1;
 	constexpr float shake_range_x = 10;
 	constexpr float shake_range_y = 10;
 }
@@ -75,6 +76,6 @@ void BombShot::Update(const float& deltaTime)
 		Vector2 pos = Vector2(transform->pos.X + transform->w / 2 * transform->scale,
 							transform->pos.Y + transform->h / 2 * transform->scale);
 		gs_->effectMng_->BombExplosionEffect(pos.X , pos.Y, bomb_exp_scale);
-		Camera::Instance().ShakeCamera(shake_range_x, shake_range_y, shake_time);
+		Camera::Instance().ShakeCamera(shake_range_x, shake_range_y, shake_speed, shake_time);
 	}
 }
