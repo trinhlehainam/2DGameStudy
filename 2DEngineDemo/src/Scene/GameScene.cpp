@@ -189,6 +189,7 @@ void GameScene::LoadLevel(const int& level)
 	map_->LoadCollisionLayer("ENEMY", "FLYING-EYE", "assets/Image/Tilemap/flying-eye.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 	map_->LoadCollisionLayer("ENEMY", "MUSHROOM", "assets/Image/Tilemap/mushroom.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 	map_->LoadCollisionLayer("ENEMY", "SKELETON", "assets/Image/Tilemap/skeleton.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
+	map_->LoadCollisionLayer("CHECK-POINT", "BORN-FIRE", "assets/Image/Tilemap/bornfire.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 
 	// Create player Entity
 	player_ = std::make_unique<Player>(*this);
@@ -215,8 +216,7 @@ void GameScene::LoadLevel(const int& level)
 	
 	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
 	levelMng_ = std::make_unique<LevelManager>(*this, (*player_));
-	auto& bornFire = levelMng_->AddCheckPoint<BornFire>();
-	bornFire->SetPosition(Vector2(100, 2500));
+	LoadCheckPoint();
 }
 
 void GameScene::LoadEnemy()
@@ -248,6 +248,20 @@ void GameScene::LoadEnemy()
 			skeleton->SetPosition(tileTransform->pos - 
 				Vector2(skeletonTransform->w * skeletonTransform->scale, skeletonTransform->h * skeletonTransform->scale));
 			enemyMng_->AddEnemy(std::move(skeleton));
+		}
+	}
+}
+
+void GameScene::LoadCheckPoint()
+{
+	for (const auto& checkPoint : entityMng_->mapLayers_["CHECK-POINT"])
+	{
+		auto tileTransform = checkPoint->GetComponent<TransformComponent>();
+		if(checkPoint->GetName() == "BORN-FIRE")
+		{
+			auto& bornFire = levelMng_->AddCheckPoint<BornFire>();
+			auto pos = tileTransform->pos - Vector2(0, bornFire->Height() - tileTransform->h * tileTransform->scale);
+			bornFire->SetPosition(pos);
 		}
 	}
 }

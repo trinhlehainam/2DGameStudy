@@ -8,6 +8,7 @@
 
 #include "../System/EntityManager.h"
 #include "../System/AssetManager.h"
+#include "../System/CollisionManager.h"
 
 namespace
 {
@@ -36,7 +37,8 @@ void BornFire::Initialize()
 
 void BornFire::Update(const float&)
 {
-	/*isActive_ = collider_->IsCollide();*/
+	// born fire is active when Player's rigid body collides with born fire's collider
+	isActive_ = collider_->IsCollide();
 }
 
 void BornFire::Render()

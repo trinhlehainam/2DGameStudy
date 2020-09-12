@@ -37,6 +37,7 @@ class GameScene :
     friend class FlyingEye;
     friend class Mushroom;
     friend class Skeleton;
+    friend class CheckPoint;
     friend class BornFire;
 private:
     std::unique_ptr<AssetManager> assetMng_;
@@ -74,6 +75,7 @@ private:
 
     void LoadLevel(const int& level);
     void LoadEnemy();
+    void LoadCheckPoint();
 
     void CheckRespawnPlayer();
 public:

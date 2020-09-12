@@ -24,6 +24,8 @@ public:
 	virtual void Render() = 0;
 
 	Vector2 Position() const;
+	float Width() const;
+	float Height() const;
 	void SetPosition(const Vector2& pos);
 	inline bool IsSelected() const { return isSelected_; }
 	inline void Select() { isSelected_ = true; }

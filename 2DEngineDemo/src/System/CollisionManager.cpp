@@ -40,8 +40,8 @@ AABBColliderComponent& CollisionManager::AddMeleeAttackCollider(const std::share
 std::shared_ptr<AABBColliderComponent>& CollisionManager::AddCheckPointCollider(const std::shared_ptr<Entity>& owner, std::string tag, const Vector2& pos, const float& w, const float& h)
 {
     auto collider = std::make_shared<AABBColliderComponent>(owner, tag, pos, w, h);
-    checkPoints_.emplace_back(std::move(collider));
-    return (*checkPoints_.rbegin());
+    checkPointColliders_.emplace_back(std::move(collider));
+    return (*checkPointColliders_.rbegin());
 }
 
 std::shared_ptr<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag, const float& posX, const float& posY, const float& radius)
@@ -333,7 +333,7 @@ void CollisionManager::ProcessCheckPoint()
     {
         if (actor->GetOwnerName() == "player")
         {
-            for (auto& checkPoint : checkPoints_)
+            for (auto& checkPoint : checkPointColliders_)
             {
                 checkPoint->NoCollide();
                 if (CheckCollision(actor->collider_, checkPoint->collider_))
@@ -360,6 +360,9 @@ void CollisionManager::Render()
 
     for (auto& attack : attackColliders_)
         attack.Render();
+
+    for (auto& checkPoint : checkPointColliders_)
+        checkPoint->Render();
 }
 
 

@@ -13,6 +13,7 @@ private:
 	std::vector<std::unique_ptr<CheckPoint>> checkPoints_;
 	Player& player_;
 	GameScene& gs_;
+	int currentCheckPoint_ = 0;
 public:
 	LevelManager(GameScene& gs, Player& player);
 	~LevelManager() = default;

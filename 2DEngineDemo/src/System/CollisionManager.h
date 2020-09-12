@@ -36,7 +36,7 @@ private:
 	std::vector<CircleColliderComponent> projectileColliders_;
 	std::vector<AABBColliderComponent> attackColliders_;
 	/*----------------------------------------------------------------------*/
-	std::vector<std::shared_ptr<AABBColliderComponent>> checkPoints_;
+	std::vector<std::shared_ptr<AABBColliderComponent>> checkPointColliders_;
 
 	Vector2 gravity_;
 	Vector2 friction_;
