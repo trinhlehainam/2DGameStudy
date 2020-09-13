@@ -182,26 +182,31 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
                 if (CheckSweptAABB(actor->collider_, actor->velocity_, target.collider_, cn,
                     ct, deltaTime))
                 {
+                    if (cn.X != 0)
+                    {
+                        if (actor->collider_.Bottom() > target.collider_.Top())
+                            actor->velocity_.X = 0;
+                        if (actor->collider_.Top() > target.collider_.Top())
+                            actor->isTouchWall_ = true;
+                    }
+                    
                     if (!actor->isGrounded_)
                     {
                         if (actor->collider_.Top() >= target.collider_.Bottom() && cn.Y > 0)
                         {
+                            actor->isTouchWall_ = false;
                             actor->collider_.pos.Y = target.collider_.Bottom();
                             actor->velocity_.Y = 0;
                         }
                         if (actor->collider_.Bottom() <= target.collider_.pos.Y && cn.Y < 0)
                         {
+                            actor->isTouchWall_ = false;
                             actor->isGrounded_ = true;
                             actor->collider_.pos.Y = target.collider_.pos.Y - actor->collider_.h;
                             actor->velocity_.Y = 0;
                         }
                     }
 
-                    if (actor->collider_.Bottom() > target.collider_.Top())
-                    {
-                        actor->velocity_.X = 0;
-                        actor->isTouchWall_ = true;
-                    }
                 }
                 if (CheckSweptAABB(actor->collider_, actor->impactVeloctity_, target.collider_, cn,
                     ct, deltaTime))
