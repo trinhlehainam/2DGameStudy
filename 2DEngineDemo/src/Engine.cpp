@@ -49,6 +49,7 @@ void Engine::Run()
     {
         auto& time = Time::Instance();
         time.FixedFrameRate();
+        /*time.SetTimeScale(0.5f);*/
 
         sceneInput_->Update(time.DeltaTimeF());
         sceneMng_->ProcessInput();

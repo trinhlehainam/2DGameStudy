@@ -112,7 +112,7 @@ void SpriteComponent::Render()
 			{
 				if (playTimer_ / 100 % 2 == 0)
 				{
-					TextureManager::AddAlpha(256*2);
+					TextureManager::AddAlpha(256);
 					TextureManager::DrawRectRota(currentAnim.texture, currentAnim.srcRect,
 						desRect, transform->scale, currentAnim.angle, isFlipped);
 					TextureManager::SetNormalBlend();

@@ -189,7 +189,7 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
                         if (actor->collider_.Top() > target.collider_.Top())
                             actor->isTouchWall_ = true;
                     }
-                    
+                
                     if (!actor->isGrounded_)
                     {
                         if (actor->collider_.Top() >= target.collider_.Bottom() && cn.Y > 0)

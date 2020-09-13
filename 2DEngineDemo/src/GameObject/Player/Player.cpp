@@ -50,6 +50,7 @@ namespace
 	constexpr float rigidbody_height_scale = 2.0f;
 	constexpr float rigidbody_jump_scale = 1.5f;
 	constexpr float rigidbody_crouch_scale = 1.4f;
+	constexpr float rigidbody_fall_scale = 1.8f;
 
 	// Time counter ( millisecond )
 	constexpr float jump_time = 0.35f;
@@ -139,6 +140,7 @@ void Player::StopSlashDown()
 {
 	if (actionState_ == ACTION::SLASH_DOWN)
 	{
+		isJumping = false;
 		actionState_ = ACTION::FALL;
 		inputState_ = &Player::FallState;
 	}
@@ -282,7 +284,7 @@ void Player::ProcessGroundAttack()
 			actionState_ = ACTION::ATTACK_3;
 			break;
 		case ACTION::ATTACK_3:
-			timer_ = change_attack_time;
+			timer_ = 0;
 			actionState_ = ACTION::ATTACK_1;
 		default:
 			actionState_ = ACTION::ATTACK_1;
@@ -380,7 +382,6 @@ void Player::FallState(const float& deltaTime)
 {
 	SetSideMoveVelocity(normal_side_velocity);
 	ProcessThrow();
-	ProcessCheckGround();
 	ProcessSlidingWall();
 	ProcessAirAttack();
 	// Second jump
@@ -396,6 +397,8 @@ void Player::FallState(const float& deltaTime)
 			inputState_ = &Player::JumpState;
 		}
 	}
+	// Put check ground to the end to avoid air action while in the ground
+	ProcessCheckGround();
 }
 
 void Player::CrouchState(const float&)
@@ -557,8 +560,8 @@ void Player::HurtState(const float&)
 	{
 		sprite->TurnOffBlinking();
 		rigidBody_->Activate();
-		actionState_ = ACTION::FALL;
-		inputState_ = &Player::FallState;
+		actionState_ = ACTION::IDLE;
+		inputState_ = &Player::GroundState;
 	}
 }
 
@@ -724,6 +727,7 @@ void Player::CheckHit()
 	{
 		actionState_ = ACTION::DEATH;
 		inputState_ = &Player::DeathState;
+		sprite->PlayOnce("die");
 		return;
 	}
 	if (!rigidBody_->IsActive())
@@ -731,6 +735,7 @@ void Player::CheckHit()
 		sprite->TurnOnBlinking();
 		actionState_ = ACTION::HURT;
 		inputState_ = &Player::HurtState;
+		sprite->PlayOnce("hurt");
 	}
 }
 
@@ -761,10 +766,11 @@ void Player::UpdateState()
 			sprite->PlayLoop("run");
 		break;
 	case ACTION::JUMP:
-		sprite->PlayLoop("jump");
 		rigidBody_->collider_.h = player_height * rigidbody_jump_scale;
+		sprite->PlayLoop("jump");
 		break;
 	case ACTION::FALL:
+		rigidBody_->collider_.h = player_height * rigidbody_fall_scale;
 		sprite->PlayLoop("fall");
 		break;
 	case ACTION::IDLE:
@@ -822,9 +828,17 @@ void Player::UpdateState()
 		break;
 	}
 
-	// Relocate rigid body's position after change it's size
-	rigidBody_->collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - rigidBody_->collider_.w / 2;
-	rigidBody_->collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - rigidBody_->collider_.h;
+	// Relocate rigid body's position after change it's size (animation state)
+	switch (actionState_)
+	{
+	case ACTION::FALL:
+		rigidBody_->collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - rigidBody_->collider_.w / 2;
+		break;
+	default:
+		rigidBody_->collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - rigidBody_->collider_.w / 2;
+		rigidBody_->collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - rigidBody_->collider_.h;
+		break;
+	}
 }
 
 std::shared_ptr<TransformComponent> Player::GetPlayerTransform()
