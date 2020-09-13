@@ -18,7 +18,8 @@ public:
 	static void DrawBoxIcon(const int& texture, const Rect& desRect);
 	static void DrawDynamicInfiniteScrolling(const int& texture, const Rect& srcRect,
 		const float& view_width, const float& view_height, const Vector2& cutPos, const Vector2& offset);
-	static void SetBlendAlpha(int alpha);
+	static void AddAlpha(const int& alpha);
+	static void SetBlendAlpha(const int& alpha);
 	static void SetNormalBlend();
 	static void GetImageSize(const int& imageID, int& sizeX, int& sizeY);
 	static void GetImageSizeF(const int& imageID, float& sizeX, float& sizeY);

@@ -108,6 +108,17 @@ void SpriteComponent::Render()
 			auto& currentAnim = animations_.at(currentAnimID);
 			TextureManager::DrawRectRota(currentAnim.texture, currentAnim.srcRect,
 				desRect, transform->scale, currentAnim.angle, isFlipped);
+			if (isBlinking_)
+			{
+				if (playTimer_ / 100 % 2 == 0)
+				{
+					TextureManager::AddAlpha(256);
+					TextureManager::DrawRectRota(currentAnim.texture, currentAnim.srcRect,
+						desRect, transform->scale, currentAnim.angle, isFlipped);
+					TextureManager::SetNormalBlend();
+				}
+			}
+				
 			// Debug
 			/*TextureManager::DrawDebugBox(desRect, 0x00ff00);*/
 		}

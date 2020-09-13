@@ -538,6 +538,14 @@ void Player::SlidingWallState(const float&)
 	}
 }
 
+void Player::HurtState(const float&)
+{
+}
+
+void Player::DeathState(const float&)
+{
+}
+
 void Player::DrawWithdrawSwordState(const float&)
 {
 	if (rigidBody_->isGrounded_)
@@ -672,6 +680,23 @@ void Player::TurnBackState()
 {
 	inputState_ = oldInputState_;
 	actionState_ = oldActionState_;
+}
+
+void Player::CheckHit()
+{
+	auto health = self_->GetComponent<HealthComponent>();
+	if (health->Health() <= 0)
+	{
+		actionState_ = ACTION::DEATH;
+		inputState_ = &Player::DeathState;
+		return;
+	}
+	if (self_->IsHit())
+	{
+		actionState_ = ACTION::HURT;
+		inputState_ = &Player::HurtState;
+	}
+	
 }
 
 void Player::ProcessSlidingWall()

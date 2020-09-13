@@ -53,6 +53,7 @@ private:
     unsigned int playTimer_ = 0;
     unsigned int playLength_ = 0;
     bool isPlaying_;
+    bool isBlinking_ = false;
     using AnimateUpdate_t = void (SpriteComponent::*)(const float&);
     AnimateUpdate_t animateUpdate_;
     using RenderUpdate_t = void (SpriteComponent::*)();
@@ -89,6 +90,8 @@ public:
     bool IsAnimationPlaying(const std::string& animID);
     bool IsAnimationFinished();
     bool IsFinished();
+    inline void TurnOnBlinking() { isBlinking_ = true; }
+    inline void TurnOffBlinking() { isBlinking_ = false; }
 
     SpriteComponent(const std::shared_ptr<Entity>& owner, bool isFixed = false);
     ~SpriteComponent();

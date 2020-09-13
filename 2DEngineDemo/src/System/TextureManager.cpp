@@ -63,7 +63,12 @@ void TextureManager::DrawDynamicInfiniteScrolling(const int& texture, const Rect
 		0, 0, srcRect.w * (1-ratio), srcRect.h, texture, true);
 }
 
-void TextureManager::SetBlendAlpha(int alpha)
+void TextureManager::AddAlpha(const int& alpha)
+{
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_ADD, alpha);
+}
+
+void TextureManager::SetBlendAlpha(const int& alpha)
 {
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 }
