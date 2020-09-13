@@ -79,6 +79,7 @@ private:
 	void SlidingWallState(const float&);
 	void HurtState(const float&);
 	void DeathState(const float&);
+	void WaitRespawnState(const float&);
 	void CheckHit();
 
 	void SetSideMoveVelocity(const float& velX);
@@ -98,18 +99,21 @@ private:
 	void TurnBackState();
 
 public:
+	Player(GameScene& gs);
+	~Player();
+
+	void Initialize();
+	void Input(const float& deltaTime);
 	void UpdateState();
+	void RenderUI();
 	inline bool IsAlive() const { return isAlive_; }
 	inline void SetAlive() { isAlive_ = true; }
 	void SetPosition(const float& posX, const float& posY);
 	float Width() const;
 	float Height() const;
-	void ForceFall();
-	Player(GameScene& gs);
-	void Initialize();
-	void Input(const float& deltaTime);
+	void StopSlashDown();
+	void Respawn();
+	
 	std::shared_ptr<TransformComponent> GetPlayerTransform();
-	void RenderUI();
-	~Player();
 };
 

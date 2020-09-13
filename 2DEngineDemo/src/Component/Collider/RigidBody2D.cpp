@@ -45,14 +45,21 @@ void RigidBody2D::ImpactUpdate(const float& deltaTime)
 	{
 		impactVeloctity_.X += impactResist_.X * deltaTime;
 		if (impactVeloctity_.X >= 0)
-			updater_ = &RigidBody2D::NormalUpdate;
+			impactVeloctity_.X = 0;
+
 	}
 	else if (impactVeloctity_.X > 0)
 	{
 		impactVeloctity_.X -= impactResist_.X * deltaTime;
 		if (impactVeloctity_.X <= 0)
-			updater_ = &RigidBody2D::NormalUpdate;
+			impactVeloctity_.X = 0;
 	}
+	else
+	{
+		updater_ = &RigidBody2D::NormalUpdate;
+		velocity_.X = 0;
+	}
+		
 }
 
 void RigidBody2D::Initialize()

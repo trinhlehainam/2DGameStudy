@@ -25,4 +25,5 @@ void LevelManager::RespawnPlayer()
 	auto checkPointPos = checkPoints_[currentCheckPoint_]->Position() - Vector2(0,player_.Height());
 	player_.SetPosition(checkPointPos.X, checkPointPos.Y);
 	player_.SetAlive();
+	player_.Respawn();
 }

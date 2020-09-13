@@ -203,6 +203,14 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
                         actor->isTouchWall_ = true;
                     }
                 }
+                if (CheckSweptAABB(actor->collider_, actor->impactVeloctity_, target.collider_, cn,
+                    ct, deltaTime))
+                {
+                    if (actor->collider_.Bottom() > target.collider_.Top())
+                    {
+                        actor->impactVeloctity_.X = 0;
+                    }
+                }
             }
         }
     }
@@ -285,6 +293,7 @@ void CollisionManager::ActorVSMeleeActtackCollision()
                 if (attack.GetOwnerName() == "player") continue;
                 if (CheckCollision(attack.collider_, actor->collider_))
                 {
+                    actor->DeActivate();
                     actor_owner->TakeDamage(attack_owner->GetMeleeAttackDamage());
                     gs_.effectMng_->EmitBloodEffect(actor->collider_.pos.X, actor->collider_.pos.Y, false, 1);
                 }
@@ -378,8 +387,9 @@ void CollisionManager::ActorVsTrap()
                         actor->Impact(Vector2(300, 0));
                     if (actor->GetOwnerName() == "player")
                     {
-                        gs_.player_->ForceFall();
+                        gs_.player_->StopSlashDown();
                         actor_owner->TakeDamage(1);
+                        actor->DeActivate();
                     }
                     else
                         actor_owner->TakeDamage(3);

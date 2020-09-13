@@ -76,7 +76,7 @@ namespace
 	constexpr unsigned short int jump_animation_speed = 100;
 	constexpr unsigned short int fall_animation_speed = 100;
 	constexpr unsigned short int hurt_animation_speed = 100;
-	constexpr unsigned short int die_animation_speed = 100;
+	constexpr unsigned short int die_animation_speed = 200;
 	constexpr unsigned short int cast_animation_speed = 50;
 	constexpr unsigned short int crouch_animation_speed = 100;
 	constexpr unsigned short int attack1_animation_speed = 70;
@@ -111,6 +111,8 @@ namespace
 	constexpr char shuriken_tag[] = "BOMB";
 	constexpr char bomb_tag[] = "SHURIKEN";
 
+	constexpr int player_health = 5;
+
 	Vector2 slashDownPos;
 }
 
@@ -133,10 +135,22 @@ float Player::Height() const
 	return transform->h * transform->scale;
 }
 
-void Player::ForceFall()
+void Player::StopSlashDown()
 {
-	actionState_ = ACTION::FALL;
-	inputState_ = &Player::FallState;
+	if (actionState_ == ACTION::SLASH_DOWN)
+	{
+		actionState_ = ACTION::FALL;
+		inputState_ = &Player::FallState;
+	}
+}
+
+void Player::Respawn()
+{
+	auto health = self_->GetComponent<HealthComponent>();
+	health->SetHealth(player_health);
+	actionState_ = ACTION::IDLE;
+	inputState_ = &Player::GroundState;
+	rigidBody_->Activate();
 }
 
 Player::Player(GameScene& gs):gs_(gs)
@@ -160,7 +174,7 @@ void Player::Initialize()
 	rigidBody_ = rigidBody;
 	rigidBody->SetTag("PLAYER");
 	rigidBody_->SetMaxVelocity(player_max_velocity_x, player_max_velocity_y);
-	self_->AddComponent<HealthComponent>(self_, 100);
+	self_->AddComponent<HealthComponent>(self_, player_health);
 	self_->AddComponent<SpriteComponent>(self_);
 	const auto& playerAnim = self_->GetComponent<SpriteComponent>();
 	playerAnim->AddAnimation(gs_.assetMng_->GetTexture("player-idle"), "idle", src_rect, idle_animation_speed);
@@ -203,11 +217,9 @@ void Player::Initialize()
 void Player::Input(const float& deltaTime)
 {
 	input_->Update(deltaTime);
-	if (input_->IsTriggered(L"space"))
-		isAlive_ = false;
 	SetAngleDirection();
 	ChangeEquip();
-	const auto& sprite = self_->GetComponent<SpriteComponent>();
+	CheckHit();
 	(this->*inputState_)(deltaTime);
 }
 
@@ -540,9 +552,31 @@ void Player::SlidingWallState(const float&)
 
 void Player::HurtState(const float&)
 {
+	auto sprite = self_->GetComponent<SpriteComponent>();
+	if (sprite->IsAnimationFinished())
+	{
+		sprite->TurnOffBlinking();
+		rigidBody_->Activate();
+		actionState_ = ACTION::FALL;
+		inputState_ = &Player::FallState;
+	}
 }
 
 void Player::DeathState(const float&)
+{
+	auto sprite = self_->GetComponent<SpriteComponent>();
+	auto& time = Time::Instance();
+
+	time.SetTimeScale(0.5f);
+	if (sprite->IsAnimationFinished())
+	{
+		time.SetTimeScale(1.0f);
+		isAlive_ = false;
+		inputState_ = &Player::WaitRespawnState;
+	}
+}
+
+void Player::WaitRespawnState(const float&)
 {
 }
 
@@ -684,6 +718,7 @@ void Player::TurnBackState()
 
 void Player::CheckHit()
 {
+	auto sprite = self_->GetComponent<SpriteComponent>();
 	auto health = self_->GetComponent<HealthComponent>();
 	if (health->Health() <= 0)
 	{
@@ -691,12 +726,12 @@ void Player::CheckHit()
 		inputState_ = &Player::DeathState;
 		return;
 	}
-	if (self_->IsHit())
+	if (!rigidBody_->IsActive())
 	{
+		sprite->TurnOnBlinking();
 		actionState_ = ACTION::HURT;
 		inputState_ = &Player::HurtState;
 	}
-	
 }
 
 void Player::ProcessSlidingWall()
@@ -778,6 +813,12 @@ void Player::UpdateState()
 		break;
 	case ACTION::SLIDE_WALL:
 		sprite->PlayLoop("slide-wall");
+		break;
+	case ACTION::HURT:
+		sprite->PlayOnce("hurt");
+		break;
+	case ACTION::DEATH:
+		sprite->PlayOnce("die");
 		break;
 	}
 
