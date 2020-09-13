@@ -847,7 +847,8 @@ std::shared_ptr<TransformComponent> Player::GetPlayerTransform()
 
 void Player::RenderUI()
 {
-	
+	auto transform = self_->GetComponent<TransformComponent>();
+	auto cameraPos = Camera::Instance().Position();
 	equipments_[currentEquip_]->Render();
 
 	auto health = self_->GetComponent<HealthComponent>();
@@ -883,6 +884,13 @@ void Player::RenderUI()
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 205, gs_.assetMng_->GetTexture("slash_Down"), true);	//C-key
 
 	DxLib::DrawGraph(WINDOW_WIDTH - 65, WINDOW_HEIGHT - 30, gs_.assetMng_->GetTexture("UI_MoveLeft"), true);	//LeftArrow-key
+
+	if (currentEquip_ == 2)
+		if (actionState_ == ACTION::FALL)
+		{
+			DxLib::DrawGraph(transform->pos.X - cameraPos.X - 20, transform->pos.Y - 50 - cameraPos.Y, gs_.assetMng_->GetTexture("Jump_attackUI"), true);
+			DxLib::DrawGraph(transform->pos.X - cameraPos.X - 50, transform->pos.Y - 50 - cameraPos.Y, gs_.assetMng_->GetTexture("slash_Down"), true);
+		}
 }
 
 Player::~Player()
