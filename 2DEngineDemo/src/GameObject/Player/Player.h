@@ -98,6 +98,7 @@ public:
 	void SetPosition(const float& posX, const float& posY);
 	float Width() const;
 	float Height() const;
+	void ForceFall();
 	Player(GameScene& gs);
 	void Initialize();
 	void Input(const float& deltaTime);

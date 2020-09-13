@@ -95,6 +95,7 @@ public:
 
 	void ActorVSProjectileCollision();
 	void ActorVSMeleeActtackCollision();
+	void ActorVsTrap();
 	void CombatCollision();
 	void ProcessCheckPoint();
 

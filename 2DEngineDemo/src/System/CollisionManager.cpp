@@ -4,8 +4,10 @@
 
 #include "../Scene/GameScene.h"
 #include "../System/EffectManager.h"
+#include "../System/Time.h"
 
 #include "../GameObject/Entity.h"
+#include "../GameObject/Player/Player.h"
 
 #include "../Component/Collider/CircleColliderComponent.h"
 #include "../Component/Collider/AABBColliderComponent.h"
@@ -304,6 +306,7 @@ void CollisionManager::CombatCollision()
 {
     ActorVSProjectileCollision();
     ActorVSMeleeActtackCollision();
+    ActorVsTrap();
     for (auto& bossCollider : bossColliders_)
     {
         for (auto& projectile : projectileColliders_)
@@ -347,6 +350,46 @@ void CollisionManager::ProcessCheckPoint()
             break;
         }
     }
+}
+
+void CollisionManager::ActorVsTrap()
+{
+    for (auto& actor : actorColliders_)
+    {
+        if (!actor->IsActive()) continue;
+        for (auto& target : mapColliders_)
+        {
+            Vector2 cn;
+            float ct;
+            if (target.GetTag() == "TRAP")
+            {
+                if (CheckSweptAABB(actor->collider_, actor->velocity_, target.collider_, cn,
+                    ct, Time::Instance().DeltaTimeF()))
+                {
+                    auto actor_owner = actor->owner_.lock();
+
+                    if(cn.Y < 0)
+                        actor->velocity_.Y = -300.0f;
+                    if(cn.Y > 0)
+                        actor->velocity_.Y = 300.0f;
+                    if (cn.X < 0)
+                        actor->Impact(Vector2(-300, 0));
+                    if (cn.X > 0)
+                        actor->Impact(Vector2(300, 0));
+                    if (actor->GetOwnerName() == "player")
+                    {
+                        gs_.player_->ForceFall();
+                        actor_owner->TakeDamage(1);
+                    }
+                    else
+                        actor_owner->TakeDamage(3);
+                        
+                    gs_.effectMng_->BloodExplosionEffect(actor->collider_.Center().X, actor->collider_.Center().Y);
+                }
+            }
+        }
+    }
+
 }
 
 void CollisionManager::Render()

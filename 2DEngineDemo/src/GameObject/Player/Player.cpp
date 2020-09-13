@@ -133,6 +133,12 @@ float Player::Height() const
 	return transform->h * transform->scale;
 }
 
+void Player::ForceFall()
+{
+	actionState_ = ACTION::FALL;
+	inputState_ = &Player::FallState;
+}
+
 Player::Player(GameScene& gs):gs_(gs)
 {
 	rigidBody_ = nullptr;

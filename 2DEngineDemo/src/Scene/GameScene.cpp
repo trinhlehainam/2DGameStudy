@@ -180,11 +180,11 @@ void GameScene::LoadLevel(const int& level)
 		32,32);
 	map_->LoadCollisionLayer("TERRAIN", "TERRAIN", "assets/Image/Tilemap/bamboo-terrain.map", NUM_TILE_X, NUM_TILE_Y,
 		bamboo_collider_w, bamboo_collider_h, bamboo_collider_offset_x, bamboo_collider_offset_y);
-	map_->LoadCollisionLayer("TERRAIN", "BAMBOO-H-TRAP", "assets/Image/Tilemap/bamboo-h-trap.map", NUM_TILE_X, NUM_TILE_Y,
+	map_->LoadCollisionLayer("TERRAIN", "TRAP", "assets/Image/Tilemap/bamboo-h-trap.map", NUM_TILE_X, NUM_TILE_Y,
 		bamboo_horizontal_trap_w, bamboo_horizontal_trap_h, bamboo_horizontal_trap_offset_x, bamboo_horizontal_trap_offset_y);
-	map_->LoadCollisionLayer("TERRAIN", "BAMBOO-V-TRAP", "assets/Image/Tilemap/bamboo-v-trap.map", NUM_TILE_X, NUM_TILE_Y,
+	map_->LoadCollisionLayer("TERRAIN", "TRAP", "assets/Image/Tilemap/bamboo-v-trap.map", NUM_TILE_X, NUM_TILE_Y,
 		bamboo_vertical_trap_w, bamboo_vertical_trap_h, bamboo_vertical_trap_offset_x, bamboo_vertical_trap_offset_y);
-	map_->LoadCollisionLayer("TERRAIN", "METAL-TRAP", "assets/Image/Tilemap/metal-trap.map", NUM_TILE_X, NUM_TILE_Y,
+	map_->LoadCollisionLayer("TERRAIN", "TRAP", "assets/Image/Tilemap/metal-trap.map", NUM_TILE_X, NUM_TILE_Y,
 		32, 32);
 	map_->LoadCollisionLayer("ENEMY", "FLYING-EYE", "assets/Image/Tilemap/flying-eye.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 	map_->LoadCollisionLayer("ENEMY", "MUSHROOM", "assets/Image/Tilemap/mushroom.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
