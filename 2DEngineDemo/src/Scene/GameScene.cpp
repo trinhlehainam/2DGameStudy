@@ -195,6 +195,7 @@ void GameScene::LoadLevel(const int& level)
 	map_->LoadCollisionLayer("ENEMY", "FLYING-EYE", "assets/Image/Tilemap/flying-eye.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 	map_->LoadCollisionLayer("ENEMY", "MUSHROOM", "assets/Image/Tilemap/mushroom.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 	map_->LoadCollisionLayer("ENEMY", "SKELETON", "assets/Image/Tilemap/skeleton.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
+	map_->LoadCollisionLayer("ENEMY", "SLASHER", "assets/Image/Tilemap/slasher.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 	map_->LoadCollisionLayer("CHECK-POINT", "BORN-FIRE", "assets/Image/Tilemap/bornfire.map", NUM_TILE_X, NUM_TILE_Y, 32, 32);
 
 	// Create player Entity
@@ -254,6 +255,15 @@ void GameScene::LoadEnemy()
 			skeleton->SetPosition(tileTransform->pos - 
 				Vector2(skeletonTransform->w * skeletonTransform->scale, skeletonTransform->h * skeletonTransform->scale));
 			enemyMng_->AddEnemy(std::move(skeleton));
+		}
+		if (enemyTile->GetName() == "SLASHER")
+		{
+			auto slasher = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
+			slasher->Initialize();
+			auto slasherTransform = slasher->GetOwner()->GetComponent<TransformComponent>();
+			slasher->SetPosition(tileTransform->pos -
+				Vector2(slasherTransform->w * slasherTransform->scale, slasherTransform->h * slasherTransform->scale));
+			enemyMng_->AddEnemy(std::move(slasher));
 		}
 	}
 }

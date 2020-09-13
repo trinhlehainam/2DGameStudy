@@ -31,6 +31,7 @@ namespace
 	constexpr int attack_damage = 1;
 	constexpr float wait_attack_time = 0.3f;
 	constexpr float attack_offset_y = 35;
+	constexpr float sight_distance = 100.0f;
 
 	constexpr unsigned int run_animation_speed = 100;
 	constexpr unsigned int slash_animation_speed = 300;
@@ -67,7 +68,7 @@ void Slasher::Initialize()
 	anim->AddAnimation(gs_.assetMng_->GetTexture("slasher-lying"), "lying", src_rect, 1);
 	anim->PlayLoop("run");
 	self_->AddComponent<HealthComponent>(self_, max_health);
-	actionUpdate_ = &Slasher::AimPlayer;
+	actionUpdate_ = &Slasher::GuardUpdate;
 }
 
 std::unique_ptr<Enemy> Slasher::MakeClone()
@@ -112,6 +113,18 @@ void Slasher::AimPlayer(const float& deltaTime)
 		attackFlag_ = true;
 		timer_ = wait_attack_time;
 		rigidBody_->velocity_.X = 0.0f;
+	}
+}
+
+void Slasher::GuardUpdate(const float& deltaTime)
+{
+	auto transform = self_->GetComponent<TransformComponent>();
+	auto& playerPos = playerTransform_.lock()->pos;
+	float distance = (playerPos.X - transform->pos.X) * (playerPos.X - transform->pos.X) +
+		(playerPos.Y - transform->pos.Y) * (playerPos.Y - transform->pos.Y);
+	if (distance <= sight_distance * sight_distance)
+	{
+		actionUpdate_ = &Slasher::AimPlayer;
 	}
 }
 

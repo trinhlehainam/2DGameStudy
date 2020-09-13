@@ -13,8 +13,9 @@ private:
 
 	float timer_ = 0.0f;
 	bool attackFlag_ = false;
-
+	
 	void AimPlayer(const float& deltaTime);
+	void GuardUpdate(const float& deltaTime);
 	void SlashUpdate(const float& deltaTime);
 	void HurtUpdate(const float& deltaTime);
 	void DeathUpdate(const float& deltaTime);
