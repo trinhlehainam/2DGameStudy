@@ -847,7 +847,16 @@ std::shared_ptr<TransformComponent> Player::GetPlayerTransform()
 
 void Player::RenderUI()
 {
+	
 	equipments_[currentEquip_]->Render();
+
+	auto health = self_->GetComponent<HealthComponent>();
+	Rect srcRect = Rect(0, 0, 64, 64);
+	for (int i = 0; i < health->Health(); ++i)
+	{
+		Rect dest = Rect(100 + 64 * i, 0, 64, 64);
+		TextureManager::DrawRect(gs_.GetTexture("UI_heart"), dest, srcRect);
+	}
 
 	int height;
 

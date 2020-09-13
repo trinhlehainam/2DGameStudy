@@ -155,6 +155,7 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("UI_jump", L"assets/Image/UI/Command/jump.png");
 	assetMng_->AddTexture("UI_attack", L"assets/Image/UI/Command/Attack.png");
 	assetMng_->AddTexture("UI_change_weapon", L"assets/Image/UI/Command/change_wepon.png");
+	assetMng_->AddTexture("UI_heart", L"assets/Image/UI/heart.png");
 
 	assetMng_->AddTexture("UI_MoveLeft", L"assets/Image/UI/Command/run.png");
 	//assetMng_->AddTexture("UI_MoveRight", L"assets/Image/UI/Command/run.png");
