@@ -280,7 +280,12 @@ void CollisionManager::ActorVSMeleeActtackCollision()
             auto actor_owner = actor->owner_.lock();
             if (actor_owner->GetName() == "player")
             {
-
+                if (attack.GetOwnerName() == "player") continue;
+                if (CheckCollision(attack.collider_, actor->collider_))
+                {
+                    actor_owner->TakeDamage(attack_owner->GetMeleeAttackDamage());
+                    gs_.effectMng_->EmitBloodEffect(actor->collider_.pos.X, actor->collider_.pos.Y, false, 1);
+                }
             }
             else
             {
