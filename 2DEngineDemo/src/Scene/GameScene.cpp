@@ -166,6 +166,9 @@ void GameScene::LoadLevel(const int& level)
 
 	assetMng_->AddTexture("LeftArrow_Move", L"assets/Image/UI/Key/arrowleft_alternative_paper.png");
 	assetMng_->AddTexture("RightArrow_Move", L"assets/Image/UI/Key/arrowright_alternative_paper.png");
+	assetMng_->AddTexture("double_Jump", L"assets/Image/UI/Command/double_Jump.png");
+	assetMng_->AddTexture("Wall_Jump", L"assets/Image/UI/Command/Wall_Jump.png");
+	assetMng_->AddTexture("slash_Down", L"assets/Image/UI/Command/slash_Down.png");
 
 	assetMng_->AddTexture("born-fire", L"assets/Image/UI/bornfire.png");
 

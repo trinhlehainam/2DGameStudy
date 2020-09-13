@@ -863,7 +863,7 @@ void Player::RenderUI()
 	int width;
 	width = 0;
 
-	TextureManager::DrawDebugBox(Rect(width, WINDOW_HEIGHT - 100, 75, 100), 0x000000, true);
+	TextureManager::DrawDebugBox(Rect(width, WINDOW_HEIGHT - 205, 75, 205), 0x000000, true);
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 100, gs_.assetMng_->GetTexture("Z_jump"), true);			//z-key
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 65, gs_.assetMng_->GetTexture("X_attack"), true);			//X-key
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 30, gs_.assetMng_->GetTexture("C_change_weapon"), true);	//C-key
@@ -877,6 +877,10 @@ void Player::RenderUI()
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 100, gs_.assetMng_->GetTexture("UI_jump"), true);	//z-key
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 65, gs_.assetMng_->GetTexture("UI_attack"), true);	//X-key
 	DxLib::DrawGraph(width, WINDOW_HEIGHT - 30, gs_.assetMng_->GetTexture("UI_change_weapon"), true);	//C-key
+
+	DxLib::DrawGraph(width, WINDOW_HEIGHT - 135, gs_.assetMng_->GetTexture("double_Jump"), true);	//C-key
+	DxLib::DrawGraph(width, WINDOW_HEIGHT - 170, gs_.assetMng_->GetTexture("Wall_Jump"), true);	//C-key
+	DxLib::DrawGraph(width, WINDOW_HEIGHT - 205, gs_.assetMng_->GetTexture("slash_Down"), true);	//C-key
 
 	DxLib::DrawGraph(WINDOW_WIDTH - 65, WINDOW_HEIGHT - 30, gs_.assetMng_->GetTexture("UI_MoveLeft"), true);	//LeftArrow-key
 }

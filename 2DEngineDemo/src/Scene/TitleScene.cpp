@@ -66,6 +66,7 @@ void TitleScene::Initialize()
 	assetMng_->AddTexture(play_tag, L"assets/Image/Title/PLAY.png");
 	assetMng_->AddTexture(setting_tag, L"assets/Image/Title/SETTING.png");
 	assetMng_->AddTexture(exit_tag, L"assets/Image/Title/EXIT.png");
+	assetMng_->AddTexture("PRESS ENTER", L"assets/Image/Title/PRESS ENTER()KEY.png");
 
 	Vector2 pos = Vector2(menu_pos_x, menu_pos_y);
 	Vector2 size;
@@ -156,6 +157,14 @@ void TitleScene::FadeOutUpdate(const float& deltaTime)
 void TitleScene::NormalRender()
 {
 	DxLib::DrawRotaGraphF(title_pos_x, title_pos_y, 1.0f, 0.0f, assetMng_->GetTexture(title_tag), true);
+
+	/*if ((frame_ / 60) % 2 == 0)*/
+	{
+		DxLib::SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+		DrawRotaGraph(WINDOW_WIDTH / 2, title_pos_y + 120, 0.8f, 0.0f, assetMng_->GetTexture("PRESS ENTER"), true);
+		DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+		
 	for (auto& item : menuItems_)
 	{
 		if (item.isActive)
