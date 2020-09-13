@@ -64,19 +64,22 @@ private:
 
     void Update(const float& deltaTime) override;
     void FadeInUpdate(const float& deltaTime);
+    void FadeOutUpdate(const float& deltaTime);
     void GameUpdate(const float& deltaTime);
     void BossSceneUpdate(const float& deltaTime);
     void RespawnPlayerUpdate(const float& deltaTime);
-    void ProcessEnterBossArea();
-
+    
     void Render() override;
     void FadeInRender();
+    void FadeOutRender();
+    void WaitRespawnPlayerRender();
     void GameRender();
 
     void LoadLevel(const int& level);
     void LoadEnemy();
     void LoadCheckPoint();
 
+    void ProcessEnterBossArea();
     void CheckRespawnPlayer();
 public:
 

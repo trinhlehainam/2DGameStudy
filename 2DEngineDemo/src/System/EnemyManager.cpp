@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "../GameObject/Enemy/Enemy.h"
+#include "../GameObject/Entity.h"
 #include <algorithm>
 
 EnemyManager::EnemyManager(std::shared_ptr<TransformComponent> playerPos, GameScene& gs):playerPos_(playerPos), gs_(gs)
@@ -21,6 +22,16 @@ void EnemyManager::Update(const float& deltaTime)
 		return !enemy->IsOwnerExist();
 		}), 
 		enemies_.end());
+}
+
+void EnemyManager::ClearEnemy()
+{
+	for (auto& enemy : enemies_)
+	{
+		auto owner = enemy->GetOwner();
+		owner->Destroy();
+	}
+	enemies_.clear();
 }
 
 void EnemyManager::BossSceneUpdate(const float& deltaTime)

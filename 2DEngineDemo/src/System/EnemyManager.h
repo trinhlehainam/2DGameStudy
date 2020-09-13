@@ -18,8 +18,8 @@ public:
 	~EnemyManager();
 
 	void Update(const float& deltaTime);
-
 	void BossSceneUpdate(const float& deltaTime);
+	void ClearEnemy();
 	
 	template<typename T,typename...Args>
 	void AddEnemy(Args&&...args)

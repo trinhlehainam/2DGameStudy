@@ -172,7 +172,7 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
     for (auto& actor : actorColliders_)
     {
         if (actor->velocity_.Y > 0)  actor->isGrounded_ = false;
-        if (actor->velocity_.X != 0) actor->isTouchWall_ = false;
+        actor->isTouchWall_ = false;
         for (auto& target : mapColliders_)
         {
             Vector2 cn;
@@ -186,7 +186,7 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
                     {
                         if (actor->collider_.Bottom() > target.collider_.Top())
                             actor->velocity_.X = 0;
-                        if (actor->collider_.Top() > target.collider_.Top())
+                        if (actor->collider_.Top() >= target.collider_.Top())
                             actor->isTouchWall_ = true;
                     }
                 
@@ -426,6 +426,11 @@ void CollisionManager::Render()
 
     for (auto& checkPoint : checkPointColliders_)
         checkPoint->Render();
+}
+
+void CollisionManager::ClearDestroyCollider()
+{
+    RemoveCollider();
 }
 
 

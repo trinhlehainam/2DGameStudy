@@ -61,6 +61,7 @@ public:
 	void ApplyForce(const float& deltaTime);
 	void Update(const float& deltaTime);
 	void Render();
+	void ClearDestroyCollider();
 
 	template<typename...Args>
 	AABBColliderComponent& AddTileCollider(Args&&...args)

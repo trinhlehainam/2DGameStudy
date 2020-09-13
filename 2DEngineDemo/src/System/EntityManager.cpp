@@ -46,6 +46,11 @@ void EntityManager::Update(const float& deltaTime)
     RemoveEntity();
 }
 
+void EntityManager::ClearDestroyEntity()
+{
+    RemoveEntity();
+}
+
 void EntityManager::BossSceneUpdate(const float& deltaTime)
 {
     // Just update the newest added Entity ( boss )

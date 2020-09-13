@@ -40,7 +40,9 @@
 namespace
 {
 	float waitTimer_ = 0.0f;
-	constexpr float wait_fade_time = 0.6f;
+	constexpr float wait_fade_in_time = 0.6f;
+	constexpr float wait_fade_out_time = 0.6f;
+	constexpr float wait_respawn_player_time = 0.3f;
 	const Vector2 slasher_start_pos = Vector2(100.0f, 100.0f);
 	constexpr float gravity_force_y = 1000.f;
 	constexpr float side_spawn_offset_x = 100.0f;
@@ -56,7 +58,7 @@ int GameScene::GetTexture(std::string textureID)
 
 GameScene::GameScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScene(sceneMng, sceneInput)
 {
-	waitTimer_ = wait_fade_time;
+	waitTimer_ = wait_fade_in_time;
 	windowBox_ = Rect(Vector2(0.0f, 0.0f), WINDOW_WIDTH, WINDOW_HEIGHT);
 	updateFunc_ = &GameScene::FadeInUpdate;
 	renderFunc_ = &GameScene::FadeInRender;
@@ -269,7 +271,11 @@ void GameScene::LoadCheckPoint()
 void GameScene::CheckRespawnPlayer()
 {
 	if (!player_->IsAlive())
-		updateFunc_ = &GameScene::RespawnPlayerUpdate;
+	{
+		waitTimer_ = wait_fade_out_time;
+		updateFunc_ = &GameScene::FadeOutUpdate;
+		renderFunc_ = &GameScene::FadeOutRender;
+	}
 }
 
 void GameScene::ProcessInput()
@@ -294,6 +300,17 @@ void GameScene::FadeInUpdate(const float& deltaTime)
 	{
 		updateFunc_ = &GameScene::GameUpdate;
 		renderFunc_ = &GameScene::GameRender;
+	}
+	waitTimer_ -= deltaTime;
+}
+
+void GameScene::FadeOutUpdate(const float& deltaTime)
+{
+	if (waitTimer_ <= 0.0f)
+	{
+		waitTimer_ = wait_respawn_player_time;
+		updateFunc_ = &GameScene::RespawnPlayerUpdate;
+		renderFunc_ = &GameScene::WaitRespawnPlayerRender;
 	}
 	waitTimer_ -= deltaTime;
 }
@@ -342,7 +359,18 @@ void GameScene::BossSceneUpdate(const float& deltaTime)
 void GameScene::RespawnPlayerUpdate(const float& deltaTime)
 {
 	levelMng_->RespawnPlayer();
-	updateFunc_ = &GameScene::GameUpdate;
+	enemyMng_->ClearEnemy();
+	entityMng_->ClearDestroyEntity();
+	collisionMng_->ClearDestroyCollider();
+	Camera::Instance().Update();
+	LoadEnemy();
+	if (waitTimer_ <= 0)
+	{
+		waitTimer_ = wait_fade_in_time;
+		updateFunc_ = &GameScene::FadeInUpdate;
+		renderFunc_ = &GameScene::FadeInRender;
+	}
+	waitTimer_ -= deltaTime;
 }
 
 void GameScene::ProcessEnterBossArea()
@@ -373,12 +401,30 @@ void GameScene::FadeInRender()
 	environment_->RenderBackGround();
 	entityMng_->Render();
 	player_->RenderUI();
-	auto blendpara = 255 * waitTimer_ / wait_fade_time;
+	auto blendpara = 255 * waitTimer_ / wait_fade_in_time;
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, blendpara);
 	DxLib::DrawBox(windowBox_.Left(), windowBox_.Top(),
 		windowBox_.Right(), windowBox_.Bottom(),
 		0x000000, true);
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void GameScene::FadeOutRender()
+{
+	environment_->RenderBackGround();
+	entityMng_->Render();
+	player_->RenderUI();
+	auto blendpara = 255 * (wait_fade_out_time - waitTimer_) / wait_fade_out_time;
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, blendpara);
+	DxLib::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT,
+		0x000000, true);
+	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void GameScene::WaitRespawnPlayerRender()
+{
+	DxLib::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT,
+		0x000000, true);
 }
 
 void GameScene::GameRender()
