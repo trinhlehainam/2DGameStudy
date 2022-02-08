@@ -1,4 +1,4 @@
-#include "Environment.h"
+#include "BackgroundEnvironment.h"
 
 #include "../Constant.h"
 #include "../Scene/GameScene.h"
@@ -16,12 +16,12 @@ namespace {
 	Vector2 cameraMove_;
 }
 
-Environment::Environment(GameScene& gs) :gs_(gs)
+BackgroundEnvironment::BackgroundEnvironment(GameScene& gs) :gs_(gs)
 {
 	Initialize();
 }
 
-void Environment::Initialize()
+void BackgroundEnvironment::Initialize()
 {
 	layers_.resize(max_layers);
 
@@ -33,19 +33,19 @@ void Environment::Initialize()
 	oldCameraPos_ = Camera::Instance().Position();
 }
 
-void Environment::InfiniteScrollingProcess(Vector2& pos, const float& width, const float& height)
+void BackgroundEnvironment::InfiniteScrollingProcess(Vector2& pos, const float& width, const float& height)
 {
 	if (pos.X >= width) pos.X = pos.X - width;
 	if (pos.X <= 0.0f) pos.X = width + pos.X;
 }
 
-void Environment::SetLayerSpeed(const int& layer_no, const float& speedX, const float& speedY)
+void BackgroundEnvironment::SetLayerSpeed(const int& layer_no, const float& speedX, const float& speedY)
 {
 	layers_[layer_no].velocity_.X = speedX;
 	layers_[layer_no].velocity_.Y = speedY;
 }
 
-void Environment::Update(const float& deltaTime)
+void BackgroundEnvironment::Update(const float& deltaTime)
 {
 	cameraMove_ = Camera::Instance().Position() - oldCameraPos_;
 	oldCameraPos_ = Camera::Instance().Position();
@@ -63,7 +63,7 @@ void Environment::Update(const float& deltaTime)
 	
 }
 
-void Environment::RenderBackGround()
+void BackgroundEnvironment::RenderBackGround()
 {
 	TextureManager::DrawDynamicInfiniteScrolling(layers_[0].textureID, srcRect,
 		WINDOW_WIDTH, WINDOW_HEIGHT, layers_[0].pos_, Vector2(0,0));
@@ -71,7 +71,7 @@ void Environment::RenderBackGround()
 		WINDOW_WIDTH, WINDOW_HEIGHT, layers_[1].pos_, Vector2(0,0));
 }
 
-void Environment::RenderForeGround()
+void BackgroundEnvironment::RenderForeGround()
 {
 	TextureManager::SetBlendAlpha(128);
 	TextureManager::DrawDynamicInfiniteScrolling(layers_[2].textureID, srcRect,

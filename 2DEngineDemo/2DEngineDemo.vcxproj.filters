@@ -123,7 +123,7 @@
     <ClCompile Include="src\GameObject\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject\Environment.cpp">
+    <ClCompile Include="src\GameObject\BackgroundEnvironment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Component\Attack\ProjectileEmitterComponent.cpp">
@@ -299,7 +299,7 @@
     <ClInclude Include="src\GameObject\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObject\Environment.h">
+    <ClInclude Include="src\GameObject\BackgroundEnvironment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Component\Attack\ProjectileEmitterComponent.h">

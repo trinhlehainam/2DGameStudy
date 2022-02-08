@@ -21,7 +21,7 @@
 #include "../GameObject/Player/Player.h"
 #include "../GameObject/Enemy/Slasher.h"
 #include "../GameObject/Enemy/SideSpawner.h"
-#include "../GameObject/Environment.h"
+#include "../GameObject/BackgroundEnvironment.h"
 #include "../GameObject/Enemy/BossSpawner.h"
 #include "../GameObject/Enemy/Asura.h"
 #include "../GameObject/Enemy/FlyingEye.h"
@@ -71,7 +71,7 @@ GameScene::GameScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScen
 	
 	LoadLevel(1);
 
-	environment_ = std::make_unique<Environment>(*this);
+	bgEnvironment_ = std::make_unique<BackgroundEnvironment>(*this);
 }
 
 void GameScene::LoadLevel(const int& level)
@@ -239,7 +239,7 @@ void GameScene::LoadEnemy()
 			flyingEye->SetPosition(tileTransform->pos);
 			enemyMng_->AddEnemy(std::move(flyingEye));
 		}
-		if (enemyTile->GetName() == "MUSHROOM")
+		else if (enemyTile->GetName() == "MUSHROOM")
 		{
 			auto mushroom = std::make_unique<Mushroom>(*this, player_->GetPlayerTransform());
 			mushroom->Initialize();
@@ -248,7 +248,7 @@ void GameScene::LoadEnemy()
 				Vector2(mushroomTransform->w * mushroomTransform->scale, mushroomTransform->h * mushroomTransform->scale));
 			enemyMng_->AddEnemy(std::move(mushroom));
 		}
-		if (enemyTile->GetName() == "SKELETON")
+		else if (enemyTile->GetName() == "SKELETON")
 		{
 			auto skeleton = std::make_unique<Skeleton>(*this, player_->GetPlayerTransform());
 			skeleton->Initialize();
@@ -257,7 +257,7 @@ void GameScene::LoadEnemy()
 				Vector2(skeletonTransform->w * skeletonTransform->scale, skeletonTransform->h * skeletonTransform->scale));
 			enemyMng_->AddEnemy(std::move(skeleton));
 		}
-		if (enemyTile->GetName() == "SLASHER")
+		else if (enemyTile->GetName() == "SLASHER")
 		{
 			auto slasher = std::make_unique<Slasher>(*this, player_->GetPlayerTransform());
 			slasher->Initialize();
@@ -347,7 +347,7 @@ void GameScene::GameUpdate(const float& deltaTime)
 	enemyMng_->Update(deltaTime);
 	entityMng_->Update(deltaTime);
 	combatMng_->Update(deltaTime);
-	environment_->Update(deltaTime);
+	bgEnvironment_->Update(deltaTime);
 	/*ProcessEnterBossArea();*/
 	collisionMng_->ProcessCheckPoint();
 	collisionMng_->PlatformResolution(deltaTime);
@@ -413,7 +413,7 @@ void GameScene::Render()
 
 void GameScene::FadeInRender()
 {
-	environment_->RenderBackGround();
+	bgEnvironment_->RenderBackGround();
 	entityMng_->Render();
 	player_->RenderUI();
 	auto blendpara = 255 * waitTimer_ / wait_fade_in_time;
@@ -426,7 +426,7 @@ void GameScene::FadeInRender()
 
 void GameScene::FadeOutRender()
 {
-	environment_->RenderBackGround();
+	bgEnvironment_->RenderBackGround();
 	entityMng_->Render();
 	player_->RenderUI();
 	auto blendpara = 255 * (wait_fade_out_time - waitTimer_) / wait_fade_out_time;
@@ -444,9 +444,11 @@ void GameScene::WaitRespawnPlayerRender()
 
 void GameScene::GameRender()
 {
-	environment_->RenderBackGround();
+	bgEnvironment_->RenderBackGround();
 	entityMng_->Render();
-	/*collisionMng_->Render();*/	// collision debug
+#if DEBUG || _DEBUG
+	collisionMng_->Render();	// collision debug
+#endif
 	effectMng_->Render();
 	player_->RenderUI();
 }

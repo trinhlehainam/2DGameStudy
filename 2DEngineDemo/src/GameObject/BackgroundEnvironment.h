@@ -5,7 +5,7 @@
 
 class GameScene;
 
-class Environment
+class BackgroundEnvironment
 {
 private:
 	struct Layer
@@ -28,7 +28,7 @@ public:
 	void RenderBackGround();
 	void RenderForeGround();
 	
-	Environment(GameScene& gs);
-	~Environment() = default;
+	BackgroundEnvironment(GameScene& gs);
+	~BackgroundEnvironment() = default;
 };
 

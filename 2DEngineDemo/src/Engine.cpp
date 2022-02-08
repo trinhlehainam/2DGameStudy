@@ -49,7 +49,8 @@ void Engine::Run()
     {
         auto& time = Time::Instance();
         time.FixedFrameRate();
-        /*time.SetTimeScale(0.5f);*/
+        // TEST slow motion
+        // time.SetTimeScale(0.5f);
 
         sceneInput_->Update(time.DeltaTimeF());
         sceneMng_->ProcessInput();
@@ -57,7 +58,9 @@ void Engine::Run()
 
         DxLib::ClearDrawScreen();
         sceneMng_->Render();
-        /*Debugger::Instance().DisplayPerformance();*/
+#if DEBUG || _DEBUG
+        Debugger::Instance().DisplayPerformance();
+#endif
         DxLib::ScreenFlip();
     }
 }

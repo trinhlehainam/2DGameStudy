@@ -13,7 +13,7 @@ class Player;
 class Slasher;
 class EnemyManager;
 class Spawner;
-class Environment;
+class BackgroundEnvironment;
 class EffectManager;
 class CombatManager;
 class LevelManager;
@@ -23,7 +23,7 @@ class GameScene :
 {
     friend Player;
     friend Slasher;
-    friend Environment;
+    friend BackgroundEnvironment;
     friend class Asura;
     friend EffectManager;
     friend CollisionManager;
@@ -47,7 +47,7 @@ private:
     std::unique_ptr<Player> player_;
     std::unique_ptr<EnemyManager> enemyMng_;
     std::vector<std::unique_ptr<Spawner>> spawners_;
-    std::unique_ptr<Environment> environment_;
+    std::unique_ptr<BackgroundEnvironment> bgEnvironment_;
     std::unique_ptr<EffectManager> effectMng_;
     std::unique_ptr<CombatManager> combatMng_;
     std::unique_ptr<LevelManager> levelMng_;
