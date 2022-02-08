@@ -5,7 +5,7 @@
 
 #include "../Entity.h"
 #include "../../System/EntityManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 #include "../../System/EffectManager.h"
 #include "../../System/Time.h"
 
@@ -20,7 +20,7 @@ MeleeAttack::MeleeAttack(GameScene& gs, const std::shared_ptr<Entity>& owner, co
 {
 	self_ = gs_->entityMng_->AddProjectTile(owner->GetName());
 	self_->AddComponent<TransformComponent>(self_, startPos, w, h);
-	auto& collider = gs_->collisionMng_->AddMeleeAttackCollider(self_,
+	auto& collider = gs_->physicsMng_->AddMeleeAttackCollider(self_,
 		"MELEE-ATTACK", startPos, w, h);
 
 	self_->AddComponent<MeleeAttackComponent>(self_, damage);

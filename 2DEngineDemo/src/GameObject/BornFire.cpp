@@ -8,7 +8,7 @@
 
 #include "../System/EntityManager.h"
 #include "../System/AssetManager.h"
-#include "../System/CollisionManager.h"
+#include "../System/PhysicsManager.h"
 
 namespace
 {

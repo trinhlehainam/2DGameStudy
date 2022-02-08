@@ -19,7 +19,7 @@ class Attack;
 
 // Class managing all objects' collider and resolve them
 // This class also manage physic of the game
-class CollisionManager
+class PhysicsManager
 {
 private:
 	friend class EntityManager;
@@ -54,8 +54,8 @@ private:
 
 	GameScene& gs_;
 public:
-	CollisionManager(GameScene& gs);
-	~CollisionManager() = default;
+	PhysicsManager(GameScene& gs);
+	~PhysicsManager() = default;
 
 	void SetGravity(const Vector2& gravity);
 	void ApplyForce(const float& deltaTime);

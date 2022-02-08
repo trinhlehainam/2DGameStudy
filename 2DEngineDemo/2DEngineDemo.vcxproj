@@ -180,7 +180,7 @@
     <ClCompile Include="src\GameObject\Player\Player.cpp" />
     <ClCompile Include="src\Component\Collider\RigidBody2D.cpp" />
     <ClCompile Include="src\Component\Collider\ColliderComponent.cpp" />
-    <ClCompile Include="src\System\CollisionManager.cpp" />
+    <ClCompile Include="src\System\PhysicsManager.cpp" />
     <ClCompile Include="src\Component\Collider\AABBColliderComponent.cpp" />
     <ClCompile Include="src\Component\Collider\CircleColliderComponent.cpp" />
     <ClCompile Include="src\System\Camera.cpp" />
@@ -240,7 +240,7 @@
     <ClInclude Include="src\GameObject\Player\Player.h" />
     <ClInclude Include="src\Component\Collider\RigidBody2D.h" />
     <ClInclude Include="src\Component\Collider\ColliderComponent.h" />
-    <ClInclude Include="src\System\CollisionManager.h" />
+    <ClInclude Include="src\System\PhysicsManager.h" />
     <ClInclude Include="src\Component\Collider\AABBColliderComponent.h" />
     <ClInclude Include="src\Component\Collider\CircleColliderComponent.h" />
     <ClInclude Include="src\System\Camera.h" />

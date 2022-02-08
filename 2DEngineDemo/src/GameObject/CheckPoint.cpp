@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "../Scene/GameScene.h"
 #include "../Component/TransformComponent.h"
-#include "../System/CollisionManager.h"
+#include "../System/PhysicsManager.h"
 
 CheckPoint::CheckPoint(GameScene& gs):gs_(gs)
 {
@@ -32,7 +32,7 @@ void CheckPoint::SetPosition(const Vector2& pos)
 {
     auto transform = self_->GetComponent<TransformComponent>();
     transform->pos = pos;
-    auto& collider = gs_.collisionMng_->AddCheckPointCollider(self_,
+    auto& collider = gs_.physicsMng_->AddCheckPointCollider(self_,
         "BORN-FIRE", transform->pos, transform->w * transform->scale, transform->h * transform->scale);
     collider_ = collider;
 }

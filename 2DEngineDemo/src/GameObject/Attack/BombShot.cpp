@@ -4,7 +4,7 @@
 
 #include "../Entity.h"
 #include "../../System/EntityManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 #include "../../System/EffectManager.h"
 #include "../../System/Camera.h"
 
@@ -44,7 +44,7 @@ BombShot::BombShot(GameScene& gs, const std::shared_ptr<Entity>& owner, const Ve
 		Rect(0, 0, bomb_width, bomb_height),
 		1,0,rotate_speed);
 	anim->PlayLoop("attack");
-	auto& collider = gs_->collisionMng_->AddProjectileCollider(self_,
+	auto& collider = gs_->physicsMng_->AddProjectileCollider(self_,
 		"PLAYER-BOMB", startPos.X, startPos.Y, bomb_radius);
 	collider.SetOffset(collider_offset_x, collider_offset_y);
 

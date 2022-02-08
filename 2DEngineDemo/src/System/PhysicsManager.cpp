@@ -1,4 +1,4 @@
-#include "CollisionManager.h"
+#include "PhysicsManager.h"
 
 #include <algorithm>
 
@@ -19,60 +19,60 @@ namespace
     constexpr unsigned int actor_size = 300;
 }
 
-CollisionManager::CollisionManager(GameScene& gs):gs_(gs)
+PhysicsManager::PhysicsManager(GameScene& gs):gs_(gs)
 {
     // Reserve to avoid reallocate memory when the container is out of size
     // Also avoid raw pointer to lose track of container's time
     actorColliders_.reserve(actor_size);
 }
 
-CircleColliderComponent& CollisionManager::AddProjectileCollider(std::shared_ptr<Entity>& owner,
+CircleColliderComponent& PhysicsManager::AddProjectileCollider(std::shared_ptr<Entity>& owner,
     std::string tag, const float& posX, const float& posY, const float& radius)
 {
     projectileColliders_.emplace_back(owner, tag, posX, posY, radius);
     return (*projectileColliders_.rbegin());
 }
 
-AABBColliderComponent& CollisionManager::AddMeleeAttackCollider(const std::shared_ptr<Entity>& owner, std::string tag, const Vector2& pos, const float& w, const float& h)
+AABBColliderComponent& PhysicsManager::AddMeleeAttackCollider(const std::shared_ptr<Entity>& owner, std::string tag, const Vector2& pos, const float& w, const float& h)
 {
     attackColliders_.emplace_back(owner, tag, pos, w, h);
     return (*attackColliders_.rbegin());
 }
 
-std::shared_ptr<AABBColliderComponent>& CollisionManager::AddCheckPointCollider(const std::shared_ptr<Entity>& owner, std::string tag, const Vector2& pos, const float& w, const float& h)
+std::shared_ptr<AABBColliderComponent>& PhysicsManager::AddCheckPointCollider(const std::shared_ptr<Entity>& owner, std::string tag, const Vector2& pos, const float& w, const float& h)
 {
     auto collider = std::make_shared<AABBColliderComponent>(owner, tag, pos, w, h);
     checkPointColliders_.emplace_back(std::move(collider));
     return (*checkPointColliders_.rbegin());
 }
 
-std::shared_ptr<CircleColliderComponent>& CollisionManager::AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag, const float& posX, const float& posY, const float& radius)
+std::shared_ptr<CircleColliderComponent>& PhysicsManager::AddBossCollider(std::shared_ptr<Entity>& owner, std::string tag, const float& posX, const float& posY, const float& radius)
 {
     auto collider = std::make_shared<CircleColliderComponent>(owner, tag, posX, posY, radius);
     bossColliders_.emplace_back(std::move(collider));
     return (*bossColliders_.rbegin());
 }
 
-bool CollisionManager::CheckCollision(const Rect& rectA, const Rect& rectB)
+bool PhysicsManager::CheckCollision(const Rect& rectA, const Rect& rectB)
 {
     return Overlapping(rectA.pos.X, rectA.pos.X + rectA.w, rectB.pos.X, rectB.pos.X + rectB.w) &&
         Overlapping(rectA.pos.Y, rectA.pos.Y + rectA.h, rectB.pos.Y, rectB.pos.Y + rectB.h);
 }
 
-bool CollisionManager::CheckCollision(const Circle& cirA, const Circle& cirB)
+bool PhysicsManager::CheckCollision(const Circle& cirA, const Circle& cirB)
 {
     auto&& distance = cirB.pos - cirA.pos;
     auto&& checkDistance = cirA.radius + cirB.radius;
     return distance * distance <= checkDistance * checkDistance;
 }
 
-bool CollisionManager::CheckCollision(const Vector2& point, const Rect& rect)
+bool PhysicsManager::CheckCollision(const Vector2& point, const Rect& rect)
 {
     return point.X >= rect.Left() && point.X <= rect.Right() &&
            point.Y >= rect.Top() && point.Y <= rect.Bottom();
 }
 
-bool CollisionManager::CheckCollision(const Vector2& ray_point, const Vector2& ray_dir, const Rect& target,
+bool PhysicsManager::CheckCollision(const Vector2& ray_point, const Vector2& ray_dir, const Rect& target,
     Vector2& normal, float& collisionTime)
 {
     Vector2 t_entry = (target.pos - ray_point) / ray_dir;
@@ -100,7 +100,7 @@ bool CollisionManager::CheckCollision(const Vector2& ray_point, const Vector2& r
     return true;
 }
 
-bool CollisionManager::CheckSweptAABB(const Rect& main, const Vector2& vec,
+bool PhysicsManager::CheckSweptAABB(const Rect& main, const Vector2& vec,
     const Rect& target, Vector2& normal, float& collisionTime, const float& deltaTime)
 {
     if (vec == Vector2(0.0f, 0.0f)) return false;
@@ -118,24 +118,24 @@ bool CollisionManager::CheckSweptAABB(const Rect& main, const Vector2& vec,
     return false;
 }
 
-bool CollisionManager::CheckCollision(const Circle& cir, const Rect& rect)
+bool PhysicsManager::CheckCollision(const Circle& cir, const Rect& rect)
 {
     return CheckCollision(cir, clamp_on_AABB(cir.pos, rect));
 }
 
-void CollisionManager::SetGravity(const Vector2& gravity)
+void PhysicsManager::SetGravity(const Vector2& gravity)
 {
     gravity_ = gravity;
 }
 
-void CollisionManager::ApplyForce(const float& deltaTime)
+void PhysicsManager::ApplyForce(const float& deltaTime)
 {
     // Apply gravity force
     for (auto& actorCollider : actorColliders_)
         actorCollider->velocity_.Y += gravity_.Y * deltaTime;
 }
 
-void CollisionManager::Update(const float& deltaTime)
+void PhysicsManager::Update(const float& deltaTime)
 {
     for (auto& mapCollider : mapColliders_)
         mapCollider.Update(deltaTime);
@@ -155,7 +155,7 @@ void CollisionManager::Update(const float& deltaTime)
     RemoveCollider();
 }
 
-void CollisionManager::RemoveCollider()
+void PhysicsManager::RemoveCollider()
 {
     ProcessRemoveCollider(projectileColliders_);
     ProcessRemoveCollider(attackColliders_);
@@ -167,7 +167,7 @@ void CollisionManager::RemoveCollider()
         bossColliders_.end());
 }
 
-void CollisionManager::PlatformResolution(const float& deltaTime)
+void PhysicsManager::PlatformResolution(const float& deltaTime)
 {
     for (auto& actor : actorColliders_)
     {
@@ -221,7 +221,7 @@ void CollisionManager::PlatformResolution(const float& deltaTime)
     }
 }
 
-bool CollisionManager::IsEnterBossArea(const std::string& bossID, Vector2& bossPos)
+bool PhysicsManager::IsEnterBossArea(const std::string& bossID, Vector2& bossPos)
 {
     for (auto& actor : actorColliders_)
     {
@@ -239,7 +239,7 @@ bool CollisionManager::IsEnterBossArea(const std::string& bossID, Vector2& bossP
     }
 }
 
-void CollisionManager::ActorVSProjectileCollision()
+void PhysicsManager::ActorVSProjectileCollision()
 {
     for (auto& actor : actorColliders_)
     {
@@ -284,7 +284,7 @@ void CollisionManager::ActorVSProjectileCollision()
     }
 }
 
-void CollisionManager::ActorVSMeleeActtackCollision()
+void PhysicsManager::ActorVSMeleeActtackCollision()
 {
     for (auto& actor : actorColliders_)
     {
@@ -316,7 +316,7 @@ void CollisionManager::ActorVSMeleeActtackCollision()
     }
 }
 
-void CollisionManager::CombatCollision()
+void PhysicsManager::CombatCollision()
 {
     ActorVSProjectileCollision();
     ActorVSMeleeActtackCollision();
@@ -349,7 +349,7 @@ void CollisionManager::CombatCollision()
     }
 }
 
-void CollisionManager::ProcessCheckPoint()
+void PhysicsManager::ProcessCheckPoint()
 {
     for (auto& actor : actorColliders_)
     {
@@ -366,7 +366,7 @@ void CollisionManager::ProcessCheckPoint()
     }
 }
 
-void CollisionManager::ActorVsTrap()
+void PhysicsManager::ActorVsTrap()
 {
     for (auto& actor : actorColliders_)
     {
@@ -407,7 +407,7 @@ void CollisionManager::ActorVsTrap()
 
 }
 
-void CollisionManager::Render()
+void PhysicsManager::Render()
 {
     for (auto& mapCollider : mapColliders_)
         mapCollider.Render();
@@ -428,7 +428,7 @@ void CollisionManager::Render()
         checkPoint->Render();
 }
 
-void CollisionManager::ClearDestroyCollider()
+void PhysicsManager::ClearDestroyCollider()
 {
     RemoveCollider();
 }

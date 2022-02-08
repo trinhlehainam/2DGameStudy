@@ -15,7 +15,7 @@ class RigidBody2D:
 	public ColliderComponent
 {
 private:
-	friend class CollisionManager;
+	friend class PhysicsManager;
 	Vector2 maxVelocity_ = Vector2(700, 700);
 
 	using Update_t = void(RigidBody2D::*)(const float&);

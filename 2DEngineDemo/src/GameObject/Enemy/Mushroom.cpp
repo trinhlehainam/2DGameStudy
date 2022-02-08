@@ -11,7 +11,7 @@
 #include "../Attack/MeleeAttack.h"
 
 #include "../../System/AssetManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/EffectManager.h"
 #include "../../System/CombatManager.h"
@@ -94,7 +94,7 @@ void Mushroom::SetPosition(const Vector2& pos)
 	startPosX_ = pos.X;
 	// Because RigidBody2D Constructor will Initialize its collider's position depend on owner's Transform
 	// Add RigidBody here after set position for owner's transform
-	const auto& body = gs_.collisionMng_->AddRigidBody2D(
+	const auto& body = gs_.physicsMng_->AddRigidBody2D(
 		self_, start_pos,
 		mushroom_width * rigidbody_width_scale,
 		mushroom_height * scale

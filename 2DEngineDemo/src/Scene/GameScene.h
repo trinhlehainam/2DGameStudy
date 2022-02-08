@@ -8,7 +8,7 @@
 class AssetManager;
 class EntityManager;
 class Map;
-class CollisionManager;
+class PhysicsManager;
 class Player;
 class Slasher;
 class EnemyManager;
@@ -26,7 +26,7 @@ class GameScene :
     friend BackgroundEnvironment;
     friend class Asura;
     friend EffectManager;
-    friend CollisionManager;
+    friend PhysicsManager;
     friend class ShurikenEquip;
     friend class BombEquip;
     friend class SwordEquip;
@@ -43,7 +43,7 @@ private:
     std::unique_ptr<AssetManager> assetMng_;
     std::unique_ptr<EntityManager> entityMng_;
     std::unique_ptr<Map> map_;
-    std::unique_ptr<CollisionManager> collisionMng_;
+    std::unique_ptr<PhysicsManager> physicsMng_;
     std::unique_ptr<Player> player_;
     std::unique_ptr<EnemyManager> enemyMng_;
     std::vector<std::unique_ptr<Spawner>> spawners_;

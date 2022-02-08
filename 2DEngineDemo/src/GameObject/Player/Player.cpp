@@ -12,7 +12,7 @@
 
 #include "../../Scene/GameScene.h"
 #include "../../System/AssetManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 #include "../../System/EntityManager.h"
 #include "../../System/TextureManager.h"
 #include "../../System/EffectManager.h"
@@ -170,7 +170,7 @@ void Player::Initialize()
 
 	self_ = gs_.entityMng_->AddEntity("player");
 	self_->AddComponent<TransformComponent>(self_, start_pos, player_width, player_height, player_scale);
-	const auto& rigidBody = gs_.collisionMng_->AddRigidBody2D(
+	const auto& rigidBody = gs_.physicsMng_->AddRigidBody2D(
 		self_, 
 		start_pos,
 		player_width * rigidbody_width_scale,

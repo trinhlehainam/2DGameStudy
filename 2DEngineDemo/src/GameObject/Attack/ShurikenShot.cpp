@@ -4,7 +4,7 @@
 
 #include "../Entity.h"
 #include "../../System/EntityManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 
 #include "../../Component/TransformComponent.h"
 #include "../../Component/SpriteComponent.h"
@@ -34,7 +34,7 @@ ShurikenShot::ShurikenShot(GameScene& gs, const std::shared_ptr<Entity>& owner,c
 		Rect(0, 0, shuriken_width, shuriken_height),
 		1, 0, rotate_speed);
 	anim->PlayLoop("attack");
-	auto& collider = gs_->collisionMng_->AddProjectileCollider(self_,
+	auto& collider = gs_->physicsMng_->AddProjectileCollider(self_,
 		"PLAYER-SHURIKEN", startPos.X, startPos.Y, shuriken_radius);
 	collider.SetOffset(shuriken_radius, shuriken_radius);
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));

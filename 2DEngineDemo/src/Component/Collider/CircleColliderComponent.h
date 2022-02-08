@@ -5,7 +5,7 @@ class CircleColliderComponent :
     public ColliderComponent
 {
 private:
-    friend class CollisionManager;
+    friend class PhysicsManager;
 public:
     Circle collider_;
     Circle destCir_;

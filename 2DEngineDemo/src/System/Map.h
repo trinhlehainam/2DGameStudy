@@ -3,7 +3,7 @@
 #include <string>
 
 class EntityManager;
-class CollisionManager;
+class PhysicsManager;
 
 /// <summary>
 /// Load Map and Add Tile
@@ -14,9 +14,9 @@ private:
 	int tileSize;
 	int scale;
 	EntityManager& entityMng_;
-	CollisionManager& collisionMng_;
+	PhysicsManager& collisionMng_;
 public:
-	Map(EntityManager& entityMng, CollisionManager& collisionMng, const int& tileSize, const int& scale);
+	Map(EntityManager& entityMng, PhysicsManager& collisionMng, const int& tileSize, const int& scale);
 	~Map();
 
 	/// <summary>

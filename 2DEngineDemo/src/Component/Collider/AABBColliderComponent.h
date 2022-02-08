@@ -9,7 +9,7 @@ class AABBColliderComponent:
 	public ColliderComponent
 {
 private:
-	friend class CollisionManager;
+	friend class PhysicsManager;
 public:
 	Rect collider_;
 	Rect destRect_;

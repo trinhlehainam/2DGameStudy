@@ -57,7 +57,7 @@
     <ClCompile Include="src\System\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\System\CollisionManager.cpp">
+    <ClCompile Include="src\System\PhysicsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\System\TextureManager.cpp">
@@ -233,7 +233,7 @@
     <ClInclude Include="src\System\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\System\CollisionManager.h">
+    <ClInclude Include="src\System\PhysicsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\System\TextureManager.h">

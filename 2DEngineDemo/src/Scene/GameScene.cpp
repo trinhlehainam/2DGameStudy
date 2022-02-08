@@ -10,7 +10,7 @@
 #include "../System/EnemyManager.h"
 #include "../System/EntityManager.h"
 #include "../System/SceneManager.h"
-#include "../System/CollisionManager.h"
+#include "../System/PhysicsManager.h"
 #include "../System/Map.h"
 #include "../System/Camera.h"
 #include "../System/EffectManager.h"
@@ -65,7 +65,7 @@ GameScene::GameScene(SceneManager& sceneMng, KeyboardInput& sceneInput):BaseScen
 
 	assetMng_ = std::make_unique<AssetManager>();
 	entityMng_ = std::make_unique<EntityManager>();
-	collisionMng_ = std::make_unique<CollisionManager>(*this);
+	physicsMng_ = std::make_unique<PhysicsManager>(*this);
 	effectMng_ = std::make_unique<EffectManager>(*this);
 	combatMng_ = std::make_unique<CombatManager>();
 	
@@ -174,7 +174,7 @@ void GameScene::LoadLevel(const int& level)
 	assetMng_->AddTexture("born-fire", L"assets/Image/UI/bornfire.png");
 
 	// Create Title Map
-	map_ = std::make_unique<Map>(*entityMng_,*collisionMng_,16,2);
+	map_ = std::make_unique<Map>(*entityMng_,*physicsMng_,16,2);
 	map_->LoadMapLayer("BACKGROUND",assetMng_->GetTexture("map"),"assets/Image/Tilemap/background.map",
 		NUM_TILE_X, NUM_TILE_Y);
 	map_->LoadMapLayer("PLATFORM", assetMng_->GetTexture("map"), "assets/Image/Tilemap/platform.map",
@@ -222,7 +222,7 @@ void GameScene::LoadLevel(const int& level)
 	Camera::Instance().SetTargetEntity(playerTransform);
 	Camera::Instance().SetPosition(playerTransform->pos);
 	
-	collisionMng_->SetGravity(Vector2(0, gravity_force_y));
+	physicsMng_->SetGravity(Vector2(0, gravity_force_y));
 	levelMng_ = std::make_unique<LevelManager>(*this, (*player_));
 	LoadCheckPoint();
 }
@@ -342,17 +342,17 @@ void GameScene::GameUpdate(const float& deltaTime)
 	{
 		spawner->Update(deltaTime);
 	}
-	collisionMng_->ApplyForce(deltaTime);
+	physicsMng_->ApplyForce(deltaTime);
 	CheckRespawnPlayer();
 	enemyMng_->Update(deltaTime);
 	entityMng_->Update(deltaTime);
 	combatMng_->Update(deltaTime);
 	bgEnvironment_->Update(deltaTime);
 	/*ProcessEnterBossArea();*/
-	collisionMng_->ProcessCheckPoint();
-	collisionMng_->PlatformResolution(deltaTime);
-	collisionMng_->Update(deltaTime);
-	collisionMng_->CombatCollision();
+	physicsMng_->ProcessCheckPoint();
+	physicsMng_->PlatformResolution(deltaTime);
+	physicsMng_->Update(deltaTime);
+	physicsMng_->CombatCollision();
 	levelMng_->Update(deltaTime);
 	effectMng_->Update(deltaTime);
 	Camera::Instance().Update();
@@ -376,7 +376,7 @@ void GameScene::RespawnPlayerUpdate(const float& deltaTime)
 	levelMng_->RespawnPlayer();
 	enemyMng_->ClearEnemy();
 	entityMng_->ClearDestroyEntity();
-	collisionMng_->ClearDestroyCollider();
+	physicsMng_->ClearDestroyCollider();
 	Camera::Instance().Update();
 	LoadEnemy();
 	if (waitTimer_ <= 0)
@@ -391,7 +391,7 @@ void GameScene::RespawnPlayerUpdate(const float& deltaTime)
 void GameScene::ProcessEnterBossArea()
 {
 	Vector2 bossPos;
-	if (collisionMng_->IsEnterBossArea("ASURA", bossPos) && !isBossAdded)
+	if (physicsMng_->IsEnterBossArea("ASURA", bossPos) && !isBossAdded)
 	{
 		auto asuraClone = std::make_unique<Asura>(*this, player_->GetPlayerTransform());
 		auto bossSpawner = std::make_unique<BossSpawner>(std::move(asuraClone), bossPos, *enemyMng_);
@@ -447,7 +447,7 @@ void GameScene::GameRender()
 	bgEnvironment_->RenderBackGround();
 	entityMng_->Render();
 #if DEBUG || _DEBUG
-	collisionMng_->Render();	// collision debug
+	physicsMng_->Render();	// collision debug
 #endif
 	effectMng_->Render();
 	player_->RenderUI();

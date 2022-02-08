@@ -13,7 +13,7 @@
 
 #include "../../System/EntityManager.h"
 #include "../../System/AssetManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 #include "../../System/EffectManager.h"
 #include "../../System/CombatManager.h"
 #include "../../System/Camera.h"
@@ -87,7 +87,7 @@ void Asura::EnteringUpdate(const float& deltaTime)
 		updater_ = &Asura::NormalUpdate;
 
 		// Add Asura's colliders
-		auto& collider = gs_.collisionMng_->AddBossCollider(self_, "ASURA", 
+		auto& collider = gs_.physicsMng_->AddBossCollider(self_, "ASURA", 
 			transform->pos.X + collider_offset_x,
 			transform->pos.Y + collider_offset_y,
 			collider_radius);

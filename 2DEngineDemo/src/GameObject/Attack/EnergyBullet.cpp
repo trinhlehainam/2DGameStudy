@@ -4,7 +4,7 @@
 
 #include "../Entity.h"
 #include "../../System/EntityManager.h"
-#include "../../System/CollisionManager.h"
+#include "../../System/PhysicsManager.h"
 #include "../../System/EffectManager.h"
 
 #include "../../Component/TransformComponent.h"
@@ -36,7 +36,7 @@ EnergyBullet::EnergyBullet(GameScene& gs, const std::shared_ptr<Entity>& owner, 
 		Rect(0, 0, energy_bullet_width, energy_bullet_height),
 		 energy_bullet_anima_speed, angle);
 	anim->PlayLoop("attack");
-	auto& collider = gs_->collisionMng_->AddProjectileCollider(self_,
+	auto& collider = gs_->physicsMng_->AddProjectileCollider(self_,
 		"ASURA-BULLET", startPos.X, startPos.Y, energy_bullet_radius);
 	collider.SetOffset(collider_offset_x, collider_offset_y);
 	Vector2 velocity = Vector2(move_speed * cosf(angle), move_speed * sinf(angle));

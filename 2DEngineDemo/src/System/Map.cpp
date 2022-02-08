@@ -5,12 +5,12 @@
 #include "../GameObject/Entity.h"
 #include "../System/EntityManager.h"
 #include "TextureManager.h"
-#include "CollisionManager.h"
+#include "PhysicsManager.h"
 #include "../Component/TileComponent.h"
 #include "../Component/TransformComponent.h"
 #include "../Component/Collider/AABBColliderComponent.h"
 
-Map::Map(EntityManager& entityMng, CollisionManager& collisionMng, const int& tileSize, const int& scale):
+Map::Map(EntityManager& entityMng, PhysicsManager& collisionMng, const int& tileSize, const int& scale):
 	entityMng_(entityMng), collisionMng_(collisionMng)
 {
 	this->tileSize = tileSize;
