@@ -32,16 +32,11 @@ void EntityManager::ClearData()
 
 void EntityManager::Update(const float& deltaTime)
 {
-
     for (auto& entity : entities_)
-    {
         entity->Update(deltaTime);
-    }
 
     for (auto& projectile : projectiles_)
-    {
         projectile->Update(deltaTime);
-    }
 
     RemoveEntity();
 }

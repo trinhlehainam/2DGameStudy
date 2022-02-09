@@ -237,6 +237,8 @@ bool PhysicsManager::IsEnterBossArea(const std::string& bossID, Vector2& bossPos
             }
         }
     }
+
+    return false;
 }
 
 void PhysicsManager::ActorVSProjectileCollision()

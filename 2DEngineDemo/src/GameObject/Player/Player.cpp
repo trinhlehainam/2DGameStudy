@@ -831,13 +831,8 @@ void Player::UpdateState()
 	}
 
 	// Relocate rigid body's position after change it's size (animation state)
-	switch (actionState_)
-	{
-	default:
-		rigidBody_->collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - rigidBody_->collider_.w / 2;
-		rigidBody_->collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - rigidBody_->collider_.h;
-		break;
-	}
+	rigidBody_->collider_.pos.X = transform->pos.X + transform->w * transform->scale / 2.0f - rigidBody_->collider_.w / 2;
+	rigidBody_->collider_.pos.Y = transform->pos.Y + transform->h * transform->scale - rigidBody_->collider_.h;
 }
 
 std::shared_ptr<TransformComponent> Player::GetPlayerTransform()

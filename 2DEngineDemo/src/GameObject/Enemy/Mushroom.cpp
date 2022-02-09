@@ -103,7 +103,7 @@ void Mushroom::SetPosition(const Vector2& pos)
 	rigidBody_->SetTag("MUSHROOM");
 }
 
-void Mushroom::HurtUpdate(const float&)
+void Mushroom::HurtUpdate(const float& deltaTime)
 {
 	auto sprite = self_->GetComponent<SpriteComponent>();
 	auto health = self_->GetComponent<HealthComponent>()->Health();
