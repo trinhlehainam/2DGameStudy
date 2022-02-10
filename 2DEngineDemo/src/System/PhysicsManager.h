@@ -105,7 +105,7 @@ public:
 		removeFlag_ = true;
 	}
 
-	// Process moving objects when they touch on platforms
+	// Process resolve objects when they touch on platforms
 	void PlatformResolution(const float& deltaTime);
 
 	// Check if player enter the boss area

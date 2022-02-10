@@ -61,8 +61,8 @@ bool PhysicsManager::CheckCollision(const Rect& rectA, const Rect& rectB)
 
 bool PhysicsManager::CheckCollision(const Circle& cirA, const Circle& cirB)
 {
-    auto&& distance = cirB.pos - cirA.pos;
-    auto&& checkDistance = cirA.radius + cirB.radius;
+    auto distance = cirB.pos - cirA.pos;
+    auto checkDistance = cirA.radius + cirB.radius;
     return distance * distance <= checkDistance * checkDistance;
 }
 

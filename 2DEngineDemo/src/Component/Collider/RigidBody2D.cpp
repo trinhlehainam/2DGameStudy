@@ -25,9 +25,8 @@ void RigidBody2D::NormalUpdate(const float& deltaTime)
 void RigidBody2D::Update(const float& deltaTime)
 {
 	if (owner_.expired())
-	{
 		return;
-	}
+
 	auto transform = owner_.lock()->GetComponent<TransformComponent>();
 
 	(this->*updater_)(deltaTime);
